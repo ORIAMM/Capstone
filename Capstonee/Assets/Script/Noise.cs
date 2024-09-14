@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Noise
 {
-    public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, float scale)
+    public static float[,] GenerateNoiseMap(int mapWidth, int mapHeight, float scale, int octaves, float persistance, float lacunarity)
     {
         float[,] noiseMap = new float[mapWidth, mapHeight];
 
@@ -13,17 +13,47 @@ public static class Noise
             scale = 0.0001f;
         }
 
+        float MaxNoiseHeight = float.MinValue;
+        float MinNoiseHeight = float.MaxValue;
+
         for (int y= 0; y < mapHeight; y++)
         {
             for (int x= 0; x < mapWidth; x++)
             {
-                float sampleX = x / scale;
-                float sampleY = y / scale;
+                float amplitude = 1;
+                float frequency = 1;
+                float noiseHeight = 0;
 
-                float perlinValue = Mathf.PerlinNoise(sampleX, sampleY);
-                noiseMap[x, y] = perlinValue;
+                for (int i = 0;i < octaves; i++)
+                {
+                    float sampleX = x / scale * frequency;
+                    float sampleY = y / scale * frequency;
+
+                    float perlinValue = Mathf.PerlinNoise(sampleX, sampleY)  * 2 - 1;
+                    noiseHeight += perlinValue * amplitude;
+
+                    amplitude *= persistance;
+                    frequency *= lacunarity;
+                }
+                if (noiseHeight > MaxNoiseHeight)
+                {
+                    MaxNoiseHeight = noiseHeight;
+                } else if (noiseHeight < MinNoiseHeight)
+                {
+                    MinNoiseHeight = noiseHeight;
+                }
+
+                noiseMap[x,y] = noiseHeight;
             }
         }
+        for (int y= 0; y < mapHeight; y++)
+        {
+            for (int x= 0; x < mapWidth; x++)
+            {
+                noiseMap[x,y] = Mathf.InverseLerp(MinNoiseHeight, MaxNoiseHeight, noiseMap[x,y]);
+            }
+        }
+
         return noiseMap;
 
     }
