@@ -20,6 +20,7 @@ public class MapGenerator : MonoBehaviour
     [Range(0,6)]
     public int editorPreviewLOD;
     public float noiseScale;
+    public Noise.NormalizeMode normalizeMode;
 
     [Header("Tinggi dan Berapa banyak")]
     public int octaves;
@@ -121,7 +122,7 @@ public class MapGenerator : MonoBehaviour
 
     MapData GenerateMapData(Vector2 centre)
     {
-        float[,] noiseMap = Noise.GenerateNoiseMap (mapChunkSize, mapChunkSize,seed, noiseScale, octaves, persistance, lacunarity, centre + offset);
+        float[,] noiseMap = Noise.GenerateNoiseMap (mapChunkSize, mapChunkSize,seed, noiseScale, octaves, persistance, lacunarity, centre + offset, normalizeMode);
 
         Color[] colourMap = new Color[mapChunkSize * mapChunkSize];
 
@@ -132,9 +133,11 @@ public class MapGenerator : MonoBehaviour
                 float currentHeight = noiseMap[x, y];
                 for (int i = 0; i< region.Length; i++)
                 {
-                    if (currentHeight <= region[i].height)
+                    if (currentHeight >= region[i].height)
                     {
                         colourMap[y * mapChunkSize + x] = region[i].colour;
+                    } else
+                    {
                         break;
                     }
                 }
