@@ -44,6 +44,8 @@ public class MapGenerator : MonoBehaviour
     [Header("Falloff (optional)")]
     public bool useFalloff;
 
+    public GrassGenerator grassGenerator;
+
     public bool autoUpdate;
 
 
@@ -53,6 +55,7 @@ public class MapGenerator : MonoBehaviour
 
     private void Awake()
     {
+        GrassGenerator grassGenerator = FindObjectOfType<GrassGenerator>();
         falloffMap = FalloffGenerator.GenerateFallofMap(mapChunkSize);
     }
 
@@ -60,6 +63,8 @@ public class MapGenerator : MonoBehaviour
     {
         MapData mapData = GenerateMapData(Vector2.zero);
         MapDisplay display = FindObjectOfType<MapDisplay>();
+        
+        
         switch (drawMode)
         {
             case DrawMode.NoiseMap:
@@ -177,6 +182,9 @@ public class MapGenerator : MonoBehaviour
                 }
             }
         }
+        
+        grassGenerator.GenerateGrass(noiseMap);
+
 
         return new MapData(noiseMap, colourMap);
 
@@ -230,4 +238,8 @@ public struct MapData
         this.colourMap = colourMap;
     }
 }
+
+
+
+
 
