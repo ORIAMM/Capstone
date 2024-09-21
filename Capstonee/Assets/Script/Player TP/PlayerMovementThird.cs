@@ -87,8 +87,8 @@ public class PlayerMovementThird : MonoBehaviour
     {
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-
-        animator.SetFloat("Speed", rb.velocity.x);
+        Debug.Log(rb.velocity.magnitude);
+        animator.SetFloat("Speed", rb.velocity.magnitude);
 
         // on ground
         if(grounded)
@@ -123,32 +123,6 @@ public class PlayerMovementThird : MonoBehaviour
         readyToJump = true;
     }
 
-    public void UpdateAnimatorValues(float horizontalMove, float  verticalMove)
-    {
-        float snappedHorizontal;
-        float snappedVertical;
-
-        #region SNAP
-        if (horizontalMove > 0f && horizontalMove < 0.55f)
-        {
-            snappedHorizontal = 0.5f;
-        } else if (horizontalMove > 0.55f)
-        {
-            snappedHorizontal = 1;
-        } else if (horizontalMove < 0 && horizontalMove > -0.55f)
-        {
-            snappedHorizontal = -0.5f;
-        } else if (horizontalMove < -0.55f)
-        {
-            snappedHorizontal = -1;
-        } else
-        {
-            snappedHorizontal = 0;
-        }
-        #endregion
-
-        animator.SetFloat("Speed", snappedHorizontal, 0.1f, Time.deltaTime);
-    }
 
 
 
