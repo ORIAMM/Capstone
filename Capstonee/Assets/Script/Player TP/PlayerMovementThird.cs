@@ -87,7 +87,7 @@ public class PlayerMovementThird : MonoBehaviour
     {
         // calculate movement direction
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-        Debug.Log(rb.velocity.magnitude);
+        //Debug.Log(rb.velocity.magnitude);
         animator.SetFloat("Speed", rb.velocity.magnitude);
 
         // on ground
