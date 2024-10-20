@@ -6,7 +6,9 @@
 </p>
 
 ## 🔴 About Project
-Chronovore is a game projec
+**Chronovore** is a 3D hack-and-slash action RPG where time is your only life force. As time constantly ticks down, players must fight through hordes of enemies to reclaim the precious seconds needed to survive. Every hit, kill, and combo adds time, but with each mistake, time slips away. The player wields the unique power to stop time for brief moments, gaining an edge in combat or evading death—but using this power comes at the cost of your remaining life. Set in a peaceful, yet monstrous world, Chronovore challenges you to manage your time and skillfully battle through a relentless struggle for survival.
+
+The game itself is set on a mutated rainforest-like environment that drains off your life as time goes by. Entities on the forest are thrived with food as your life keeps on depleting, as you charge and attacked them hoping to life you gained your lifeforce back.
 <br>
 
 ## 📋 Project Info 
@@ -29,32 +31,13 @@ Chronovore is a game projec
   <summary> Philips Sanjaya (Programmer) </summary>
   
   **More Details**
-  1. Main Movement and Game Mechanism Concept
-     - Initial Mechanics Pre-Multiplayer (Movement, interactions, Trash Instances, facilities)
-      
-  3. Early Fusion Mechanism
-     - Initial multiplayer mechanism involving with NetworkObjects, Creating a prototype for lobby
-    
-  2. Idea Pitching
-     - Providing detailed descriptions about the framework, and the pseudocode for the other programmer
-  
+  - NULL
   **What i learned**
-  - I learned more about the learning and research process in tackling a problem as this project was made recently after the new multiplayer framework released. This was way ahead of what our team expected as we were informed that the multiplayer implimentation was easy. Though at that time we did not think through by using another multiplayer framework but to keep on developing the game using bare knowledge none other than the documentation itself. Through reading on the documentation, i developed my reading skills to grasp such knowledge effortlessly. As another plus, my abiltity to analyze and deconstruct the whole idea through testing it makes it much more easier to be discerned.
-  - Throughout the project, i learned to communicate with the teammates and also improved problem solving skills mainly program designing to tackle an approach. I learned to do an effective communication with the other programmer, providing him concepts to problems that was a problem for him personally.
-  <br>
+  - NULL
 </details>
 
 - Totti Adithana (Project Manager)
-- Yohanes Duns Scotus Aerotri Tunyanan (3D Artist)
 - Justin Tjokro (Game Designer)
-
-<h3>Game Description</h3>
-<p align="justify"> Trashure is a 3D Multiplayer Casual Party Game. Managing and processing trash has been a challenge throughout the world. Alone or with friends, help the world by managing things in Trashure factory. Work together, avoid disaster, and most importantly process all the trash for customer.
-</p>
-
-<h3>Target Audience</h3>
-<p align="justify"> <b>Trashure</b> is designed for 12 - 40 years old individuals who are interested in environmental issues and sustainable practices. The game is suitable for both educational settings and casual gamers who wish to learn in a more interactive and enjoyable manner.
-</p>
 
 ## Files description
 
