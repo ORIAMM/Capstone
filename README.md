@@ -1,4 +1,3 @@
-
 <h1>Chronovore</h1>
 <p align="center">
 <!--   <img width="100%"src=".png"> -->
@@ -31,7 +30,15 @@ The game itself is set on a mutated rainforest-like environment that drains off 
   <summary> Philips Sanjaya (Programmer) </summary>
   
   **More Details**
-  - NULL
+  1. Post-Processing
+     - using URP's post-processing to improve lighting, blooming, color grading, bluring.
+
+![image](https://github.com/user-attachments/assets/1b8b7dcf-16c7-4bcd-9cc7-b240dd6360c8)
+  2. Free fly Movement
+
+  3. Further implimentation of cinemachines with the help of code
+
+
   **What i learned**
   - NULL
 </details>
