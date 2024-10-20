@@ -1,14 +1,14 @@
 
-<h1>Trashure</h1>
+<h1>Chronovore</h1>
 <p align="center">
-  <img width="100%"src="https://github.com/ORIAMM/ORIAMM/blob/main/images/TRASHURE.png">
+<!--   <img width="100%"src=".png"> -->
   </br>
 </p>
 
 ## 🔴 About Project
 **Chronovore** is a 3D hack-and-slash action RPG where time is your only life force. As time constantly ticks down, players must fight through hordes of enemies to reclaim the precious seconds needed to survive. Every hit, kill, and combo adds time, but with each mistake, time slips away. The player wields the unique power to stop time for brief moments, gaining an edge in combat or evading death—but using this power comes at the cost of your remaining life. Set in a peaceful, yet monstrous world, Chronovore challenges you to manage your time and skillfully battle through a relentless struggle for survival.
 
-The game itself is set on a mutated rainforest-like environment that drains off your life as time goes by. Entities on the forest are thrived with food as your life keeps on depleting, as you charge and attacked them hoping to life you gained your lifeforce back.
+The game itself is set on a mutated rainforest-like environment that drains off your life as time goes by. Entities on the forest are thrived with food as your life keeps on depleting, as you charge and attacked them hoping to life you gained your lifeforce back. 
 <br>
 
 ## 📋 Project Info 
@@ -61,8 +61,9 @@ The following controls are bound in-game, for gameplay and testing.
 | Key Binding       | Function          |
 | :---: | :---: |
 | WASD | Player Movement |
-| LMB | Pickup Item |
-| RMB | Drop Item |
+| X | Target Locking |
+| LMB | Use held item |
+| Q | Equip / Unequip item |
 
 <h3>Download Game</h3>
 Currently the latest version is not downloadable yet as it is in further development and polishing
