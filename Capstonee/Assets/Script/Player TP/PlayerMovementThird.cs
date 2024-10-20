@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
-
 public class PlayerMovementThird : MonoBehaviour
 {
     [Header("Movement")]
@@ -35,7 +31,7 @@ public class PlayerMovementThird : MonoBehaviour
     float verticalInput;
 
     Vector3 moveDirection;
-
+    CustomCamera cam;
     Rigidbody rb;
 
     private void Start()

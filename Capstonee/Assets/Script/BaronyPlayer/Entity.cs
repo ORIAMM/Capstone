@@ -9,7 +9,10 @@ public enum Damage_type
 {
     trap, weapon
 }
-public class 
+public enum Race_type
+{
+    Human, Dwarf, Elf, Lizardmen, Orc, Goblin, Undead
+}
 public class Entity : MonoBehaviour, IEntity
 {
     protected float MaxHealth;
@@ -44,9 +47,15 @@ public class Entity : MonoBehaviour, IEntity
     {
         Destroy(this);
     }
-    public virtual void ReceiveDamage(float damage)
+    public virtual void ReceiveDamage(float ammmount)
     {
-        float damageReceived = Mathf.Clamp(damage - defense, 1, damage);
+        float damageReceived = Mathf.Clamp(ammmount - defense, 1, ammmount);
         _Health -= damageReceived;
+    }
+    public virtual bool UseMana(float ammount)
+    {
+        if(Mana <= ammount)return true;
+        Mana -= ammount;
+        return false;
     }
 }
