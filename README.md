@@ -20,7 +20,18 @@ The game itself is set on a mutated rainforest-like environment that drains off 
 | Totti Adithana Sunarto | Game Programmer | 3 days |
 | Justin Tjokro | Game Designer | 3 days |
 
-*note: this game is currently in development!!!
+```*note: this game is currently in development!!!```
+<br>
+## 📜 Scripts and Features
+
+| Location |  Script       | Description                                                  |
+|-----| ------- | ------------------------------------------------------------ |
+|DataPersistence| `DataManager.cs` | Manages data storage and data distribution towards the interfaces. |
+|DataPersistence| `DataHandler.cs` | Handles the save and loading system for the game. |
+|Gameplay| `Inventory.cs` | Stores picture data and its detail for further uses during gameplay. |
+|Manager| `UIManager.cs`  | Manages pausing and various UI element functions. |
+|Underwater| `ScreenshotHandler.cs`  | Handles screenshot and also album creating. |
+| | `etc`  | |
 <br>
 
 ## 👤Contributions
@@ -48,7 +59,7 @@ The game itself is set on a mutated rainforest-like environment that drains off 
 5. New input system
    - Using Unity's new input system as the first steps of migration from the old system to the new system.
      
-  **What i learned**
+  **What i learned as of currently**
   - I mostly learned new things about how input system work and how it is executed, like for example having the actionmap enable and disable function to actually make the actionmap to start functioning. Using the events like `performed, ispressed` really makes it much more simple and much more readable (for reading convention). Overall, i would be using the new input system when developing a game with a bigger scope as it is also organized in way that we dont need to create our own input script or find all the inputs used for the game.
   - Through the development, i improved my object placement skills as they are sensitive to changes on parents. Here in this project, we used an Animator that applies root motion in which this was the main parent of the object. As of the rotations, we seperated it into different types, the mesh rotations, and the player rotation. The player rotation itself is always aimed at the camera's forward direction as it is crutial for the User Experience to have the player move along with the camera rotating.
   - Through the animating process, i also learned to create animator parameters efficiently. As for an example in this project, i created the parameter by taking the `localVelocity` of the object and dividing that with the `base_walkingspeed`, this allows easy animating as they are reliant to the parameters 0 to 1 and also can be extended when adding others mechanics (ex : using run would just make the parameter above 1).
@@ -63,22 +74,20 @@ The game itself is set on a mutated rainforest-like environment that drains off 
 - Totti Adithana (Project Manager)
 - Justin Tjokro (Game Designer)
 
-## Files description
+## 📂Files description
 
 ```
-├── Trashure-Main              # In this Folder, containing the Unity files and README file
-   ├── Software Engineering              # In this Folder, containing all the Unity project files, to be opened by a Unity Editor
-     ├── Assets                          #  In this Folder, it contains all our code, assets, scenes, etcwas not automatically created by Unity
-        ├── ...
-        ├── Script2                      # In this folder, containing all the game codes
-        ├── Scenes                       # In this folder, there are scenes. You can open these scenes to play the game via Unity
-        ├── Prefab2                      # In this folder, Contain all asset prefab that being used
-     ├── ...
-      
+ ├── Capstonee              # In this Folder, containing all the Unity project files, to be opened by a Unity Editor
+   ├── Assets                          #  In this Folder, it contains all our code, assets, scenes, etcwas not automatically created by Unity
+      ├── ...
+      ├── Script                       # In this folder, containing all the game codes
+      ├── Scenes                       # In this folder, there are scenes. You can open these scenes to play the game via Unity
+      ├── ...                      
+   ├── ...
 ```
 <br>
 
-## Game controls
+## 🕹️ Controls
 
 The following controls are bound in-game, for gameplay and testing.
 
