@@ -30,11 +30,9 @@ The game itself is set on a mutated rainforest-like environment that drains off 
 
 | Location |  Script       | Description                                                  |
 |-----| ------- | ------------------------------------------------------------ |
-|DataPersistence| `DataManager.cs` | Manages data storage and data distribution towards the interfaces. |
-|DataPersistence| `DataHandler.cs` | Handles the save and loading system for the game. |
-|Gameplay| `Inventory.cs` | Stores picture data and its detail for further uses during gameplay. |
-|Manager| `UIManager.cs`  | Manages pausing and various UI element functions. |
-|Underwater| `ScreenshotHandler.cs`  | Handles screenshot and also album creating. |
+| Player TP | `PlayerCamera.cs` | Manages modes of player camera. |
+| Player TP | `ImprovisedPlayerMovement.cs`  | Manages 3D player movement. |
+|ProceduralGenerationV2| | Consists of all codes related to procedural generation. |
 | | `etc`  | |
 
 <br>
