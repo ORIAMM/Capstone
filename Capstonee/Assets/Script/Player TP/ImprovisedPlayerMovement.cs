@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class ImprovisedPlayerMovement : MonoBehaviour
@@ -7,6 +9,7 @@ public class ImprovisedPlayerMovement : MonoBehaviour
     [SerializeField] private float JumpPower;
     [SerializeField] private float player_speed;
     [SerializeField] private float rotSmoothTime;
+    [SerializeField] private float DodgeCooltime;
 
     [Header("Friction Settings")]
     [SerializeField] private float dampingValue;
@@ -14,12 +17,16 @@ public class ImprovisedPlayerMovement : MonoBehaviour
     [HideInInspector] public Transform player;
     [HideInInspector] public Transform FacingDirection;
     [HideInInspector] public Transform camerapos;
+    [HideInInspector] public float ExteriordampingValue;
     CharacterController controller;
 
     Animator animator;
     Vector3 moveDirection = Vector3.zero, right, forward;
     private float rotSpeed;
-
+    [HideInInspector] public Coroutine isDodging;
+    float dodgeTime = 0;
+    bool dodgeCooldown => Time.time >= dodgeTime;
+    float DampingValue => dampingValue + ExteriordampingValue;
     public void Set(CharacterController controller, Animator animator)
     {
         this.controller = controller;
@@ -39,11 +46,25 @@ public class ImprovisedPlayerMovement : MonoBehaviour
             player.rotation = Quaternion.Euler(0f, angle, 0f);
         }
     }
+    public void Dodge()
+    {
+        if(isDodging == null && dodgeCooldown)
+        {
+            isDodging = StartCoroutine(StartDodge());
+        }
+    }
+    public IEnumerator StartDodge()
+    {
+        dodgeTime = Time.time + DodgeCooltime;
+        animator.Play("Dodge");
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName("Dodge"));
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).normalizedTime < 1f);
+    }
     public void Jump() => moveDirection.y = controller.isGrounded ? JumpPower : 0f;
     public void ApplyMove(float gravity)
     {
         float yMagnitude = moveDirection.y;
-        moveDirection = Vector3.Slerp(moveDirection, Vector3.zero, Time.deltaTime * dampingValue);
+        moveDirection = Vector3.Slerp(moveDirection, Vector3.zero, Time.deltaTime * DampingValue);
         moveDirection = Vector3.ClampMagnitude(new Vector3(moveDirection.x, 0, moveDirection.z), player_speed) + Vector3.up * yMagnitude;
         controller.Move(moveDirection * Time.deltaTime);
         Vector3 velValue = new(controller.velocity.x, 0, controller.velocity.z);
@@ -56,6 +77,5 @@ public class ImprovisedPlayerMovement : MonoBehaviour
             animator.SetFloat("VelX", Vector3.Dot(rightVel, velValue) / player_speed);
             animator.SetFloat("VelY", Vector3.Dot(forwardVel, velValue) / player_speed);
         }
-
     }
 }

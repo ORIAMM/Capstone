@@ -27,7 +27,6 @@ public class PlayerCamera : MonoBehaviour
     private Camera cam;
 
     float mouseX, mouseY;
-    bool isTargetting;
     public Transform target;
     private void Awake()
     {
@@ -70,7 +69,7 @@ public class PlayerCamera : MonoBehaviour
         if (Vector3.Distance(target.position, transform.position) < minDistance) return;
         mouseX = (viewPos.x - 0.5f + targetLockOffset.x) * panning_speed;
         mouseY = (viewPos.y - 0.5f + targetLockOffset.y) * panning_speed;
-        Vector3 inputDir = new Vector3(cam.transform.forward.x, 0, cam.transform.forward.z);
+        Vector3 inputDir = new(cam.transform.forward.x, 0, cam.transform.forward.z);
         PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir, Time.deltaTime * rotationSpeed);
     }
     //public void SetCameraStyle(CameraStyle cameraStyle)

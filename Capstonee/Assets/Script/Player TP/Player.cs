@@ -1,4 +1,5 @@
-﻿using TMPro.EditorUtilities;
+﻿using System.Collections;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Windows;
 
@@ -6,9 +7,47 @@ public enum CameraStyle
 {
     Basic, Combat
 }
+public interface IEntity
+{
+    public void ReceiveDamage(float value);
+    public void OnDeath();
+}
+public class TimeManager : MonoBehaviour
+{
+    public static TimeManager instance;
+    public bool isStopped;
+    private void Awake()
+    {
+        instance = this;
+    }
+    public IEnumerator StopTime(float Time)
+    {
+        isStopped = true;
+        yield return new WaitForSeconds(Time);
+        isStopped = false;
+    }
+}
+public class TimedObject : MonoBehaviour
+{
+    public Coroutine TimeStopped;
+    private void Update()
+    {
+        if (TimeManager.instance.isStopped || TimeStopped != null) TimeStopped ??= StartCoroutine(OnStop());
+    }
+    public virtual IEnumerator OnStop()
+    {
+        yield return new WaitUntil(() => TimeManager.instance.isStopped == false);
+        OnContinue();
+        TimeStopped = null;
+    }
+    public virtual void OnContinue()
+    {
+
+    }
+}
 
 [RequireComponent(typeof(CharacterController))]
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IEntity
 {
     private Animator _animator;
     private PlayerControls input;
@@ -23,6 +62,7 @@ public class Player : MonoBehaviour
     [SerializeField] private Transform FacingDirection;
 
     [SerializeField] private float Gravity = 9.81f;
+    bool Dodging => movement.isDodging != null;
     private void OnEnable()
     {
         input.Movement.Enable();
@@ -51,12 +91,24 @@ public class Player : MonoBehaviour
         playerCam.input = input;
 
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
-        input.Movement.Jump.performed += (val) => movement.Jump();
+        //input.Movement.Jump.performed += (val) => movement.Jump();
+        input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
     private void Update()
     {
         movement.Move(MoveValue);
         movement.ApplyMove(Gravity);
+    }
+    public void ReceiveDamage(float value)
+    {
+        if (!Dodging)
+        {
+
+        }
+    }
+    public void OnDeath()
+    {
+        throw new System.NotImplementedException();
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
 }

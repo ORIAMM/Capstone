@@ -1,10 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-public interface IEntity
-{
-    public void ReceiveDamage(float damage);
-}
 public enum Damage_type
 {
     trap, weapon
@@ -13,7 +9,7 @@ public enum Race_type
 {
     Human, Dwarf, Elf, Lizardmen, Orc, Goblin, Undead
 }
-public class Entity : MonoBehaviour, IEntity
+public class Entity : MonoBehaviour
 {
     protected float MaxHealth;
     protected float Health;
