@@ -235,10 +235,12 @@ MonoBehaviour:
   JumpPower: 2.5
   player_speed: 2.5
   rotSmoothTime: 0.1
+  DodgeCooltime: 0
   dampingValue: 4.5
   player: {fileID: 0}
   FacingDirection: {fileID: 0}
   camerapos: {fileID: 0}
+  ExteriordampingValue: 0
 --- !u!114 &348057765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,7 +318,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c388bf2b7b66201418d599157b636f90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  combos: []
+  animator: {fileID: 0}
+  TotalCombos: 0
   ComboInterval: 0.3
 --- !u!1 &364199043
 GameObject:
@@ -2792,10 +2795,12 @@ MonoBehaviour:
   JumpPower: 2.5
   player_speed: 2.5
   rotSmoothTime: 0.1
+  DodgeCooltime: 0
   dampingValue: 4.5
   player: {fileID: 0}
   FacingDirection: {fileID: 0}
   camerapos: {fileID: 0}
+  ExteriordampingValue: 0
 --- !u!114 &816442590
 MonoBehaviour:
   m_ObjectHideFlags: 0

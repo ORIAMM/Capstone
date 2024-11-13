@@ -87,8 +87,9 @@ public class Player : MonoBehaviour, IEntity
 
         //Initialize Camera
         playerCam.PlayerMeshObject = PlayerMeshObject;
-        playerCam.FacingDirection = FacingDirection;   
+        playerCam.FacingDirection = FacingDirection; 
         playerCam.input = input;
+        playerCam.animator = _animator;
 
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
         //input.Movement.Jump.performed += (val) => movement.Jump();

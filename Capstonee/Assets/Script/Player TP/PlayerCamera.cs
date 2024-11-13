@@ -21,13 +21,27 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] float panning_speed;
     //public Action CameraLogic;
 
+    [HideInInspector] public Animator animator;
     [HideInInspector] public Transform FacingDirection;
     [HideInInspector] public Transform PlayerMeshObject;
     [HideInInspector] public PlayerControls input;
     private Camera cam;
 
     float mouseX, mouseY;
-    public Transform target;
+    public Transform Target;
+    public Transform target
+    {
+        get
+        {
+            return Target;
+        }
+        set
+        {
+            Target = value;
+            animator.SetBool("isCombat", Target != null);
+        }
+    }
+
     private void Awake()
     {
         cam = Camera.main;
