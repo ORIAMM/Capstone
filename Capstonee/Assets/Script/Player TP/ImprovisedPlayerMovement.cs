@@ -14,6 +14,7 @@ public class ImprovisedPlayerMovement : MonoBehaviour
     [Header("Friction Settings")]
     [SerializeField] private float dampingValue;
 
+    [HideInInspector] public Player core;
     [HideInInspector] public Transform player;
     [HideInInspector] public Transform FacingDirection;
     [HideInInspector] public Transform camerapos;
@@ -39,7 +40,7 @@ public class ImprovisedPlayerMovement : MonoBehaviour
         forward = baseInput.y * FacingDirection.forward;
         moveDirection += new Vector3(right.x, 0, right.z);
         moveDirection += new Vector3(forward.x, 0, forward.z);
-        if (baseInput.magnitude > 0f)
+        if (baseInput.magnitude > 0f && !core.isCombat)
         {
             float targetAngle = Mathf.Atan2(baseInput.x, baseInput.y) * Mathf.Rad2Deg + camerapos.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(player.eulerAngles.y, targetAngle, ref rotSpeed, rotSmoothTime);

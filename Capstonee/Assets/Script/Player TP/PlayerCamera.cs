@@ -21,6 +21,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] float panning_speed;
     //public Action CameraLogic;
 
+
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform FacingDirection;
     [HideInInspector] public Transform PlayerMeshObject;
@@ -28,7 +29,7 @@ public class PlayerCamera : MonoBehaviour
     private Camera cam;
 
     float mouseX, mouseY;
-    public Transform Target;
+    private Transform Target;
     public Transform target
     {
         get

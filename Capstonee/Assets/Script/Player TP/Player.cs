@@ -62,7 +62,8 @@ public class Player : MonoBehaviour, IEntity
     [SerializeField] private Transform FacingDirection;
 
     [SerializeField] private float Gravity = 9.81f;
-    bool Dodging => movement.isDodging != null;
+    public bool isCombat => playerCam.target != null;
+    public bool Dodging => movement.isDodging != null;
     private void OnEnable()
     {
         input.Movement.Enable();
@@ -84,6 +85,7 @@ public class Player : MonoBehaviour, IEntity
         movement.player = PlayerMeshObject;
         movement.FacingDirection = FacingDirection;
         movement.Set(controller, _animator);
+        movement.core = this;
 
         //Initialize Camera
         playerCam.PlayerMeshObject = PlayerMeshObject;
