@@ -56,7 +56,7 @@ public class PlayerCombat : MonoBehaviour
         Debug.Log("philips");
         isBlocking = true;
         yield return null;
-        string animBlock = " "
+        string animBlock = " ";
 
 
     }
