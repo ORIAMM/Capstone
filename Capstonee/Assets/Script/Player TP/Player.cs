@@ -93,14 +93,23 @@ public class Player : MonoBehaviour, IEntity
         playerCam.input = input;
         playerCam.animator = _animator;
 
+        //Initializa Combat
+        playerCombat.animator = _animator;
+
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
+        input.Controls.Attack.performed += (val) => playerCombat.Attack();
         //input.Movement.Jump.performed += (val) => movement.Jump();
         input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
     private void Update()
     {
-        movement.Move(MoveValue);
-        movement.ApplyMove(Gravity);
+        Debug.Log(playerCombat.coroutine);
+        if (playerCombat.coroutine == null)
+        {
+            
+            movement.Move(MoveValue);
+            movement.ApplyMove(Gravity);
+        }
     }
     public void ReceiveDamage(float value)
     {

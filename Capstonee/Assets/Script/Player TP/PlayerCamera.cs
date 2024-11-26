@@ -21,6 +21,9 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] float panning_speed;
     //public Action CameraLogic;
 
+/*    [Header("Equip")]
+    [SerializeField] private GameObject sword;
+    [SerializeField] private GameObject swordSheath;*/
 
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform FacingDirection;
@@ -30,6 +33,7 @@ public class PlayerCamera : MonoBehaviour
 
     float mouseX, mouseY;
     private Transform Target;
+    private bool isEquipped;
     public Transform target
     {
         get
@@ -87,6 +91,23 @@ public class PlayerCamera : MonoBehaviour
         Vector3 inputDir = new(cam.transform.forward.x, 0, cam.transform.forward.z);
         PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir, Time.deltaTime * rotationSpeed);
     }
+
+/*    public void Equip()
+    {
+        if (!isEquipped)
+        {
+            sword.SetActive(true);
+            swordSheath.SetActive(false);
+            isEquipped = !isEquipped;
+        } else
+        {
+            sword.SetActive(false);
+            swordSheath.SetActive(true);
+            isEquipped = !isEquipped;
+        }
+    }*/
+
+
     //public void SetCameraStyle(CameraStyle cameraStyle)
     //{
     //    _CameraStyle = cameraStyle;
