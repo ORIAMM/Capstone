@@ -37,8 +37,17 @@ public class PlayerCombat : MonoBehaviour
     public IEnumerator Attacking()
     {
         Debug.Log("philipsGants");
-        if (Time.time >= time || index + 1 <= TotalCombos) index = 0;
-        else index++;
+        if (Time.time >= time || index + 1 <= TotalCombos)
+        {
+            index = 0;
+            /*animator.SetBool("combatBreak", true);*/
+        }
+        else 
+        {
+            index++;
+            /*animator.SetBool("combatBreak", false);*/
+        }
+        
         isAttacking = true;
         Debug.Log(index);
 

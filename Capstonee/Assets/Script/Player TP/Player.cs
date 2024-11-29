@@ -105,12 +105,12 @@ public class Player : MonoBehaviour, IEntity
     private void Update()
     {
         Debug.Log(playerCombat.coroutine == null);
-        if (playerCombat.isAttacking == false)
+        if (playerCombat.isBlocking == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
-            if (playerCombat.isBlocking == true)
+            if (playerCombat.isAttacking == true)
             {
-                adjustedMoveValue *= 0.09f;
+                adjustedMoveValue *= 0.07f;
             } 
             movement.Move(adjustedMoveValue);
             movement.ApplyMove(Gravity);

@@ -896,7 +896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 0}
-  TotalCombos: 1
+  TotalCombos: 3
   ComboInterval: 0.3
   Weapon: {fileID: 0}
 --- !u!1 &350946623
