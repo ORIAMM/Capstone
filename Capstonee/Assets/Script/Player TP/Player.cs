@@ -98,18 +98,25 @@ public class Player : MonoBehaviour, IEntity
 
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
         input.Controls.Attack.performed += (val) => playerCombat.Attack();
+        input.Controls.Block.performed += (val) => playerCombat.Block();
         //input.Movement.Jump.performed += (val) => movement.Jump();
         input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
     private void Update()
     {
-        Debug.Log(playerCombat.coroutine);
-        if (playerCombat.coroutine == null)
+        Debug.Log(playerCombat.coroutine == null);
+        if (playerCombat.isAttacking == false)
         {
-            
-            movement.Move(MoveValue);
+            Vector2 adjustedMoveValue = MoveValue;
+            if (playerCombat.isBlocking == true)
+            {
+                adjustedMoveValue *= 0.09f;
+            } 
+            movement.Move(adjustedMoveValue);
             movement.ApplyMove(Gravity);
+
         }
+
     }
     public void ReceiveDamage(float value)
     {

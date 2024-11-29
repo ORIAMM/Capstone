@@ -22,7 +22,11 @@ public class PlayerCombat : MonoBehaviour
         get ; 
         private set; 
     }
-    private bool isBlocking = false;
+    public bool isBlocking
+    {
+        get;
+        private set;
+    }
     public Coroutine coroutine { get; private set; }
     float time = 0;
     int index = 0;
@@ -53,12 +57,27 @@ public class PlayerCombat : MonoBehaviour
 
     public IEnumerator Blocking()
     {
-        Debug.Log("philips");
-        isBlocking = true;
-        yield return null;
-        string animBlock = " ";
+        Debug.Log("Bloc");
+        if (isBlocking == false)
+        {
+            isBlocking = true;
+            animator.SetBool("isBlock", isBlocking);
+            yield return new WaitForSeconds(2f);
+
+            isBlocking = false;
+            animator.SetBool("isBlock", isBlocking);
+        }
+        coroutine = null;
 
 
+    }
+
+    public void Impact()
+    {
+        StopCoroutine(Blocking());
+        animator.SetTrigger("Impact");
+        isBlocking = false;
+        coroutine = null;
     }
 
 
