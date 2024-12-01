@@ -78,6 +78,7 @@ public class PlayerCamera : MonoBehaviour
         var MouseInput = input.Controls.Mouse.ReadValue<Vector2>();
         mouseX = MouseInput.x;
         mouseY = MouseInput.y;
+        _CameraStyle = CameraStyle.Basic;
     }
     void CombatCamera()
     {
@@ -90,6 +91,7 @@ public class PlayerCamera : MonoBehaviour
         mouseY = (viewPos.y - 0.5f + targetLockOffset.y) * panning_speed;
         Vector3 inputDir = new(cam.transform.forward.x, 0, cam.transform.forward.z);
         PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir, Time.deltaTime * rotationSpeed);
+        _CameraStyle = CameraStyle.Combat;
     }
 
 /*    public void Equip()

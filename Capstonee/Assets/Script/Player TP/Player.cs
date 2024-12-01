@@ -52,6 +52,7 @@ public class Player : MonoBehaviour, IEntity
     private Animator _animator;
     private PlayerControls input;
     private CharacterController controller;
+
     [Header("Main Settings")]
     [SerializeField] private ImprovisedPlayerMovement movement;
     [SerializeField] private PlayerCamera playerCam;
@@ -95,10 +96,10 @@ public class Player : MonoBehaviour, IEntity
 
         //Initializa Combat
         playerCombat.animator = _animator;
-
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
         input.Controls.Attack.performed += (val) => playerCombat.Attack();
         input.Controls.Block.performed += (val) => playerCombat.Block();
+
         //input.Movement.Jump.performed += (val) => movement.Jump();
         input.Movement.Dodge.performed += (val) => movement.Dodge();
     }

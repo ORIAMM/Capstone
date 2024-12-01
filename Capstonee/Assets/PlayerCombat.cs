@@ -36,18 +36,18 @@ public class PlayerCombat : MonoBehaviour
     public void Block() => coroutine ??= StartCoroutine(Blocking());
     public IEnumerator Attacking()
     {
-        Debug.Log("philipsGants");
+        Debug.Log($"index brp{index}");
         if (Time.time >= time || index + 1 <= TotalCombos)
         {
             index = 0;
             /*animator.SetBool("combatBreak", true);*/
         }
-        else 
+        else
         {
             index++;
             /*animator.SetBool("combatBreak", false);*/
         }
-        
+
         isAttacking = true;
         Debug.Log(index);
 
@@ -62,6 +62,7 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = false;
         time = Time.time + ComboInterval;
         coroutine = null;
+        
     }
 
     public IEnumerator Blocking()
