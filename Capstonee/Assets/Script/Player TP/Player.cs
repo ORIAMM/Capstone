@@ -57,6 +57,10 @@ public class Player : MonoBehaviour, IEntity
     [SerializeField] private ImprovisedPlayerMovement movement;
     [SerializeField] private PlayerCamera playerCam;
     [SerializeField] private PlayerCombat playerCombat;
+    [SerializeField] private float initial_time = 300f;
+    [SerializeField] private float DmgReduct = 0.5f;
+    private float HealthPlayer;
+    
 
     [Header("References")]
     [SerializeField] private Transform PlayerMeshObject;
@@ -81,6 +85,9 @@ public class Player : MonoBehaviour, IEntity
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
 
+        //Initialize Health
+        HealthPlayer = Time.time + initial_time;
+
         //Initialize Movement
         movement.camerapos = Camera.main.transform;
         movement.player = PlayerMeshObject;
@@ -99,13 +106,15 @@ public class Player : MonoBehaviour, IEntity
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
         input.Controls.Attack.performed += (val) => playerCombat.Attack();
         input.Controls.Block.performed += (val) => playerCombat.Block();
+        
+        //Debug Animation
+        input.Controls.Test.performed += (val) => playerCombat.Interrupt();
 
         //input.Movement.Jump.performed += (val) => movement.Jump();
         input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
     private void Update()
     {
-        Debug.Log(playerCombat.coroutine == null);
         if (playerCombat.isBlocking == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
@@ -117,17 +126,31 @@ public class Player : MonoBehaviour, IEntity
             movement.ApplyMove(Gravity);
 
         }
-
+        Ticking();
     }
+
+    public void Ticking()
+    {
+        if (HealthPlayer - Time.time <= 0)
+        {
+            OnDeath();
+        }
+    }
+
     public void ReceiveDamage(float value)
     {
-        if (!Dodging)
+        if (playerCombat.isBlocking)
         {
-
+            playerCombat.Impact();
+            HealthPlayer -= value * DmgReduct;
+        } else
+        {
+            playerCombat.Interrupt();
+            HealthPlayer -= value;
         }
     }
     public void OnDeath()
-    {
+    { 
         throw new System.NotImplementedException();
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();

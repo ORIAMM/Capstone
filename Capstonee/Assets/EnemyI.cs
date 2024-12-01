@@ -4,21 +4,20 @@ using UnityEngine;
 
 public class EnemyI : MonoBehaviour, IEntity
 {
-    public BoxCollider Collider;
+    public float healthbar;
+    [SerializeField] private PlayerCombat _PlayerCombat;
 
-    public void OnCollisionEnter(Collision collision)
-    {
-        
-
-        
-    }
 
     public void ReceiveDamage(float value)
     {
-
+        Debug.Log("JustinSayang");
+        healthbar -= value;
     }
     public void OnDeath()
     {
-
+        if (healthbar <= 0)
+        {
+            Debug.Log("Ambatublow");
+        }
     }
 }

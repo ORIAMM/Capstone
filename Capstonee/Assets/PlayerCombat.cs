@@ -17,6 +17,8 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] int TotalCombos = 0;
     public float ComboInterval = 0.3f;
     public Collider Weapon;
+    [SerializeField] private Transform attackPoint;
+    [SerializeField] private LayerMask EnemyL;
 
     public bool isAttacking {  
         get ; 
@@ -34,9 +36,10 @@ public class PlayerCombat : MonoBehaviour
     public void Attack() => coroutine ??= StartCoroutine(Attacking());
 
     public void Block() => coroutine ??= StartCoroutine(Blocking());
+
     public IEnumerator Attacking()
     {
-        Debug.Log($"index brp{index}");
+        
         if (Time.time >= time || index + 1 <= TotalCombos)
         {
             index = 0;
@@ -55,6 +58,8 @@ public class PlayerCombat : MonoBehaviour
         //float ProjectileSpawnTime = ProjectileTimeline[index].type == Attack_Type.projectile ? ProjectileTimeline[index].FrameInWhichProjectileSpawn / ProjectileTimeline[index].AnimationFrames : 10;
         string animationName = "Attack" + (index + 1).ToString();
         animator.Play(animationName);
+
+
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName(animationName));
         //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).normalizedTime < ProjectileSpawnTime;
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f);
@@ -64,6 +69,20 @@ public class PlayerCombat : MonoBehaviour
         coroutine = null;
         
     }
+
+    public void hit()
+    {
+        bool isHit = Physics.CheckSphere(attackPoint.position, 0.5f, EnemyL);
+        if (isHit)
+        {
+            Collider[] hitenemy = Physics.OverlapSphere(attackPoint.position, 0.5f, EnemyL);
+            foreach (Collider col in hitenemy)
+            {
+                col.gameObject.GetComponent<EnemyI>().ReceiveDamage(5);
+            }
+        }
+    }
+
 
     public IEnumerator Blocking()
     {
@@ -88,6 +107,15 @@ public class PlayerCombat : MonoBehaviour
         animator.SetTrigger("Impact");
         isBlocking = false;
         coroutine = null;
+    }
+
+    public void Interrupt()
+    {
+        StopAllCoroutines();
+        animator.SetTrigger("Fall");
+        coroutine = null;
+        isAttacking = false;
+        isBlocking = false;
     }
 
 
