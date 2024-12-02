@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyI : MonoBehaviour, IEntity
 {
     public float healthbar;
-    [SerializeField] private PlayerCombat _PlayerCombat;
+
     public float def;
 
     public void ReceiveDamage(float value)

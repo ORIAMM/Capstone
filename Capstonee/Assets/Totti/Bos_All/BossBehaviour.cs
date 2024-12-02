@@ -109,7 +109,7 @@ public class BossBehaviour : MonoBehaviour, IEntity
 
         CurrTP -= (int)value - DEF;
 
-        Debug.Log($"Boss took {value} damage. Current HP: {CurrTP}");
+        //Debug.Log($"Boss took {value} damage. Current HP: {CurrTP}");
 
         if (CurrTP <= 0)
         {
