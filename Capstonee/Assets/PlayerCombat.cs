@@ -19,7 +19,7 @@ public class PlayerCombat : MonoBehaviour
     public Collider Weapon;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask EnemyL;
-    private HashSet<EnemyI> hitEnemies = new HashSet<EnemyI>();
+    private HashSet<BossBehaviour> hitEnemies = new HashSet<BossBehaviour>();
 
     public bool isAttacking {  
         get ; 
@@ -52,7 +52,7 @@ public class PlayerCombat : MonoBehaviour
         string animationName = "Attack" + (index + 1).ToString();
 
         if (animationName == "Attack1") animator.Play(animationName);
-        else animator.CrossFade(animationName, 0.2f);
+        else animator.CrossFade(animationName, 0.25f);
 
         //animator.Play(animationName);
 
@@ -72,11 +72,11 @@ public class PlayerCombat : MonoBehaviour
             Collider[] hitenemy = Physics.OverlapSphere(attackPoint.position, 0.5f, EnemyL);
             foreach (Collider col in hitenemy)
             {
-                EnemyI enemy = col.gameObject.GetComponent<EnemyI>();
+                BossBehaviour enemy = col.gameObject.GetComponent<BossBehaviour>();
                 if (enemy != null && !hitEnemies.Contains(enemy))
                 {
                     hitEnemies.Add(enemy);
-                    enemy.ReceiveDamage(30);
+                    enemy.ReceiveDamage(70);
                 }
             }
         }
