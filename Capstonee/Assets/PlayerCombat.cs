@@ -56,15 +56,15 @@ public class PlayerCombat : MonoBehaviour
         //animator.Play(animationName);
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
-        //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).normalizedTime < ProjectileSpawnTime;
+
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName(animationName));
+
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
 
         isAttacking = false;
         time = Time.time + ComboInterval;
         coroutine = null;
-        
     }
-
     public void hit()
     {
         bool isHit = Physics.CheckSphere(attackPoint.position, 0.5f, EnemyL);
@@ -77,8 +77,6 @@ public class PlayerCombat : MonoBehaviour
             }
         }
     }
-
-
     public IEnumerator Blocking()
     {
         Debug.Log("Bloc");
@@ -95,7 +93,6 @@ public class PlayerCombat : MonoBehaviour
 
 
     }
-
     public void Impact()
     {
         StopCoroutine(Blocking());
@@ -103,7 +100,6 @@ public class PlayerCombat : MonoBehaviour
         isBlocking = false;
         coroutine = null;
     }
-
     public void Interrupt()
     {
         StopAllCoroutines();
@@ -112,6 +108,4 @@ public class PlayerCombat : MonoBehaviour
         isAttacking = false;
         isBlocking = false;
     }
-
-
 }
