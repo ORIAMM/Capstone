@@ -52,7 +52,7 @@ public class PlayerCombat : MonoBehaviour
         string animationName = "Attack" + (index + 1).ToString();
 
         if (animationName == "Attack1") animator.Play(animationName);
-        else animator.CrossFade(animationName, 0.7f);
+        else animator.CrossFade(animationName, 0.3f);
 
         //animator.Play(animationName);
 
