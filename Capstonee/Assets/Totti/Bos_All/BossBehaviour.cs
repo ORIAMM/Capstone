@@ -94,7 +94,7 @@ public class BossBehaviour : MonoBehaviour, IEntity
             agent.enabled = false;
         }
 
-        Debug.Log("Tururururu");
+        //Debug.Log("Tururururu");
     }
     void UpdateHealthBar()
     {
