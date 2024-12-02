@@ -8,8 +8,12 @@ public class UI_Controller : MonoBehaviour
     private Stack<GameObject> panelHistory = new Stack<GameObject>();
     private GameObject currentPanel;
 
+    public GameObject pauseMenuUI;
+    private bool isPaused;
     void Start()
     {
+        isPaused = false;
+
         foreach (var panel in panels)
         {
             panel.SetActive(false);
@@ -51,5 +55,31 @@ public class UI_Controller : MonoBehaviour
     public void ChangeScene(string SceneName)
     {
         SceneManager.LoadScene(SceneName);
+    }
+    public void FullScreen()
+    {
+        Screen.fullScreen = !Screen.fullScreen;
+    }
+    public void PauseGame()
+    {
+        if (!isPaused)
+        {
+            Time.timeScale = 0f;
+            isPaused = true;
+            if (pauseMenuUI != null)
+            {
+                pauseMenuUI.SetActive(true);
+            }
+        }
+
+        else if (isPaused)
+        {
+            Time.timeScale = 1f;
+            isPaused = false;
+            if (pauseMenuUI != null)
+            {
+                pauseMenuUI.SetActive(false);
+            }
+        }
     }
 }

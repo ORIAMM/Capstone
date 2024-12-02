@@ -10,6 +10,7 @@ public class BossCombat : MonoBehaviour
     private float lastAttackTime = 0f;
     public Transform player;
     private int Damage;
+    public int MawForce;
 
     private Animator animator;
     public bool isAttack = false;
@@ -22,7 +23,7 @@ public class BossCombat : MonoBehaviour
 
     private Dictionary<string, float> attackDurations = new Dictionary<string, float>()
     {
-        { "trigger1", 3f },    // Charge Pounce
+        { "trigger1", 4.2f },    // Charge Pounce
         { "trigger2", 5f },    // Claw Slash
         { "trigger3", 2.3f },  // Fissure
         { "trigger4", 3.2f },  // Pounce
@@ -120,30 +121,34 @@ public class BossCombat : MonoBehaviour
         if (attacktrigger == "trigger1")
         {
             StartCoroutine(GoToPlayer());
-            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+            StartCoroutine(HandleAttackWithDelay(1, 2.6f));
         }
-
-        if (attacktrigger == "trigger2")
+        else if (attacktrigger == "trigger2")
         {
-            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+            StartCoroutine(HandleAttackWithDelay(1, 1.6f));
+            StartCoroutine(HandleAttackWithDelay(0, 2.8f));
+            StartCoroutine(HandleAttackWithDelay(1, 4.8f));
         }
-
-        if (attacktrigger == "trigger3")
+        else if (attacktrigger == "trigger3")
         {
-            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+            StartCoroutine(HandleAttackWithDelay(1, 2.2f));
         }
-
-        if (attacktrigger == "trigger4")
+        else if (attacktrigger == "trigger4")
         {
             StartCoroutine(GoToPlayer());
-            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+            StartCoroutine(HandleAttackWithDelay(1, 1.7f));
         }
-
-        if (attacktrigger == "trigger5")
+        else if (attacktrigger == "trigger5")
         {
-            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+            StartCoroutine(HandleAttackWithDelay(2, 0.7f));
         }
     }
+    IEnumerator HandleAttackWithDelay(int hitboxType, float delay)
+    {
+        yield return new WaitForSeconds(delay); // Tunggu sesuai durasi
+        SpawnHitboxAt(hitboxType);
+    }
+
     private void SpawnHitboxAt(int attackPointIndex)
     {
         if (attackPointIndex < attackPoints.Length && hitboxPrefab != null)
@@ -159,20 +164,50 @@ public class BossCombat : MonoBehaviour
         }
     }
 
+    //Ini teleport
+    //private IEnumerator GoToPlayer()
+    //{
 
+    //    yield return new WaitForSeconds(attackDelay);
+
+    //    if (player != null)
+    //    {
+    //        transform.position = player.position;
+    //    }
+    //    else
+    //    {
+    //        //Debug.LogWarning("Player not found, teleportation failed.");
+    //    }
+    //}
+
+    //Ini Physics make lerp untuk interpolate, bukan teleport
     private IEnumerator GoToPlayer()
     {
-
         yield return new WaitForSeconds(attackDelay);
 
         if (player != null)
         {
-            transform.position = player.position;
-            Debug.Log("Lompatt");
+            float duration = 0.5f;
+            float elapsedTime = 0f;
+
+            Vector3 startPosition = transform.position;
+            Vector3 targetPosition = new Vector3(player.position.x, startPosition.y, player.position.z);
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+                yield return null;
+            }
+
+            transform.position = targetPosition;
         }
         else
         {
-            Debug.LogWarning("Player not found, teleportation failed.");
+            Debug.LogWarning("Player not found, cannot move.");
         }
     }
+
+
+
 }
