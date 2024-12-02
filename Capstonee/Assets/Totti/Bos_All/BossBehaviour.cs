@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class BossBehaviour : MonoBehaviour
+public class BossBehaviour : MonoBehaviour, IEntity
 {
     [Header("Object Reference")]
     public Transform player;
@@ -21,6 +21,7 @@ public class BossBehaviour : MonoBehaviour
     public float ASPD;
     public float CD;
 
+    public float SkillDuration;
     public int RotateSpeed;
     public float RotateOffset;
 
@@ -101,5 +102,23 @@ public class BossBehaviour : MonoBehaviour
         {
             BossHPBar.fillAmount = Mathf.Clamp01((float)CurrTP / MaxTP);
         }
+    }
+    public void ReceiveDamage(float value)
+    {
+        if (!isAlive) return;
+
+        CurrTP -= Mathf.Max(0, (int)value - DEF); // Damage dikurangi DEF
+        Debug.Log($"Boss took {value} damage. Current HP: {CurrTP}");
+
+        if (CurrTP <= 0)
+        {
+            CurrTP = 0;
+            isAlive = false;
+            OnDeath();
+        }
+    }
+    public void OnDeath()
+    {
+        BossDeath();
     }
 }

@@ -9,10 +9,16 @@ public class BossCombat : MonoBehaviour
     private float attackDelay;
     private float lastAttackTime = 0f;
     public Transform player;
+    private int Damage;
 
     private Animator animator;
     public bool isAttack = false;
     private BossBehaviour bossBehaviour;
+
+    [Header("Attack Settings")]
+    public GameObject hitboxPrefab;
+    public Transform[] attackPoints;
+    public LayerMask targetLayer;
 
     private Dictionary<string, float> attackDurations = new Dictionary<string, float>()
     {
@@ -28,6 +34,7 @@ public class BossCombat : MonoBehaviour
         animator = GetComponent<Animator>();
         bossBehaviour = GetComponent<BossBehaviour>();
         attackDelay = bossBehaviour.CD;
+        Damage = bossBehaviour.ATK;
 
         if (player == null)
         {
@@ -67,17 +74,22 @@ public class BossCombat : MonoBehaviour
         bossBehaviour.agent.isStopped = true;
         bossBehaviour.agent.speed = 0;
 
+        var Rtemp = bossBehaviour.RotateSpeed;
+        bossBehaviour.RotateSpeed = 0;
+
         int randomAttack = Random.Range(1, 6);
         string attackTrigger = $"trigger{randomAttack}";
         animator.SetTrigger(attackTrigger);
         Debug.Log(attackTrigger);
         float animationLength = GetAttackAnimationDuration(attackTrigger);
+        AttackFunction(attackTrigger);
 
         yield return new WaitForSeconds(animationLength);
 
         isAttack = false;
         bossBehaviour.agent.isStopped = false;
         bossBehaviour.agent.speed = bossBehaviour.SPD;
+        bossBehaviour.RotateSpeed = Rtemp;
     }
 
     private float GetAttackAnimationDuration(string attackTrigger)
@@ -102,5 +114,65 @@ public class BossCombat : MonoBehaviour
         StopAllCoroutines();
         bossBehaviour.isAlive = false;
         this.enabled = false;
+    }
+    void AttackFunction(string attacktrigger)
+    {
+        if (attacktrigger == "trigger1")
+        {
+            StartCoroutine(GoToPlayer());
+            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+        }
+
+        if (attacktrigger == "trigger2")
+        {
+            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+        }
+
+        if (attacktrigger == "trigger3")
+        {
+            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+        }
+
+        if (attacktrigger == "trigger4")
+        {
+            StartCoroutine(GoToPlayer());
+            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+        }
+
+        if (attacktrigger == "trigger5")
+        {
+            SpawnHitboxAt(1); //0 1 tangan kiri kanan
+        }
+    }
+    private void SpawnHitboxAt(int attackPointIndex)
+    {
+        if (attackPointIndex < attackPoints.Length && hitboxPrefab != null)
+        {
+            Transform spawnPoint = attackPoints[attackPointIndex];
+            GameObject hitbox = Instantiate(hitboxPrefab, spawnPoint.position, spawnPoint.rotation);
+            BossAttackHitbox attackHitbox = hitbox.GetComponent<BossAttackHitbox>();
+
+            if (attackHitbox != null)
+            {
+                attackHitbox.Initialize(bossBehaviour);
+            }
+        }
+    }
+
+
+    private IEnumerator GoToPlayer()
+    {
+
+        yield return new WaitForSeconds(attackDelay);
+
+        if (player != null)
+        {
+            transform.position = player.position;
+            Debug.Log("Lompatt");
+        }
+        else
+        {
+            Debug.LogWarning("Player not found, teleportation failed.");
+        }
     }
 }
