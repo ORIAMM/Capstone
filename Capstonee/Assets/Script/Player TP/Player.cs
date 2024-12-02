@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Windows;
@@ -42,7 +43,7 @@ public class TimedObject : MonoBehaviour
     }
     public virtual void OnContinue()
     {
-
+        
     }
 }
 
@@ -57,16 +58,18 @@ public class Player : MonoBehaviour, IEntity
     [SerializeField] private ImprovisedPlayerMovement movement;
     [SerializeField] private PlayerCamera playerCam;
     [SerializeField] private PlayerCombat playerCombat;
+
+    [Header("Player Stat")]
     [SerializeField] private float initial_time = 300f;
     [SerializeField] private float DmgReduct = 0.5f;
     private float HealthPlayer;
     
-
     [Header("References")]
     [SerializeField] private Transform PlayerMeshObject;
     [SerializeField] private Transform FacingDirection;
-
+ 
     [SerializeField] private float Gravity = 9.81f;
+    private TimeManager timeManager;
     public bool isCombat => playerCam.target != null;
     public bool Dodging => movement.isDodging != null;
     private void OnEnable()
@@ -101,12 +104,15 @@ public class Player : MonoBehaviour, IEntity
         playerCam.input = input;
         playerCam.animator = _animator;
 
-        //Initializa Combat
+        //Initialize Combat
+        timeManager = new TimeManager();
         playerCombat.animator = _animator;
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
         input.Controls.Attack.performed += (val) => playerCombat.Attack();
         input.Controls.Block.performed += (val) => playerCombat.Block();
-        
+        input.Controls.Skill.performed += (val) => timeManager.StopTime(5f);
+        input.Movement.Dodge.performed += (val) => playerCombat.Dodge();
+
         //Debug Animation
         input.Controls.Test.performed += (val) => playerCombat.Interrupt();
 
@@ -115,7 +121,7 @@ public class Player : MonoBehaviour, IEntity
     }
     private void Update()
     {
-        if (playerCombat.isBlocking == false)
+        if (playerCombat.isBlocking == false || playerCombat.isFall == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
             if (playerCombat.isAttacking == true)
@@ -139,15 +145,21 @@ public class Player : MonoBehaviour, IEntity
 
     public void ReceiveDamage(float value)
     {
-        if (playerCombat.isBlocking)
+        if (playerCombat.isFall == true || playerCombat.isDodging == true) return;
+        else
         {
-            playerCombat.Impact();
-            HealthPlayer -= value * DmgReduct;
-        } else
-        {
-            playerCombat.Interrupt();
-            HealthPlayer -= value;
+            if (playerCombat.isBlocking)
+            {
+                playerCombat.Impact();
+                HealthPlayer -= value * DmgReduct;
+            }
+            else
+            {
+                playerCombat.Interrupt();
+                HealthPlayer -= value;
+            }
         }
+        
     }
     public void OnDeath()
     {

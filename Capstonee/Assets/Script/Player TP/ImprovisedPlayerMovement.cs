@@ -21,7 +21,7 @@ public class ImprovisedPlayerMovement : MonoBehaviour
     [HideInInspector] public float ExteriordampingValue;
     CharacterController controller;
 
-    Animator animator;
+    public Animator animator;
     Vector3 moveDirection = Vector3.zero, right, forward;
     private float rotSpeed;
     [HideInInspector] public Coroutine isDodging;

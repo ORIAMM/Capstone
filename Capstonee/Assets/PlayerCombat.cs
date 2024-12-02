@@ -13,15 +13,24 @@ public struct Combo
 public class PlayerCombat : MonoBehaviour
 {
     //public List<Combo> ProjectileTimeline = new();
-    [HideInInspector] public Animator animator;
+    [Header("Combat")]
     [SerializeField] int TotalCombos = 0;
-    public float ComboInterval = 0.3f;
-    public Collider Weapon;
     [SerializeField] private Transform attackPoint;
-    [SerializeField] private LayerMask EnemyL;
-    private HashSet<BossBehaviour> hitEnemies = new HashSet<BossBehaviour>();
+    [SerializeField] private float DodgeCooltime;
+    public float ComboInterval = 0.3f;
 
-    public bool isAttacking {  
+    [Header("Reference")]
+    [HideInInspector] public Animator animator;
+    [SerializeField] private LayerMask EnemyL;
+
+    private ImprovisedPlayerMovement IPmovement;
+    private PlayerCamera PlayerCamera;
+    
+
+    private HashSet<BossBehaviour> hitEnemies = new HashSet<BossBehaviour>();
+    private CharacterController characterController;
+    public bool isAttacking 
+    {  
         get ; 
         private set; 
     }
@@ -30,13 +39,33 @@ public class PlayerCombat : MonoBehaviour
         get;
         private set;
     }
+    public bool isDodging
+    {
+        get;
+        private set;
+    }
+    public bool isFall
+    {
+        get;
+        private set;
+    }
     public Coroutine coroutine { get; private set; }
     float time = 0;
     int index = 0;
+    float dodgeTime = 0;
+    bool dodgeCooldown => Time.time >= dodgeTime;
+
+
+
+    private void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+        IPmovement = GetComponent<ImprovisedPlayerMovement>();
+    }
 
     public void Attack() => coroutine ??= StartCoroutine(Attacking());
-
     public void Block() => coroutine ??= StartCoroutine(Blocking());
+    public void Dodge() => coroutine ??= StartCoroutine(Dodging());
 
     public IEnumerator Attacking()
     {
@@ -64,6 +93,40 @@ public class PlayerCombat : MonoBehaviour
         time = Time.time + ComboInterval;
         coroutine = null;
     }
+    
+
+    public IEnumerator Blocking()
+    {
+        Debug.Log("Bloc");
+        if (isBlocking == false)
+        {
+            isBlocking = true;
+            animator.SetBool("isBlock", isBlocking);
+            yield return new WaitForSeconds(2f);
+
+            isBlocking = false;
+            animator.SetBool("isBlock", isBlocking);
+        }
+        coroutine = null;
+    }
+
+    public IEnumerator Dodging()
+    {
+        if (isDodging == false && dodgeCooldown)
+        {
+            dodgeTime = Time.time + DodgeCooltime;
+            isDodging = true;
+            animator.SetTrigger("Dodge");
+
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"));
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7f);
+
+            isDodging = false;
+            coroutine = null;
+
+        }
+    }
+
     public void hit()
     {
         bool isHit = Physics.CheckSphere(attackPoint.position, 0.5f, EnemyL);
@@ -85,23 +148,6 @@ public class PlayerCombat : MonoBehaviour
     {
         hitEnemies.Clear(); // Clear the HashSet at the end of the animation
     }
-
-    public IEnumerator Blocking()
-    {
-        Debug.Log("Bloc");
-        if (isBlocking == false)
-        {
-            isBlocking = true;
-            animator.SetBool("isBlock", isBlocking);
-            yield return new WaitForSeconds(2f);
-
-            isBlocking = false;
-            animator.SetBool("isBlock", isBlocking);
-        }
-        coroutine = null;
-
-
-    }
     public void Impact()
     {
         StopCoroutine(Blocking());
@@ -109,12 +155,17 @@ public class PlayerCombat : MonoBehaviour
         isBlocking = false;
         coroutine = null;
     }
-    public void Interrupt()
+    public IEnumerator Interrupt()
     {
-        StopAllCoroutines();
-        animator.SetTrigger("Fall");
-        coroutine = null;
-        isAttacking = false;
-        isBlocking = false;
+        if (isFall == false)
+        {
+            StopCoroutine(Attacking());
+            animator.SetTrigger("Fall");
+            yield return new WaitForSeconds(1f);
+
+            coroutine = null;
+            isAttacking = false;
+        }
+        
     }
 }

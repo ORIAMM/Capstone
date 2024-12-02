@@ -161,6 +161,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Escape",
+                    "type": "Button",
+                    "id": "6ca56cc2-be47-4ee8-a97d-97d759e99e59",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Skill",
+                    "type": "Button",
+                    "id": "0498bada-eb69-4b30-8cb1-d4daa9ef0bfb",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -178,7 +196,7 @@
                 {
                     "name": "",
                     "id": "2e957041-fdbf-4cf4-b0df-8623af4fa0fc",
-                    "path": "<Keyboard>/x",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -216,6 +234,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Test",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "87a8bf7d-9442-416c-b253-49e15b99e488",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "0ab91387-f57b-48f7-b393-9d144aaf3c51",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -183,6 +183,24 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Escape"",
+                    ""type"": ""Button"",
+                    ""id"": ""6ca56cc2-be47-4ee8-a97d-97d759e99e59"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skill"",
+                    ""type"": ""Button"",
+                    ""id"": ""0498bada-eb69-4b30-8cb1-d4daa9ef0bfb"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -200,7 +218,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""2e957041-fdbf-4cf4-b0df-8623af4fa0fc"",
-                    ""path"": ""<Keyboard>/x"",
+                    ""path"": ""<Keyboard>/e"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -240,6 +258,28 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""Test"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""87a8bf7d-9442-416c-b253-49e15b99e488"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Escape"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ab91387-f57b-48f7-b393-9d144aaf3c51"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skill"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -258,6 +298,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Controls_Attack = m_Controls.FindAction("Attack", throwIfNotFound: true);
         m_Controls_Block = m_Controls.FindAction("Block", throwIfNotFound: true);
         m_Controls_Test = m_Controls.FindAction("Test", throwIfNotFound: true);
+        m_Controls_Escape = m_Controls.FindAction("Escape", throwIfNotFound: true);
+        m_Controls_Skill = m_Controls.FindAction("Skill", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -386,6 +428,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Controls_Attack;
     private readonly InputAction m_Controls_Block;
     private readonly InputAction m_Controls_Test;
+    private readonly InputAction m_Controls_Escape;
+    private readonly InputAction m_Controls_Skill;
     public struct ControlsActions
     {
         private @PlayerControls m_Wrapper;
@@ -395,6 +439,8 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Attack => m_Wrapper.m_Controls_Attack;
         public InputAction @Block => m_Wrapper.m_Controls_Block;
         public InputAction @Test => m_Wrapper.m_Controls_Test;
+        public InputAction @Escape => m_Wrapper.m_Controls_Escape;
+        public InputAction @Skill => m_Wrapper.m_Controls_Skill;
         public InputActionMap Get() { return m_Wrapper.m_Controls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -419,6 +465,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Test.started += instance.OnTest;
             @Test.performed += instance.OnTest;
             @Test.canceled += instance.OnTest;
+            @Escape.started += instance.OnEscape;
+            @Escape.performed += instance.OnEscape;
+            @Escape.canceled += instance.OnEscape;
+            @Skill.started += instance.OnSkill;
+            @Skill.performed += instance.OnSkill;
+            @Skill.canceled += instance.OnSkill;
         }
 
         private void UnregisterCallbacks(IControlsActions instance)
@@ -438,6 +490,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Test.started -= instance.OnTest;
             @Test.performed -= instance.OnTest;
             @Test.canceled -= instance.OnTest;
+            @Escape.started -= instance.OnEscape;
+            @Escape.performed -= instance.OnEscape;
+            @Escape.canceled -= instance.OnEscape;
+            @Skill.started -= instance.OnSkill;
+            @Skill.performed -= instance.OnSkill;
+            @Skill.canceled -= instance.OnSkill;
         }
 
         public void RemoveCallbacks(IControlsActions instance)
@@ -468,5 +526,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnAttack(InputAction.CallbackContext context);
         void OnBlock(InputAction.CallbackContext context);
         void OnTest(InputAction.CallbackContext context);
+        void OnEscape(InputAction.CallbackContext context);
+        void OnSkill(InputAction.CallbackContext context);
     }
 }
