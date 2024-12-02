@@ -19,6 +19,7 @@ public class PlayerCombat : MonoBehaviour
     public Collider Weapon;
     [SerializeField] private Transform attackPoint;
     [SerializeField] private LayerMask EnemyL;
+    private HashSet<EnemyI> hitEnemies = new HashSet<EnemyI>();
 
     public bool isAttacking {  
         get ; 
@@ -73,10 +74,24 @@ public class PlayerCombat : MonoBehaviour
             Collider[] hitenemy = Physics.OverlapSphere(attackPoint.position, 0.5f, EnemyL);
             foreach (Collider col in hitenemy)
             {
-                col.gameObject.GetComponent<EnemyI>().ReceiveDamage(500);
+                EnemyI enemy = col.gameObject.GetComponent<EnemyI>();
+                if (enemy != null && !hitEnemies.Contains(enemy))
+                {
+                    hitEnemies.Add(enemy);
+                    enemy.ReceiveDamage(30);
+                }
             }
         }
     }
+<<<<<<< Updated upstream
+=======
+    public void ResetHitEnemies()
+    {
+        hitEnemies.Clear(); // Clear the HashSet at the end of the animation
+    }
+
+
+>>>>>>> Stashed changes
     public IEnumerator Blocking()
     {
         Debug.Log("Bloc");

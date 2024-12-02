@@ -10,7 +10,6 @@ public class EnemyI : MonoBehaviour, IEntity
 
     public void ReceiveDamage(float value)
     {
-        Debug.Log("JustinSayang");
         healthbar -= (value - def);
     }
     public void OnDeath()
