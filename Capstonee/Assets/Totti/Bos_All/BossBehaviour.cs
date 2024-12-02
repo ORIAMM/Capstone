@@ -107,7 +107,8 @@ public class BossBehaviour : MonoBehaviour, IEntity
     {
         if (!isAlive) return;
 
-        CurrTP -= Mathf.Max(0, (int)value - DEF); // Damage dikurangi DEF
+        CurrTP -= (int)value - DEF;
+
         Debug.Log($"Boss took {value} damage. Current HP: {CurrTP}");
 
         if (CurrTP <= 0)
