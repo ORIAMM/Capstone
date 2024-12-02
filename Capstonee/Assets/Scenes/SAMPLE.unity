@@ -8035,9 +8035,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a45e43432d6fc419f157d351762860, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthbar: 0
+  healthbar: 100
   _PlayerCombat: {fileID: 348057768}
-  def: 0
+  def: 50
 --- !u!1 &1509026190
 GameObject:
   m_ObjectHideFlags: 0
