@@ -39,17 +39,9 @@ public class PlayerCombat : MonoBehaviour
 
     public IEnumerator Attacking()
     {
-        
-        if (Time.time >= time || index + 1 <= TotalCombos)
-        {
-            index = 0;
-            /*animator.SetBool("combatBreak", true);*/
-        }
-        else
-        {
-            index++;
-            /*animator.SetBool("combatBreak", false);*/
-        }
+
+        if (Time.time >= time || index + 1 >= TotalCombos) index = 0;
+        else index++;
 
         isAttacking = true;
         Debug.Log(index);
@@ -57,12 +49,15 @@ public class PlayerCombat : MonoBehaviour
         yield return null;
         //float ProjectileSpawnTime = ProjectileTimeline[index].type == Attack_Type.projectile ? ProjectileTimeline[index].FrameInWhichProjectileSpawn / ProjectileTimeline[index].AnimationFrames : 10;
         string animationName = "Attack" + (index + 1).ToString();
-        animator.Play(animationName);
 
+        if (animationName == "Attack1") animator.Play(animationName);
+        else animator.CrossFade(animationName, 0.7f);
 
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName(animationName));
+        //animator.Play(animationName);
+
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
         //yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).normalizedTime < ProjectileSpawnTime;
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).normalizedTime >= 1f);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
 
         isAttacking = false;
         time = Time.time + ComboInterval;
@@ -78,7 +73,7 @@ public class PlayerCombat : MonoBehaviour
             Collider[] hitenemy = Physics.OverlapSphere(attackPoint.position, 0.5f, EnemyL);
             foreach (Collider col in hitenemy)
             {
-                col.gameObject.GetComponent<EnemyI>().ReceiveDamage(5);
+                col.gameObject.GetComponent<EnemyI>().ReceiveDamage(500);
             }
         }
     }

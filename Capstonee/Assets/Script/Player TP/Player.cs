@@ -150,8 +150,9 @@ public class Player : MonoBehaviour, IEntity
         }
     }
     public void OnDeath()
-    { 
-        throw new System.NotImplementedException();
+    {
+        /*throw new System.NotImplementedException();*/
+        Debug.Log("Mati");
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
 }
