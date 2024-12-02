@@ -58,8 +58,6 @@ public class PlayerCombat : MonoBehaviour
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
 
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName(animationName));
-
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
 
         isAttacking = false;
@@ -83,15 +81,11 @@ public class PlayerCombat : MonoBehaviour
             }
         }
     }
-<<<<<<< Updated upstream
-=======
     public void ResetHitEnemies()
     {
         hitEnemies.Clear(); // Clear the HashSet at the end of the animation
     }
 
-
->>>>>>> Stashed changes
     public IEnumerator Blocking()
     {
         Debug.Log("Bloc");
