@@ -21,11 +21,13 @@ public class BossBehaviour : MonoBehaviour, IEntity
     public float ASPD;
     public float CD;
 
+    public float AtkRange;
     public float SkillDuration;
     public int RotateSpeed;
     public float RotateOffset;
 
     public bool isAlive;
+    private bool isPlaySFX;
 
     private void Start()
     {
@@ -33,6 +35,7 @@ public class BossBehaviour : MonoBehaviour, IEntity
         bossCombat = GetComponent<BossCombat>();
         agent.speed = SPD;
         isAlive = true;
+        isPlaySFX = false;
     }
     private void Update()
     {
@@ -53,8 +56,21 @@ public class BossBehaviour : MonoBehaviour, IEntity
         if (player != null && !bossCombat.isAttack)
         {
             agent.SetDestination(player.position);
+            
+            //if (!isPlaySFX)
+            //{
+            //    Debug.Log("Musik");
+            //    SoundManager.instance.PlaySFX("BossStep");
+            //    isPlaySFX = true;
+            //}
         }
-
+        //else if (bossCombat.isAttack)
+        //{
+        //    Debug.Log("Berhentii");
+        //    SoundManager.instance.StopSFX("BossStep");
+        //    isPlaySFX = false;
+        //}
+        
         RotateToTarget(RotateOffset);
     }
     public void FindPlayer()

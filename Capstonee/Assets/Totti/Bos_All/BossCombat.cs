@@ -8,6 +8,7 @@ public class BossCombat : MonoBehaviour
     public float attackRange;
     private float attackDelay;
     private float lastAttackTime = 0f;
+    private string lastAttackTrigger;
     public Transform player;
     private int Damage;
     public int MawForce;
@@ -17,9 +18,10 @@ public class BossCombat : MonoBehaviour
     private BossBehaviour bossBehaviour;
 
     [Header("Attack Settings")]
-    public GameObject hitboxPrefab;
+    public List<GameObject> hitboxPrefabs = new List<GameObject>();
     public Transform[] attackPoints;
     public LayerMask targetLayer;
+    private bool SFXPlaying;
 
     private Dictionary<string, float> attackDurations = new Dictionary<string, float>()
     {
@@ -36,6 +38,7 @@ public class BossCombat : MonoBehaviour
         bossBehaviour = GetComponent<BossBehaviour>();
         attackDelay = bossBehaviour.CD;
         Damage = bossBehaviour.ATK;
+        lastAttackTrigger = "";
 
         if (player == null)
         {
@@ -49,6 +52,19 @@ public class BossCombat : MonoBehaviour
     }
     private void Update()
     {
+        if (bossBehaviour.isAlive)
+        {
+            if (!isAttack && !SoundManager.instance.IsSFXPlaying("BossStep"))
+            {
+                Debug.Log("Musik");
+                SoundManager.instance.PlaySFX("BossStep");
+            }
+            else if (isAttack && SoundManager.instance.IsSFXPlaying("BossStep"))
+            {
+                Debug.Log("Berhenti");
+                SoundManager.instance.StopSFX("BossStep");
+            }
+        }
 
         if (bossBehaviour.CurrTP > 0 && player != null)
         {
@@ -78,8 +94,18 @@ public class BossCombat : MonoBehaviour
         var Rtemp = bossBehaviour.RotateSpeed;
         bossBehaviour.RotateSpeed = 0;
 
-        int randomAttack = Random.Range(1, 6);
-        string attackTrigger = $"trigger{randomAttack}";
+        int randomAttack;
+        string attackTrigger;
+
+        do
+        {
+            randomAttack = Random.Range(1, 6);
+            attackTrigger = $"trigger{randomAttack}";
+        } 
+        while (attackTrigger == lastAttackTrigger);
+
+        lastAttackTrigger = attackTrigger;
+
         animator.SetTrigger(attackTrigger);
         Debug.Log(attackTrigger);
         float animationLength = GetAttackAnimationDuration(attackTrigger);
@@ -95,7 +121,6 @@ public class BossCombat : MonoBehaviour
 
     private float GetAttackAnimationDuration(string attackTrigger)
     {
-        // Memeriksa apakah trigger ada di dalam dictionary dan mengambil durasinya
         if (attackDurations.ContainsKey(attackTrigger))
         {
             return attackDurations[attackTrigger];
@@ -118,43 +143,51 @@ public class BossCombat : MonoBehaviour
     }
     void AttackFunction(string attacktrigger)
     {
+
         if (attacktrigger == "trigger1")
         {
+            SoundManager.instance.PlaySFX("ChargePounch");
             StartCoroutine(GoToPlayer());
-            StartCoroutine(HandleAttackWithDelay(1, 2.6f));
+            StartCoroutine(HandleAttackWithDelay(1, 2.6f, 0));
         }
         else if (attacktrigger == "trigger2")
         {
-            StartCoroutine(HandleAttackWithDelay(1, 1.6f));
-            StartCoroutine(HandleAttackWithDelay(0, 2.8f));
-            StartCoroutine(HandleAttackWithDelay(1, 4.8f));
+            SoundManager.instance.PlaySFX("Claws");
+            StartCoroutine(HandleAttackWithDelay(1, 1.5f, 1));
+            StartCoroutine(HandleAttackWithDelay(0, 2.8f, 1));
+            StartCoroutine(HandleAttackWithDelay(1, 4.9f, 2));
+            SoundManager.instance.PlaySFX("Roar");
         }
         else if (attacktrigger == "trigger3")
         {
-            StartCoroutine(HandleAttackWithDelay(1, 2.2f));
+            SoundManager.instance.PlaySFX("Roar");
+            StartCoroutine(HandleAttackWithDelay(1, 2.2f, 3));
+            SoundManager.instance.PlaySFX("Fissure");
         }
         else if (attacktrigger == "trigger4")
         {
             StartCoroutine(GoToPlayer());
-            StartCoroutine(HandleAttackWithDelay(1, 1.7f));
+            StartCoroutine(HandleAttackWithDelay(1, 1.7f, 4));
+            SoundManager.instance.PlaySFX("Pounch");
         }
         else if (attacktrigger == "trigger5")
         {
-            StartCoroutine(HandleAttackWithDelay(2, 0.7f));
+            SoundManager.instance.PlaySFX("Kick");
+            StartCoroutine(HandleAttackWithDelay(2, 0.7f, 5));
         }
     }
-    IEnumerator HandleAttackWithDelay(int hitboxType, float delay)
+    IEnumerator HandleAttackWithDelay(int hitboxType, float delay, int hitboxIndex)
     {
-        yield return new WaitForSeconds(delay); // Tunggu sesuai durasi
-        SpawnHitboxAt(hitboxType);
+        yield return new WaitForSeconds(delay);
+        SpawnHitboxAt(hitboxType, hitboxIndex);
     }
 
-    private void SpawnHitboxAt(int attackPointIndex)
+    private void SpawnHitboxAt(int attackPointIndex, int prefabIndex)
     {
-        if (attackPointIndex < attackPoints.Length && hitboxPrefab != null)
+        if (attackPointIndex < attackPoints.Length && hitboxPrefabs != null)
         {
             Transform spawnPoint = attackPoints[attackPointIndex];
-            GameObject hitbox = Instantiate(hitboxPrefab, spawnPoint.position, spawnPoint.rotation);
+            GameObject hitbox = Instantiate(hitboxPrefabs[prefabIndex], spawnPoint.position, spawnPoint.rotation);
             BossAttackHitbox attackHitbox = hitbox.GetComponent<BossAttackHitbox>();
 
             if (attackHitbox != null)
