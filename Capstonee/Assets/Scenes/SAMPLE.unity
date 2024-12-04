@@ -662,6 +662,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Maw J Laygo
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fc2f0a39dd156b640ae67d27f7e29cd5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -875,8 +880,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cinemachineFreeLook: {fileID: 610583291}
-  _CameraStyle: 1
   rotationSpeed: 10
+  _CameraStyle: 1
   radius: 4.1
   targetLockOffset: {x: 0, y: 0}
   maxDistance: 3.77
@@ -884,7 +889,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  panning_speed: 64
+  panning_speed: 79
   animator: {fileID: 0}
   FacingDirection: {fileID: 0}
   PlayerMeshObject: {fileID: 0}
@@ -908,6 +913,7 @@ MonoBehaviour:
   EnemyL:
     serializedVersion: 2
     m_Bits: 512
+  _CameraStyle: 0
   player: {fileID: 0}
 --- !u!114 &348057769
 MonoBehaviour:
@@ -4421,8 +4427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cinemachineFreeLook: {fileID: 0}
-  _CameraStyle: 0
   rotationSpeed: 1
+  _CameraStyle: 0
   radius: 0
   targetLockOffset: {x: 0, y: 0}
   maxDistance: 0

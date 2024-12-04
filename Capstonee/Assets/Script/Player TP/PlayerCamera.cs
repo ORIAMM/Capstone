@@ -9,8 +9,9 @@ public class PlayerCamera : MonoBehaviour
 {
     [Header("Camera Settings")]
     [SerializeField] private CinemachineFreeLook cinemachineFreeLook;
-    [SerializeField] private CameraStyle _CameraStyle;
     [SerializeField] private float rotationSpeed;
+    public CameraStyle _CameraStyle;
+    
 
     [Header("Combat Settings")]
     [SerializeField] float radius;

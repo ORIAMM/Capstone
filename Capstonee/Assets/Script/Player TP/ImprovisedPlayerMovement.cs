@@ -47,21 +47,7 @@ public class ImprovisedPlayerMovement : MonoBehaviour
             player.rotation = Quaternion.Euler(0f, angle, 0f);
         }
     }
-    public void Dodge()
-    {
-        if(isDodging == null && dodgeCooldown)
-        {
-            //isDodging = StartCoroutine(StartDodge());
-        }
-    }
-    public IEnumerator StartDodge()
-    {
-        dodgeTime = Time.time + DodgeCooltime;
-        animator.Play("Dodge");
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).IsName("Dodge"));
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(1).normalizedTime < 1f);
-    }
-    public void Jump() => moveDirection.y = controller.isGrounded ? JumpPower : 0f;
+
     public void ApplyMove(float gravity)
     {
         float yMagnitude = moveDirection.y;
@@ -79,4 +65,11 @@ public class ImprovisedPlayerMovement : MonoBehaviour
             animator.SetFloat("VelY", Vector3.Dot(forwardVel, velValue) / player_speed);
         }
     }
+
+    public void Dash()
+    {
+        controller.Move(moveDirection * Time.deltaTime);
+        
+    }
+
 }

@@ -55,12 +55,13 @@ public class Player : MonoBehaviour, IEntity
     private void Awake()
     {
         Cursor.visible = false;
-
-
         input = new();
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
         timeManager = GetComponent<TimeManager>();
+
+        playerCam = GetComponent<PlayerCamera>();
+        playerCombat = GetComponent<PlayerCombat>();
 
         //Initialize Health
         HealthPlayer = Time.time + initial_time;
@@ -77,11 +78,12 @@ public class Player : MonoBehaviour, IEntity
         playerCam.FacingDirection = FacingDirection; 
         playerCam.input = input;
         playerCam.animator = _animator;
+        playerCam._CameraStyle = _CameraStyle;
 
         //Initialize Combat
         playerCombat.animator = _animator;
         timeManager.animator = _animator;
-        playerCombat.player = PlayerMeshObject;
+        playerCombat.player =  PlayerMeshObject;
 
         //Initialize Input
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
@@ -94,12 +96,14 @@ public class Player : MonoBehaviour, IEntity
         input.Controls.Test.performed += (val) => ReceiveDamage(5);
 
         //input.Movement.Jump.performed += (val) => movement.Jump();
-        input.Movement.Dodge.performed += (val) => movement.Dodge();
+        //input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
 
     private void Update()
     {
-        if (playerCombat.isBlocking == false || playerCombat.isFall == false)
+        Debug.Log(PlayerMeshObject.forward);
+        
+        if (playerCombat.isBlocking == false && playerCombat.isFall == false && playerCombat.isDodging == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
             switch (_CameraStyle)
@@ -112,7 +116,7 @@ public class Player : MonoBehaviour, IEntity
                     adjustedMoveValue *= 0.5f;
                     if (playerCombat.isAttacking == true)
                     {
-                        adjustedMoveValue *= 0.02f;
+                        adjustedMoveValue *= 0.05f;
                     }
                     movement.Move(adjustedMoveValue);
                     movement.ApplyMove(Gravity);
@@ -136,13 +140,16 @@ public class Player : MonoBehaviour, IEntity
         if (playerCombat.isFall == true || playerCombat.isDodging == true) return;
         else
         {
+            Debug.Log("receive");
             if (playerCombat.isBlocking == true)
             {
+                Debug.Log("Blocked");
                 playerCombat.Impact();
                 HealthPlayer -= value * DmgReduct;
             }
             else
             {
+                Debug.Log("Fall");
                 playerCombat.Interrupt();
                 HealthPlayer -= value;
             }
