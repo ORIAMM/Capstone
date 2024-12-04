@@ -25,32 +25,35 @@ public class UI_Controller : MonoBehaviour
             currentPanel = panels[0];
             currentPanel.SetActive(true);
         }
-
+        
         GetMusic();
     }
     public void GetMusic()
     {
+        SoundManager.instance.StopAllMusic();
         currentScene = SceneManager.GetActiveScene().name;
 
         switch (currentScene)
         {
             case "GameMenu":
-                //Debug.Log("MAin");
+                //Debug.Log("Main");
                 currentMusic = "MainMenuTheme";
+                SoundManager.instance.LoadPref();
                 SoundManager.instance.PlayMusic("MainMenuTheme");
                 break;
 
             case "BossFight":
-                //Debug.Log("MAin2");
                 currentMusic = "BossFightTheme";
+                SoundManager.instance.LoadPref();
                 SoundManager.instance.PlayMusic("BossFightTheme");
                 break;
 
             default:
-                //Debug.LogWarning("No audio clip assigned for this scene.");
+                Debug.LogWarning("No audio clip assigned for this scene.");
                 break;
         }
     }
+
     public void ButtonClicked()
     {
         SoundManager.instance.PlaySFX("UI_Click");
@@ -101,7 +104,7 @@ public class UI_Controller : MonoBehaviour
             {
                 pauseMenuUI.SetActive(true);
             }
-            SoundManager.instance.PauseMusic(currentScene);
+            SoundManager.instance.PauseMusic();
             SoundManager.instance.PauseSfx();
         }
 
@@ -113,8 +116,16 @@ public class UI_Controller : MonoBehaviour
             {
                 pauseMenuUI.SetActive(false);
             }
-            SoundManager.instance.UnPauseMusic(currentScene);
+            SoundManager.instance.UnPauseMusic();
             SoundManager.instance.UnPauseSfx();
         }
+    }
+    public void VictoryPanel()
+    {
+
+    }
+    public void DefeatPanel()
+    {
+
     }
 }

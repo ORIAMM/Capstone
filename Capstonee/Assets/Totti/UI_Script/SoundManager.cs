@@ -2,6 +2,7 @@ using UnityEngine.Audio;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+
 public class SoundManager : MonoBehaviour
 {
     [System.Serializable]
@@ -22,12 +23,13 @@ public class SoundManager : MonoBehaviour
     public Slider musicSlider;
     public Slider sfxSlider;
 
-    private float masterVolume;
+    private float masterVolume = 1f;
 
     public Sound[] music;
     public Sound[] sfx;
 
     public static SoundManager instance;
+
     private void Awake()
     {
         if (instance == null)
@@ -44,53 +46,52 @@ public class SoundManager : MonoBehaviour
         InitializeSounds(music);
         InitializeSounds(sfx);
     }
+
     private void Start()
     {
         LoadPref();
     }
+
     public void SavePref()
     {
         if (masterSlider != null)
         {
-            MusicVolume(masterSlider.value);
             PlayerPrefs.SetFloat("MasterVolume", masterSlider.value);
         }
+
         if (musicSlider != null)
         {
-            MusicVolume(musicSlider.value);
             PlayerPrefs.SetFloat("MusicVolume", musicSlider.value);
         }
+
         if (sfxSlider != null)
         {
-            SFXVolume(sfxSlider.value);
             PlayerPrefs.SetFloat("SFXVolume", sfxSlider.value);
         }
+
+        PlayerPrefs.Save();
+        ApplyVolume();
+        Debug.Log("Preferences Saved!");
     }
+
     public void LoadPref()
     {
-        // Load Master Volume
-        if (PlayerPrefs.HasKey("MasterVolume") && masterSlider != null)
+        if (masterSlider != null && PlayerPrefs.HasKey("MasterVolume"))
         {
-            float masterVolume = PlayerPrefs.GetFloat("MasterVolume");
-            masterSlider.value = masterVolume; // Set slider value
-            MasterVolume(masterVolume);       // Apply volume
+            masterSlider.value = PlayerPrefs.GetFloat("MasterVolume");
         }
 
-        // Load Music Volume
-        if (PlayerPrefs.HasKey("MusicVolume") && musicSlider != null)
+        if (musicSlider != null && PlayerPrefs.HasKey("MusicVolume"))
         {
-            float musicVolume = PlayerPrefs.GetFloat("MusicVolume");
-            musicSlider.value = musicVolume; // Set slider value
-            MusicVolume(musicVolume);        // Apply volume
+            musicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
         }
 
-        // Load SFX Volume
-        if (PlayerPrefs.HasKey("SFXVolume") && sfxSlider != null)
+        if (sfxSlider != null && PlayerPrefs.HasKey("SFXVolume"))
         {
-            float sfxVolume = PlayerPrefs.GetFloat("SFXVolume");
-            sfxSlider.value = sfxVolume; // Set slider value
-            SFXVolume(sfxVolume);        // Apply volume
+            sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
         }
+
+        ApplyVolume();
     }
 
     private void InitializeSounds(Sound[] sounds)
@@ -103,40 +104,40 @@ public class SoundManager : MonoBehaviour
             s.source.volume = s.Volume;
         }
     }
+
     public void PlaySFX(string name)
     {
-        Sound s = Array.Find(sfx, sfx => sfx.name == name);
-        if (s == null)
+        Sound s = Array.Find(sfx, sound => sound.name == name);
+        if (s != null)
         {
-            return;
+            s.source.Play();
         }
-        s.source.Play();
     }
+
     public void PlayMusic(string name)
     {
-        Sound s = Array.Find(music, music => music.name == name);
-        if (s == null)
+        Sound s = Array.Find(music, sound => sound.name == name);
+        if (s != null)
         {
-            return;
+            s.source.Play();
         }
-        s.source.volume = 0f;
-        s.source.Play();
     }
 
     public void StopMusic(string name)
     {
-        Sound s = Array.Find(music, music => music.name == name);
-        if (s == null)
+        Sound s = Array.Find(music, sound => sound.name == name);
+        if (s != null)
         {
-            return;
+            s.source.Stop();
         }
     }
+
     public void StopSFX(string name)
     {
-        Sound s = Array.Find(sfx, sfx => sfx.name == name);
-        if (s == null)
+        Sound s = Array.Find(sfx, sound => sound.name == name);
+        if (s != null)
         {
-            return;
+            s.source.Stop();
         }
     }
 
@@ -147,84 +148,104 @@ public class SoundManager : MonoBehaviour
             s.source.Stop();
         }
     }
-    public void StopAllSfx()
+
+    public void StopAllSFX()
     {
         foreach (Sound s in sfx)
         {
             s.source.Stop();
         }
     }
+
     public void MusicVolume(float volume)
     {
         foreach (Sound s in music)
         {
-            s.source.volume = volume;
+            s.source.volume = s.Volume * volume * (masterSlider != null ? masterSlider.value : 1f);
         }
     }
+
     public void SFXVolume(float volume)
     {
         foreach (Sound s in sfx)
         {
-            s.source.volume = volume;
+            s.source.volume = s.Volume * volume * (masterSlider != null ? masterSlider.value : 1f);
         }
     }
+
     public void MasterVolume(float volume)
     {
         masterVolume = volume;
+        ApplyVolume();
+    }
 
-        // Scale music volume
+    private void ApplyVolume()
+    {
+        float master = masterSlider != null ? masterSlider.value : 1f;
+        float musicVol = musicSlider != null ? musicSlider.value : 1f;
+        float sfxVol = sfxSlider != null ? sfxSlider.value : 1f;
+
         foreach (Sound s in music)
         {
-            s.source.volume = s.Volume * musicSlider.value * masterVolume;
+            s.source.volume = s.Volume * musicVol * master;
         }
 
-        // Scale SFX volume
         foreach (Sound s in sfx)
         {
-            s.source.volume = s.Volume * sfxSlider.value * masterVolume;
+            s.source.volume = s.Volume * sfxVol * master;
         }
-    }
-    public void PauseSfx()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            sfx[i].source.Pause();
-        }
-    }
-    public void UnPauseSfx()
-    {
-        for (int i = 0; i < 6; i++)
-        {
-            sfx[i].source.UnPause();
-        }
+
+        //Debug.Log("Volume Applied!");
     }
 
-    public void PauseMusic(string name)
-    {
-        Sound s = Array.Find(music, music => music.name == name);
-        if (s == null)
-        {
-            return;
-        }
-        s.source.Pause();
-    }
-
-    public void UnPauseMusic(string name)
-    {
-        Sound s = Array.Find(music, music => music.name == name);
-        if (s == null)
-        {
-            return;
-        }
-        s.source.UnPause();
-    }
     public bool IsSFXPlaying(string name)
     {
-        Sound s = Array.Find(sfx, sfx => sfx.name == name);
-        if (s == null)
-        {
-            return false;
-        }
-        return s.source.isPlaying;
+        Sound s = Array.Find(sfx, sound => sound.name == name);
+        return s != null && s.source.isPlaying;
     }
+
+    public void PauseMusic()
+    {
+        foreach (Sound s in music)
+        {
+            if (s.source.isPlaying)
+            {
+                s.source.Pause();
+            }
+        }
+    }
+
+    public void PauseSfx()
+    {
+        foreach (Sound s in sfx)
+        {
+            if (s.source.isPlaying)
+            {
+                s.source.Pause();
+            }
+        }
+    }
+
+    public void UnPauseMusic()
+    {
+        foreach (Sound s in music)
+        {
+            if (!s.source.isPlaying)
+            {
+                s.source.UnPause();
+            }
+        }
+    }
+
+    public void UnPauseSfx()
+    {
+        foreach (Sound s in sfx)
+        {
+            if (!s.source.isPlaying)
+            {
+                s.source.UnPause();
+            }
+        }
+    }
+
 }

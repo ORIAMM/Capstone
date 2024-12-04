@@ -4925,8 +4925,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d589e19a23d01b49aacecc4c47b8829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
-  duration: 0
+  damage: 110
+  duration: 3
   range: 2.39
   targetLayer:
     serializedVersion: 2
