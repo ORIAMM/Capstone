@@ -100,20 +100,20 @@ public class PlayerCamera : MonoBehaviour
         //_CameraStyle = CameraStyle.Combat;
     }
 
-/*    public void Equip()
-    {
-        if (!isEquipped)
+    /*    public void Equip()
         {
-            sword.SetActive(true);
-            swordSheath.SetActive(false);
-            isEquipped = !isEquipped;
-        } else
-        {
-            sword.SetActive(false);
-            swordSheath.SetActive(true);
-            isEquipped = !isEquipped;
-        }
-    }*/
+            if (!isEquipped)
+            {
+                sword.SetActive(true);
+                swordSheath.SetActive(false);
+                isEquipped = !isEquipped;
+            } else
+            {
+                sword.SetActive(false);
+                swordSheath.SetActive(true);
+                isEquipped = !isEquipped;
+            }
+        }*/
 
 
     //public void SetCameraStyle(CameraStyle cameraStyle)
@@ -141,12 +141,19 @@ public class PlayerCamera : MonoBehaviour
     //    Gizmos.color = Color.blue;
     //    Gizmos.DrawLine(cam.transform.position, cam.transform.position + Vector3.right * minDistance);
     //}
-    public void GetTarget() => target = target ? null : FindClosest().transform;
+    public void GetTarget()
+    {
+        GameObject obj = target ? null : FindClosest(); target = obj ? target = obj.transform : null;
+    }
     private GameObject FindClosest()
     {
         var hits = Physics.SphereCastAll(cam.transform.position, radius, cam.transform.forward, maxDistance, layerMask).ToList();
-        GameObject hit = hits.Find(x => x.collider.CompareTag("Enemy")).collider.gameObject;
-        return hit.GetComponent<Collider>().gameObject;
+        RaycastHit hit = hits.Find(x => x.collider.CompareTag("Enemy"));
+        if(hit.collider)
+        {
+            return hit.collider.gameObject;
+        }
+        return null;
     }
 
 }

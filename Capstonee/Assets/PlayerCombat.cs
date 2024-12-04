@@ -117,7 +117,7 @@ public class PlayerCombat : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
             float dodgeDuration = 0.6f;
             float elapsedTime = 0f;
-            float dodgeSpeed = 7f;
+            float dodgeSpeed = 4f;
             if (DodgeInput.magnitude == 0)
             {
                 while (elapsedTime < dodgeDuration)
@@ -130,19 +130,8 @@ public class PlayerCombat : MonoBehaviour
 
                     yield return null;
                 }
-            } else
-            {
-                while (elapsedTime < dodgeDuration)
-                {
-                    elapsedTime += Time.deltaTime;
-
-                    IPmovement.Move(DodgeInput.normalized * dodgeSpeed);
-
-                    IPmovement.ApplyMove(0);
-
-                    yield return null;
-                }
             }
+            else yield return null;
             isDodging = false;
             coroutine = null;
 
@@ -182,12 +171,14 @@ public class PlayerCombat : MonoBehaviour
         Debug.Log("Interrupt");
         if (isFall == false)
         {
+            isFall = true;
             StopCoroutine(Attacking());
             animator.SetTrigger("Fall");
             yield return new WaitForSeconds(1f);
 
             coroutine = null;
             isAttacking = false;
+            isFall = false;
         }
         
     }

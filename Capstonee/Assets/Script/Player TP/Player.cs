@@ -91,7 +91,7 @@ public class Player : MonoBehaviour, IEntity
         input.Movement.Dodge.performed += (val) => playerCombat.Dodge(MoveValue);
 
         //Debug Animation
-        input.Controls.Test.performed += (val) => playerCombat.Interrupt();
+        input.Controls.Test.performed += (val) => ReceiveDamage(5);
 
         //input.Movement.Jump.performed += (val) => movement.Jump();
         input.Movement.Dodge.performed += (val) => movement.Dodge();
@@ -136,7 +136,7 @@ public class Player : MonoBehaviour, IEntity
         if (playerCombat.isFall == true || playerCombat.isDodging == true) return;
         else
         {
-            if (playerCombat.isBlocking)
+            if (playerCombat.isBlocking == true)
             {
                 playerCombat.Impact();
                 HealthPlayer -= value * DmgReduct;
@@ -151,7 +151,6 @@ public class Player : MonoBehaviour, IEntity
     }
     public void OnDeath()
     {
-        /*throw new System.NotImplementedException();*/
         Debug.Log("Mati");
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
