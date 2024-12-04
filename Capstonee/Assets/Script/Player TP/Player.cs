@@ -54,6 +54,9 @@ public class Player : MonoBehaviour, IEntity
     }
     private void Awake()
     {
+        Cursor.visible = false;
+
+
         input = new();
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();

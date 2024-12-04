@@ -114,23 +114,35 @@ public class PlayerCombat : MonoBehaviour
             dodgeTime = Time.time + DodgeCooltime;
             isDodging = true;
             animator.SetTrigger("Dodge");
-
             yield return new WaitForSeconds(0.1f);
-            float dodgeDuration = 0.6f; 
+            float dodgeDuration = 0.6f;
             float elapsedTime = 0f;
-            float dodgeSpeed = 7f; 
-
-            while (elapsedTime < dodgeDuration)
+            float dodgeSpeed = 7f;
+            if (DodgeInput.magnitude == 0)
             {
-                elapsedTime += Time.deltaTime;
+                while (elapsedTime < dodgeDuration)
+                {
+                    elapsedTime += Time.deltaTime;
 
-                IPmovement.Move(DodgeInput.normalized * dodgeSpeed);
+                    IPmovement.Move(player.right * dodgeSpeed);
 
-                IPmovement.ApplyMove(0);
+                    IPmovement.ApplyMove(0);
 
-                yield return null;
+                    yield return null;
+                }
+            } else
+            {
+                while (elapsedTime < dodgeDuration)
+                {
+                    elapsedTime += Time.deltaTime;
+
+                    IPmovement.Move(DodgeInput.normalized * dodgeSpeed);
+
+                    IPmovement.ApplyMove(0);
+
+                    yield return null;
+                }
             }
-
             isDodging = false;
             coroutine = null;
 
@@ -167,6 +179,7 @@ public class PlayerCombat : MonoBehaviour
     }
     public IEnumerator Interrupt()
     {
+        Debug.Log("Interrupt");
         if (isFall == false)
         {
             StopCoroutine(Attacking());

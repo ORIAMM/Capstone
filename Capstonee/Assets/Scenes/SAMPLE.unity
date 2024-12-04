@@ -840,6 +840,7 @@ MonoBehaviour:
   PlayerMeshObject: {fileID: 543450652366004746}
   FacingDirection: {fileID: 337419806}
   Gravity: 9.81
+  _CameraStyle: 0
 --- !u!95 &348057766
 Animator:
   serializedVersion: 5
@@ -901,12 +902,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TotalCombos: 3
   attackPoint: {fileID: 1526015123}
-  DodgeCooltime: 0
+  DodgeCooltime: 1
   ComboInterval: 0.5
   animator: {fileID: 0}
   EnemyL:
     serializedVersion: 2
     m_Bits: 512
+  player: {fileID: 0}
 --- !u!114 &348057769
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4379,6 +4381,7 @@ MonoBehaviour:
   PlayerMeshObject: {fileID: 816442587}
   FacingDirection: {fileID: 1487130882}
   Gravity: 9.81
+  _CameraStyle: 0
 --- !u!143 &816442591
 CharacterController:
   m_ObjectHideFlags: 0
