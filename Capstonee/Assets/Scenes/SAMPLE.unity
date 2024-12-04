@@ -882,7 +882,7 @@ MonoBehaviour:
   cinemachineFreeLook: {fileID: 610583291}
   rotationSpeed: 10
   _CameraStyle: 1
-  radius: 4.1
+  radius: 10
   targetLockOffset: {x: 0, y: 0}
   maxDistance: 3.77
   minDistance: 0.5
@@ -913,7 +913,6 @@ MonoBehaviour:
   EnemyL:
     serializedVersion: 2
     m_Bits: 512
-  _CameraStyle: 0
   player: {fileID: 0}
 --- !u!114 &348057769
 MonoBehaviour:

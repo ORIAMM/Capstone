@@ -101,7 +101,6 @@ public class Player : MonoBehaviour, IEntity
 
     private void Update()
     {
-        Debug.Log(PlayerMeshObject.forward);
         
         if (playerCombat.isBlocking == false && playerCombat.isFall == false && playerCombat.isDodging == false)
         {

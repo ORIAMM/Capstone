@@ -22,12 +22,12 @@ public class PlayerCombat : MonoBehaviour
     [Header("Reference")]
     [HideInInspector] public Animator animator;
     [SerializeField] private LayerMask EnemyL;
-    public CameraStyle _CameraStyle;
 
     //Reference
     private ImprovisedPlayerMovement IPmovement;
     private PlayerCamera PlayerCamera;
     private HashSet<BossBehaviour> hitEnemies = new HashSet<BossBehaviour>();
+    private Player _player;
 
     [HideInInspector] public Transform player;
 
@@ -60,6 +60,7 @@ public class PlayerCombat : MonoBehaviour
     private void Start()
     {
         IPmovement = GetComponent<ImprovisedPlayerMovement>();
+        _player = GetComponent<Player>();
     }
 
     public void Attack() => coroutine ??= StartCoroutine(Attacking());
@@ -68,33 +69,37 @@ public class PlayerCombat : MonoBehaviour
 
     public IEnumerator Attacking()
     {
-        if (Time.time >= time || index + 1 >= TotalCombos) index = 0;
-        else index++;
+        if (_player._CameraStyle == CameraStyle.Combat)
+        {
+            if (Time.time >= time || index + 1 >= TotalCombos) index = 0;
+            else index++;
 
-        isAttacking = true;
-        Debug.Log(index);
+            isAttacking = true;
+            Debug.Log(index);
 
-        yield return null;
-        //float ProjectileSpawnTime = ProjectileTimeline[index].type == Attack_Type.projectile ? ProjectileTimeline[index].FrameInWhichProjectileSpawn / ProjectileTimeline[index].AnimationFrames : 10;
-        string animationName = "Attack" + (index + 1).ToString();
+            yield return null;
+            //float ProjectileSpawnTime = ProjectileTimeline[index].type == Attack_Type.projectile ? ProjectileTimeline[index].FrameInWhichProjectileSpawn / ProjectileTimeline[index].AnimationFrames : 10;
+            string animationName = "Attack" + (index + 1).ToString();
 
-        if (animationName == "Attack1") animator.Play(animationName);
-        else animator.CrossFade(animationName, 0.25f);
+            if (animationName == "Attack1") animator.Play(animationName);
+            else animator.CrossFade(animationName, 0.25f);
 
-        //animator.Play(animationName);
+            //animator.Play(animationName);
 
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
 
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
 
-        isAttacking = false;
-        time = Time.time + ComboInterval;
-        coroutine = null;
+            isAttacking = false;
+            time = Time.time + ComboInterval;
+            coroutine = null;
+        }
+        
     }
     
     public IEnumerator Blocking()
     {
-        if (isBlocking == false)
+        if (isBlocking == false && _player._CameraStyle == CameraStyle.Combat)
         {
             Debug.Log("Bloc");
             isBlocking = true;
@@ -115,20 +120,48 @@ public class PlayerCombat : MonoBehaviour
             dodgeTime = Time.time + DodgeCooltime;
             isDodging = true;
             animator.SetTrigger("Dodge");
-            yield return new WaitForSeconds(0.2f);
-            float dodgeDuration = 0.5f;
-            float elapsedTime = 0f;
-
-            while (elapsedTime < dodgeDuration)
+            switch (_player._CameraStyle)
             {
-                elapsedTime += Time.deltaTime;
-                IPmovement.Dash();
-                IPmovement.ApplyMove(0);
-                yield return null;
-            }
+                case CameraStyle.Combat:
+                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge0"));
+                    float combatDodgeDuration = 0.7f;
+                    float elapsedCombatTime = 0f;
 
-            isDodging = false;
-            coroutine = null;
+                    /*Vector3 dashDirection = player.forward;
+                    if (DodgeInput.magnitude > 0)
+                    {
+                        Vector3 inputDirection = new Vector3(DodgeInput.x, 0, DodgeInput.y).normalized;
+                        dashDirection = player.TransformDirection(inputDirection);
+                    }*/
+                    while (elapsedCombatTime < combatDodgeDuration)
+                    {
+                        elapsedCombatTime += Time.deltaTime;
+                        IPmovement.Dash();
+                        IPmovement.ApplyMove(0);
+                        yield return null;
+                    }
+                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
+                    isDodging = false;
+                    coroutine = null;
+
+                    break;
+
+                case CameraStyle.Basic:
+                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"));
+                    float dodgeDuration = 0.7f;
+                    float elapsedTime = 0f;
+                    while (elapsedTime < dodgeDuration)
+                    {
+                        elapsedTime += Time.deltaTime;
+                        IPmovement.Dash();
+                        IPmovement.ApplyMove(0);
+                        yield return null;
+                    }
+                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
+                    isDodging = false;
+                    coroutine = null;
+                    break;
+            }
 
         }
     }

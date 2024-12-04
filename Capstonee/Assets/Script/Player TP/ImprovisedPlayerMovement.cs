@@ -69,7 +69,7 @@ public class ImprovisedPlayerMovement : MonoBehaviour
     public void Dash()
     {
         //controller.Move(moveDirection * Time.deltaTime);
-        float dashSpeed = 10f; // Adjust the dash speed as needed
+        float dashSpeed = 5f; // Adjust the dash speed as needed
         Vector3 dashDirection = player.forward * dashSpeed;
 
         // Apply movement
