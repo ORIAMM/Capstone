@@ -13,7 +13,7 @@ public class BossAttackHitbox : TimedObject
         damage = boss.ATK;
         duration = boss.SkillDuration;
         range = boss.AtkRange;
-        Destroy(gameObject, duration);
+        //Destroy(gameObject, duration);
 
         StartCoroutine(DealDamageWithSphere());
     }
@@ -26,7 +26,10 @@ public class BossAttackHitbox : TimedObject
     {
         
     }
-
+    private void OnParticleSystemStopped()
+    {
+        PoolManager.ReleaseObject(gameObject);
+    }
     private System.Collections.IEnumerator DealDamageWithSphere()
     {
         float elapsedTime = 0f;
@@ -53,6 +56,6 @@ public class BossAttackHitbox : TimedObject
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, range);
+        Gizmos.DrawSphere(transform.position, range);
     }
 }

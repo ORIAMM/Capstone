@@ -117,7 +117,7 @@ public class BossBehaviour : TimedObject, IEntity
             }
         }
     }
-    void RotateToTarget(float offsetY)
+    public void RotateToTarget(float offsetY)
     {
         // Hitung arah ke target
         Vector3 dir = player.position - transform.position;

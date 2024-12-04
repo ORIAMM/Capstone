@@ -1,6 +1,26 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+[Serializable]
+public struct hitBoxInfo
+{
+    [Header("Hitbox Settings")]
+    public GameObject HitBoxPrefabs;
+    public Transform HitBox;
+
+    [Header("Frame Settings")]
+    public float SpawnFrame;
+}
+[Serializable]
+public struct TriggerInfo
+{
+    public string TriggerName;
+    public string ANIMATIONNAME;
+    public List<hitBoxInfo> hitboxesInfo;
+    public float TotalFrames;
+
+}
 
 public class BossCombat : MonoBehaviour
 {
@@ -8,7 +28,7 @@ public class BossCombat : MonoBehaviour
     public float attackRange;
     private float attackDelay;
     private float lastAttackTime = 0f;
-    private string lastAttackTrigger;
+    private int lastAttackIndex;
     public Transform player;
     private int Damage;
     public int MawForce;
@@ -20,6 +40,8 @@ public class BossCombat : MonoBehaviour
     [Header("Attack Settings")]
     public List<GameObject> hitboxPrefabs = new List<GameObject>();
     public Transform[] attackPoints;
+
+
     public LayerMask targetLayer;
     private bool SFXPlaying;
 
@@ -32,13 +54,18 @@ public class BossCombat : MonoBehaviour
         { "trigger5", 1.2f }   // Kick
     };
 
+
+    [SerializeField] private List<TriggerInfo> infos;
+
+
+
     private void Start()
     {
         animator = GetComponent<Animator>();
         bossBehaviour = GetComponent<BossBehaviour>();
         attackDelay = bossBehaviour.CD;
         Damage = bossBehaviour.ATK;
-        lastAttackTrigger = "";
+        //lastAttackTrigger = "";
 
         if (player == null)
         {
@@ -54,16 +81,16 @@ public class BossCombat : MonoBehaviour
     {
         if (bossBehaviour.isAlive)
         {
-            if (!isAttack && !SoundManager.instance.IsSFXPlaying("BossStep"))
-            {
-                Debug.Log("Musik");
-                SoundManager.instance.PlaySFX("BossStep");
-            }
-            else if (isAttack && SoundManager.instance.IsSFXPlaying("BossStep"))
-            {
-                Debug.Log("Berhenti");
-                SoundManager.instance.StopSFX("BossStep");
-            }
+            //if (!isAttack && !SoundManager.instance.IsSFXPlaying("BossStep"))
+            //{
+            //    //Debug.Log("Musik");
+            //    SoundManager.instance.PlaySFX("BossStep");
+            //}
+            //else if (isAttack && SoundManager.instance.IsSFXPlaying("BossStep"))
+            //{
+            //    //Debug.Log("Berhenti");
+            //    SoundManager.instance.StopSFX("BossStep");
+            //}
         }
 
         if (bossBehaviour.CurrTP > 0 && player != null)
@@ -95,23 +122,25 @@ public class BossCombat : MonoBehaviour
         bossBehaviour.RotateSpeed = 0;
 
         int randomAttack;
-        string attackTrigger;
+        int count = infos.Count;
 
         do
         {
-            randomAttack = Random.Range(1, 6);
-            attackTrigger = $"trigger{randomAttack}";
+            randomAttack = UnityEngine.Random.Range(1, count);
         } 
-        while (attackTrigger == lastAttackTrigger);
+        while (randomAttack == lastAttackIndex);
 
-        lastAttackTrigger = attackTrigger;
+        lastAttackIndex = randomAttack;
 
-        animator.SetTrigger(attackTrigger);
-        Debug.Log(attackTrigger);
-        float animationLength = GetAttackAnimationDuration(attackTrigger);
-        AttackFunction(attackTrigger);
+        //Debug.Log("AAA");
+        yield return PlayAnimationYA(infos[randomAttack], infos[randomAttack].TotalFrames);
+        //Debug.Log("BBB");
+        //animator.SetTrigger(attackTrigger);
+        //Debug.Log(attackTrigger);
+        //float animationLength = GetAttackAnimationDuration(attackTrigger);
+        //AttackFunction(attackTrigger);
 
-        yield return new WaitForSeconds(animationLength);
+        //yield return new WaitForSeconds(animationLength);
 
         isAttack = false;
         bossBehaviour.agent.isStopped = false;
@@ -141,61 +170,92 @@ public class BossCombat : MonoBehaviour
         bossBehaviour.isAlive = false;
         this.enabled = false;
     }
-    void AttackFunction(string attacktrigger)
+    IEnumerator PlayAnimationYA(TriggerInfo info, float TotalFrames)
     {
+        animator.SetTrigger(info.TriggerName);
 
-        if (attacktrigger == "trigger1")
+        if (info.TriggerName == "trigger4" || info.TriggerName == "trigger1")
         {
-            SoundManager.instance.PlaySFX("ChargePounch");
-            StartCoroutine(GoToPlayer());
-            StartCoroutine(HandleAttackWithDelay(1, 2.6f, 0));
+            GoToPlayer();
         }
-        else if (attacktrigger == "trigger2")
+        //Debug.Log("AAA");
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(info.ANIMATIONNAME));
+        //Debug.Log("AAANAMA");
+        foreach (hitBoxInfo trigger in info.hitboxesInfo)
         {
-            SoundManager.instance.PlaySFX("Claws");
-            StartCoroutine(HandleAttackWithDelay(1, 1.5f, 1));
-            StartCoroutine(HandleAttackWithDelay(0, 2.8f, 1));
-            StartCoroutine(HandleAttackWithDelay(1, 4.9f, 2));
-            SoundManager.instance.PlaySFX("Roar");
-        }
-        else if (attacktrigger == "trigger3")
-        {
-            SoundManager.instance.PlaySFX("Roar");
-            StartCoroutine(HandleAttackWithDelay(1, 2.2f, 3));
-            SoundManager.instance.PlaySFX("Fissure");
-        }
-        else if (attacktrigger == "trigger4")
-        {
-            StartCoroutine(GoToPlayer());
-            StartCoroutine(HandleAttackWithDelay(1, 1.7f, 4));
-            SoundManager.instance.PlaySFX("Pounch");
-        }
-        else if (attacktrigger == "trigger5")
-        {
-            SoundManager.instance.PlaySFX("Kick");
-            StartCoroutine(HandleAttackWithDelay(2, 0.7f, 5));
+            float NormalizedTime = trigger.SpawnFrame/TotalFrames;
+
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > NormalizedTime);
+            //Debug.Log("HITUNGFRRAME");
+            SpawnHitbox(trigger);
         }
     }
-    IEnumerator HandleAttackWithDelay(int hitboxType, float delay, int hitboxIndex)
-    {
-        yield return new WaitForSeconds(delay);
-        SpawnHitboxAt(hitboxType, hitboxIndex);
-    }
 
-    private void SpawnHitboxAt(int attackPointIndex, int prefabIndex)
-    {
-        if (attackPointIndex < attackPoints.Length && hitboxPrefabs != null)
-        {
-            Transform spawnPoint = attackPoints[attackPointIndex];
-            GameObject hitbox = Instantiate(hitboxPrefabs[prefabIndex], spawnPoint.position, spawnPoint.rotation);
-            BossAttackHitbox attackHitbox = hitbox.GetComponent<BossAttackHitbox>();
+    //void AttackFunction(string attacktrigger)
+    //{
 
-            if (attackHitbox != null)
-            {
-                attackHitbox.Initialize(bossBehaviour);
-            }
-        }
+    //    if (attacktrigger == "trigger1")
+    //    {
+    //        SoundManager.instance.PlaySFX("ChargePounch");
+    //        StartCoroutine(GoToPlayer());
+    //        StartCoroutine(HandleAttackWithDelay(1, 2.6f, 0));
+    //    }
+    //    else if (attacktrigger == "trigger2")
+    //    {
+    //        SoundManager.instance.PlaySFX("Claws");
+    //        StartCoroutine(HandleAttackWithDelay(1, 1.5f, 1));
+    //        StartCoroutine(HandleAttackWithDelay(0, 2.8f, 1));
+    //        StartCoroutine(HandleAttackWithDelay(1, 4.9f, 2));
+    //        SoundManager.instance.PlaySFX("Roar");
+    //    }
+    //    else if (attacktrigger == "trigger3")
+    //    {
+    //        SoundManager.instance.PlaySFX("Roar");
+    //        StartCoroutine(HandleAttackWithDelay(1, 2.2f, 3));
+    //        SoundManager.instance.PlaySFX("Fissure");
+    //    }
+    //    else if (attacktrigger == "trigger4")
+    //    {
+    //        StartCoroutine(GoToPlayer());
+    //        StartCoroutine(HandleAttackWithDelay(1, 1.7f, 4));
+    //        SoundManager.instance.PlaySFX("Pounch");
+    //    }
+    //    else if (attacktrigger == "trigger5")
+    //    {
+    //        SoundManager.instance.PlaySFX("Kick");
+    //        StartCoroutine(HandleAttackWithDelay(2, 0.7f, 5));
+    //    }
+    //}
+    //IEnumerator HandleAttackWithDelay(int hitboxType, float delay, int hitboxIndex)
+    //{
+    //    yield return new WaitForSeconds(delay);
+    //    SpawnHitboxAt(hitboxType, hitboxIndex);
+    //}
+
+    //private void SpawnHitboxAt(int attackPointIndex, int prefabIndex)
+    //{
+    //    if (attackPointIndex < attackPoints.Length && hitboxPrefabs != null)
+    //    {
+    //        Transform spawnPoint = attackPoints[attackPointIndex];
+    //        GameObject hitbox = Instantiate(hitboxPrefabs[prefabIndex], spawnPoint.position, spawnPoint.rotation);
+    //        BossAttackHitbox attackHitbox = hitbox.GetComponent<BossAttackHitbox>();
+
+    //        if (attackHitbox != null)
+    //        {
+    //            attackHitbox.Initialize(bossBehaviour);
+    //        }
+    //    }
+    //}
+    private void SpawnHitbox(hitBoxInfo info)
+    {
+        var obj = PoolManager.GetObject(info.HitBoxPrefabs, false);
+        obj.transform.position = info.HitBox.position;
+        obj.SetActive(true);
     }
+    //GameObject VFX = PoolManager.GetObject(info.VFX, false);
+    //VFX.transform.forward = transform.forward;
+    //VFX.transform.position = transform.position + info.position_offset;
+    ////VFX.transform.position = info.position_offset;
 
     //Ini teleport
     //private IEnumerator GoToPlayer()
@@ -218,6 +278,8 @@ public class BossCombat : MonoBehaviour
     {
         yield return new WaitForSeconds(attackDelay);
 
+        bossBehaviour.RotateToTarget(0);
+
         if (player != null)
         {
             float duration = 0.5f;
@@ -237,7 +299,7 @@ public class BossCombat : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("Player not found, cannot move.");
+            //Debug.LogWarning("Player not found, cannot move.");
         }
     }
 
