@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-public class BossBehaviour : MonoBehaviour, IEntity
+public class BossBehaviour : TimedObject, IEntity
 {
     [Header("Object Reference")]
     public Transform player;
@@ -26,8 +26,12 @@ public class BossBehaviour : MonoBehaviour, IEntity
     public int RotateSpeed;
     public float RotateOffset;
 
+    private int tempRotateSpeed;
+
     public bool isAlive;
     private bool isPlaySFX;
+    private TimeManager timeManager;
+    private Animator animator;
 
     private void Start()
     {
@@ -36,9 +40,12 @@ public class BossBehaviour : MonoBehaviour, IEntity
         agent.speed = SPD;
         isAlive = true;
         isPlaySFX = false;
+        animator = GetComponent<Animator>();
+        tempRotateSpeed = RotateSpeed;
     }
-    private void Update()
+    protected override void Update()
     {
+        base.Update();
         UpdateHealthBar();
 
         if (isAlive)
@@ -49,6 +56,31 @@ public class BossBehaviour : MonoBehaviour, IEntity
             BossDeath();
         }
     }
+
+
+    public override void OnStop()
+    {
+        if (animator != null)
+        {
+            animator.speed = 0; // Freeze the animation
+            agent.speed = 0;
+            RotateSpeed = 0;
+
+        }
+    }
+
+
+    public override void OnContinue()
+    {
+        if (animator != null)
+        {
+            agent.speed = SPD;
+            animator.speed = 1; // Resume the Animator
+            RotateSpeed = tempRotateSpeed;
+        }
+    }
+
+
     void ChasePlayer()
     {
         FindPlayer();
@@ -138,4 +170,6 @@ public class BossBehaviour : MonoBehaviour, IEntity
     {
         BossDeath();
     }
+
+
 }

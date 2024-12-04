@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class BossAttackHitbox : MonoBehaviour
+public class BossAttackHitbox : TimedObject
 {
     [Header("Attack Settings")]
     public float damage;
@@ -16,6 +16,15 @@ public class BossAttackHitbox : MonoBehaviour
         Destroy(gameObject, duration);
 
         StartCoroutine(DealDamageWithSphere());
+    }
+    public override void OnContinue()
+    {
+        
+    }
+
+    public override void OnStop()
+    {
+        
     }
 
     private System.Collections.IEnumerator DealDamageWithSphere()

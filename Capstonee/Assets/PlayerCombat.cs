@@ -23,12 +23,13 @@ public class PlayerCombat : MonoBehaviour
     [HideInInspector] public Animator animator;
     [SerializeField] private LayerMask EnemyL;
 
+    //Reference
     private ImprovisedPlayerMovement IPmovement;
     private PlayerCamera PlayerCamera;
-    
-
     private HashSet<BossBehaviour> hitEnemies = new HashSet<BossBehaviour>();
     private CharacterController characterController;
+
+    [HideInInspector] public Transform player;
     public bool isAttacking 
     {  
         get ; 
@@ -55,8 +56,6 @@ public class PlayerCombat : MonoBehaviour
     float dodgeTime = 0;
     bool dodgeCooldown => Time.time >= dodgeTime;
 
-
-
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
@@ -65,11 +64,10 @@ public class PlayerCombat : MonoBehaviour
 
     public void Attack() => coroutine ??= StartCoroutine(Attacking());
     public void Block() => coroutine ??= StartCoroutine(Blocking());
-    public void Dodge() => coroutine ??= StartCoroutine(Dodging());
+    public void Dodge(Vector2 DodgeInput) => coroutine ??= StartCoroutine(Dodging(DodgeInput));
 
     public IEnumerator Attacking()
     {
-
         if (Time.time >= time || index + 1 >= TotalCombos) index = 0;
         else index++;
 
@@ -94,7 +92,6 @@ public class PlayerCombat : MonoBehaviour
         coroutine = null;
     }
     
-
     public IEnumerator Blocking()
     {
         Debug.Log("Bloc");
@@ -110,7 +107,7 @@ public class PlayerCombat : MonoBehaviour
         coroutine = null;
     }
 
-    public IEnumerator Dodging()
+    public IEnumerator Dodging(Vector2 DodgeInput)
     {
         if (isDodging == false && dodgeCooldown)
         {
@@ -118,8 +115,21 @@ public class PlayerCombat : MonoBehaviour
             isDodging = true;
             animator.SetTrigger("Dodge");
 
-            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"));
-            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7f);
+            yield return new WaitForSeconds(0.1f);
+            float dodgeDuration = 0.6f; 
+            float elapsedTime = 0f;
+            float dodgeSpeed = 7f; 
+
+            while (elapsedTime < dodgeDuration)
+            {
+                elapsedTime += Time.deltaTime;
+
+                IPmovement.Move(DodgeInput.normalized * dodgeSpeed);
+
+                IPmovement.ApplyMove(0);
+
+                yield return null;
+            }
 
             isDodging = false;
             coroutine = null;

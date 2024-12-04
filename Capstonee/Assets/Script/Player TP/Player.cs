@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro.EditorUtilities;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Windows;
 
 public enum CameraStyle
@@ -12,39 +13,6 @@ public interface IEntity
 {
     public void ReceiveDamage(float value);
     public void OnDeath();
-}
-public class TimeManager : MonoBehaviour
-{
-    public static TimeManager instance;
-    public bool isStopped;
-    private void Awake()
-    {
-        instance = this;
-    }
-    public IEnumerator StopTime(float Time)
-    {
-        isStopped = true;
-        yield return new WaitForSeconds(Time);
-        isStopped = false;
-    }
-}
-public class TimedObject : MonoBehaviour
-{
-    public Coroutine TimeStopped;
-    private void Update()
-    {
-        if (TimeManager.instance.isStopped || TimeStopped != null) TimeStopped ??= StartCoroutine(OnStop());
-    }
-    public virtual IEnumerator OnStop()
-    {
-        yield return new WaitUntil(() => TimeManager.instance.isStopped == false);
-        OnContinue();
-        TimeStopped = null;
-    }
-    public virtual void OnContinue()
-    {
-        
-    }
 }
 
 [RequireComponent(typeof(CharacterController))]
@@ -67,8 +35,10 @@ public class Player : MonoBehaviour, IEntity
     [Header("References")]
     [SerializeField] private Transform PlayerMeshObject;
     [SerializeField] private Transform FacingDirection;
- 
+
     [SerializeField] private float Gravity = 9.81f;
+
+    public CameraStyle _CameraStyle;
     private TimeManager timeManager;
     public bool isCombat => playerCam.target != null;
     public bool Dodging => movement.isDodging != null;
@@ -87,6 +57,7 @@ public class Player : MonoBehaviour, IEntity
         input = new();
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
+        timeManager = GetComponent<TimeManager>();
 
         //Initialize Health
         HealthPlayer = Time.time + initial_time;
@@ -105,13 +76,16 @@ public class Player : MonoBehaviour, IEntity
         playerCam.animator = _animator;
 
         //Initialize Combat
-        timeManager = new TimeManager();
         playerCombat.animator = _animator;
+        timeManager.animator = _animator;
+        playerCombat.player = PlayerMeshObject;
+
+        //Initialize Input
         input.Controls.Target.performed += (val) => playerCam.GetTarget();
         input.Controls.Attack.performed += (val) => playerCombat.Attack();
         input.Controls.Block.performed += (val) => playerCombat.Block();
-        input.Controls.Skill.performed += (val) => timeManager.StopTime(5f);
-        input.Movement.Dodge.performed += (val) => playerCombat.Dodge();
+        input.Controls.Skill.performed += (val) => timeManager.UseSkill(5f);
+        input.Movement.Dodge.performed += (val) => playerCombat.Dodge(MoveValue);
 
         //Debug Animation
         input.Controls.Test.performed += (val) => playerCombat.Interrupt();
@@ -119,17 +93,28 @@ public class Player : MonoBehaviour, IEntity
         //input.Movement.Jump.performed += (val) => movement.Jump();
         input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
+
     private void Update()
     {
         if (playerCombat.isBlocking == false || playerCombat.isFall == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
-            if (playerCombat.isAttacking == true)
+            switch (_CameraStyle)
             {
-                adjustedMoveValue *= 0.07f;
-            } 
-            movement.Move(adjustedMoveValue);
-            movement.ApplyMove(Gravity);
+                case (CameraStyle.Basic):
+                    movement.Move(adjustedMoveValue);
+                    movement.ApplyMove(Gravity);
+                    break;
+                case (CameraStyle.Combat):
+                    adjustedMoveValue *= 0.5f;
+                    if (playerCombat.isAttacking == true)
+                    {
+                        adjustedMoveValue *= 0.02f;
+                    }
+                    movement.Move(adjustedMoveValue);
+                    movement.ApplyMove(Gravity);
+                    break;
+            }
 
         }
         Ticking();
@@ -167,4 +152,5 @@ public class Player : MonoBehaviour, IEntity
         Debug.Log("Mati");
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
+
 }

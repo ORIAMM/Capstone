@@ -51,7 +51,7 @@ public class ImprovisedPlayerMovement : MonoBehaviour
     {
         if(isDodging == null && dodgeCooldown)
         {
-            isDodging = StartCoroutine(StartDodge());
+            //isDodging = StartCoroutine(StartDodge());
         }
     }
     public IEnumerator StartDodge()

@@ -15,21 +15,10 @@ public class EnemyI : TimedObject, IEntity
     public TimeManager timeManager;
 
 
-    public override IEnumerator OnStop()
-    {
-        if (animator != null)
-        {
-            animator.speed = 0; // Freeze the animation
-        }
 
-        yield return new WaitUntil(() => TimeManager.instance.isStopped == false);
-        OnContinue();
-        TimeStopped = null;
-    }
 
     public override void OnContinue()
     {
-        base.OnContinue();
 
         if (animator != null)
         {
@@ -53,5 +42,8 @@ public class EnemyI : TimedObject, IEntity
         }
     }
 
-
+    public override void OnStop()
+    {
+        throw new System.NotImplementedException();
+    }
 }
