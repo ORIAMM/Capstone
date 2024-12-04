@@ -179,6 +179,7 @@ public class PlayerCombat : MonoBehaviour
                 {
                     hitEnemies.Add(enemy);
                     enemy.ReceiveDamage(70);
+                    _player.HealthPlayer += 20f;
                 }
             }
         }

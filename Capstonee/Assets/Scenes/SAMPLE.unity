@@ -842,6 +842,7 @@ MonoBehaviour:
   playerCombat: {fileID: 348057768}
   initial_time: 50
   DmgReduct: 0.5
+  HealthPlayer: 0
   PlayerMeshObject: {fileID: 543450652366004746}
   FacingDirection: {fileID: 337419806}
   Gravity: 9.81
@@ -928,6 +929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStopped: 0
   animator: {fileID: 0}
+  skillCoolTime: 5
 --- !u!1 &350946623
 GameObject:
   m_ObjectHideFlags: 0
@@ -4383,6 +4385,7 @@ MonoBehaviour:
   playerCombat: {fileID: 0}
   initial_time: 50
   DmgReduct: 0.5
+  HealthPlayer: 0
   PlayerMeshObject: {fileID: 816442587}
   FacingDirection: {fileID: 1487130882}
   Gravity: 9.81

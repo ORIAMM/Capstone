@@ -30,7 +30,7 @@ public class Player : MonoBehaviour, IEntity
     [Header("Player Stat")]
     [SerializeField] private float initial_time = 300f;
     [SerializeField] private float DmgReduct = 0.5f;
-    private float HealthPlayer;
+    public float HealthPlayer;
     
     [Header("References")]
     [SerializeField] private Transform PlayerMeshObject;
