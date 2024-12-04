@@ -118,7 +118,6 @@ public class PlayerCombat : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
             float dodgeDuration = 0.5f;
             float elapsedTime = 0f;
-            float dodgeSpeed = 5f;
 
             while (elapsedTime < dodgeDuration)
             {
@@ -128,7 +127,6 @@ public class PlayerCombat : MonoBehaviour
                 yield return null;
             }
 
-            yield return new WaitForSeconds(0.5f);
             isDodging = false;
             coroutine = null;
 
