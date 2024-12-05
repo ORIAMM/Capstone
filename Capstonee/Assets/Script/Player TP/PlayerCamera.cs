@@ -29,7 +29,7 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform FacingDirection;
     [HideInInspector] public Transform PlayerMeshObject;
-    [HideInInspector] public PlayerControls input;
+    [HideInInspector] public InputActionMap Action;
     private Camera cam;
 
     private Player player;
@@ -51,8 +51,10 @@ public class PlayerCamera : MonoBehaviour
 
     private void Awake()
     {
-        player = GetComponent<Player>();
-        cam = Camera.main;
+        player = GetComponent<Player>(); 
+        Transform playerParent = player.transform.parent;
+        cam = playerParent.GetComponentInChildren<Camera>();
+        //cam = Camera.main;
         cinemachineFreeLook.m_XAxis.m_InputAxisName = "";
         cinemachineFreeLook.m_YAxis.m_InputAxisName = "";
     }
@@ -75,10 +77,10 @@ public class PlayerCamera : MonoBehaviour
     }
     void BasicCamera()
     {
-        var Input = input.Movement.Move.ReadValue<Vector2>();
+        var Input = Action.FindAction("Move").ReadValue<Vector2>();
         Vector3 inputDir = FacingDirection.forward * Input.y + FacingDirection.right * Input.x;
         if (inputDir != Vector3.zero) PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
-        var MouseInput = input.Controls.Mouse.ReadValue<Vector2>();
+        var MouseInput = Action.FindAction("Mouse").ReadValue<Vector2>();
         mouseX = MouseInput.x;
         mouseY = MouseInput.y;
 
