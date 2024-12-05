@@ -25,7 +25,7 @@ public class EnemyI : TimedObject, IEntity
             animator.speed = 1; // Resume the animation
         }
     }
-    private void Update()
+    public override void OnUpdate()
     {
         // if (TimeManager.instance.isStopped || TimeStopped != null) TimeStopped ??= StartCoroutine(OnStop());
     }

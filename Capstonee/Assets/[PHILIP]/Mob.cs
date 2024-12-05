@@ -5,25 +5,55 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-//Kroco yah
-//1. Kejer (map kecil gada pathfinding) gampangnya ambil arah ke player terus velocity x z nya ikut player
-//2. Kalo dah deket pukul, ini bisa pake distance, pukul pake transform.forward overlap
+//public abstract class AttackInfo : MonoBehaviour
+//{
+//    public float distance;
+//    public float delay;
+//    public Animator animator;
 
-public abstract class AttackInfo 
-{
-    public float distance;
-    public abstract void AttackBehaviour();
-}
-public class Mob_BasicAttack : AttackInfo
-{
-    public override void AttackBehaviour()
-    {
+//    public abstract IEnumerator AttackBehaviour();
+//    public IEnumerator PlayAnimation(TriggerInfo info, float TotalFrames)
+//    {
+//        animator.SetTrigger(info.TriggerName);
 
-    }
-}
+//        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(info.ANIMATIONNAME));
+
+//        foreach (hitBoxInfo trigger in info.hitboxesInfo)
+//        {
+//            float NormalizedTime = trigger.SpawnFrame / TotalFrames;
+
+//            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > NormalizedTime);
+
+//            SpawnHitbox(trigger);
+//        }
+//    }
+//    private void SpawnHitbox(hitBoxInfo info)
+//    {
+//        var obj = PoolManager.GetObject(info.HitBoxPrefabs, false);
+//        obj.transform.position = info.HitBox.position;
+//        obj.transform.forward = transform.forward;
+//        obj.SetActive(true);
+//    }
+//}
+//public class Mob_BasicAttack : AttackInfo
+//{
+//    public TriggerInfo info;
+
+//    public Mob_BasicAttack(float distance, Transform transform, Animator animator, TriggerInfo info) : base(distance, transform, animator)
+//    {
+//        this.info = info;
+//    }
+//    public override IEnumerator AttackBehaviour()
+//    {
+//        yield return PlayAnimation(info, info.TotalFrames);
+//    }
+//}
 public class Mob : TimedObject, IEntity
 {
     [SerializeField] private float Health;
+    [SerializeField] private float AttackRadius;
+    [SerializeField] private float AttackDelay;
+    [SerializeField] private TriggerInfo info;
 
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed;
@@ -32,36 +62,45 @@ public class Mob : TimedObject, IEntity
     [SerializeField] private float ChaseRadius;
     [SerializeField] private float DampingValue;
 
-
     [SerializeField] private LayerMask playerLayer;
-    private List<AttackInfo> attackInfos = new();
+    //private List<AttackInfo> attackInfos = new();
     private CharacterController controller;
     private Animator animator;
 
+    private float initial_Health;
     private Transform player;
 
+
+    Vector3 keptVelocity;
+    float atkCooldown;
     Vector3 moveDirection = Vector3.zero;
-    private AttackInfo currentAttackQueue;
+    Coroutine isAttacking;
+    //private AttackInfo currentAttackQueue;
     public void Awake()
     {
         controller = GetComponent<CharacterController>();
         animator = GetComponent<Animator>();
-        
-        AddInfos(new()
-        {
-            new Mob_BasicAttack()
-        });
     }
-    protected override void Update()
+    private void OnEnable()
     {
-        base.Update();
+        initial_Health = Health;
+    }
+    public override void OnUpdate()
+    {
         Target();
-        if (player)
+        if (player && isAttacking == null)
         {
             LookToPlayer();
             GetForwardMove();
         }
         ApplyMovement();
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= AttackRadius && Time.time > atkCooldown)
+        {
+            isAttacking = StartCoroutine(PlayAnimation(info, info.TotalFrames));
+        }
     }
     public void LookToPlayer()
     {
@@ -111,19 +150,61 @@ public class Mob : TimedObject, IEntity
     }
     public override void OnContinue()
     {
+        if (animator)
+        {
+            animator.speed = 1;
+            controller.Move(keptVelocity);
+            keptVelocity = Vector3.zero;
+            Debug.Log("Continue");
+        }
     }
     public override void OnStop()
     {
+        if (animator)
+        {
+            animator.speed = 1;
+            keptVelocity = controller.velocity;
+            controller.Move(Vector3.zero);
+            Debug.Log("Continue");
+        }
     }
     public void OnDeath()
     {
+        PoolManager.ReleaseObject(gameObject);
     }
     public void ReceiveDamage(float value)
     {
+        initial_Health -= (int)value;
+
+        if (initial_Health <= 0)
+        {
+            initial_Health = 0;
+            OnDeath();
+        }
     }
-    public void AddInfos(List<AttackInfo> infos)
+    public IEnumerator PlayAnimation(TriggerInfo info, float TotalFrames)
     {
-        foreach (AttackInfo info in infos) attackInfos.Add(info);
+        animator.SetTrigger(info.TriggerName);
+
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(info.ANIMATIONNAME));
+
+        foreach (hitBoxInfo trigger in info.hitboxesInfo)
+        {
+            float NormalizedTime = trigger.SpawnFrame / TotalFrames;
+
+            yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > NormalizedTime);
+
+            SpawnHitbox(trigger);
+        }
+        isAttacking = null;
+        atkCooldown = Time.time + AttackDelay;
+    }
+    private void SpawnHitbox(hitBoxInfo info)
+    {
+        var obj = PoolManager.GetObject(info.HitBoxPrefabs, false);
+        obj.transform.position = info.HitBox.position;
+        obj.transform.forward = transform.forward;
+        obj.SetActive(true);
     }
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -131,5 +212,7 @@ public class Mob : TimedObject, IEntity
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, ChaseRadius);
     }
+
+
 #endif
 }

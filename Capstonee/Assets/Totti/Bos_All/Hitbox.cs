@@ -24,9 +24,8 @@ public class Hitbox : TimedObject
         hits.Clear();
         time_elapsed = 0;
     }
-    protected override void Update()
+    public override void OnUpdate()
     {
-        base.Update();
         //Kode tidak akan jalan kalo stop harusnya;
         time_elapsed += Time.deltaTime;
         if (time_elapsed <= attackDuration)

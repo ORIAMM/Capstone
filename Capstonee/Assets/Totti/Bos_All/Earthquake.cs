@@ -36,9 +36,8 @@ public class Earthquake : TimedObject
         elapsed_time = 0;
         if(particle) particle.Play();
     }
-    protected override void Update()
+    public override void OnUpdate()
     {
-        base.Update();
         elapsed_time += Time.deltaTime;
         Vector3 position = Vector3.Lerp(initial_position, initial_position + frontOffset * transform.forward, elapsed_time/lifetime);
         //Kode tidak akan jalan kalo stop harusnya;

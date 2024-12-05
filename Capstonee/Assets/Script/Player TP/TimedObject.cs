@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public abstract class TimedObject : MonoBehaviour
@@ -12,7 +13,10 @@ public abstract class TimedObject : MonoBehaviour
             TimeStopped ??= StartCoroutine(StopLogic());
             return;
         }
+        OnUpdate(); 
     }
+    public abstract void OnUpdate();
+
     public IEnumerator StopLogic()
     {
         isPaused = true;

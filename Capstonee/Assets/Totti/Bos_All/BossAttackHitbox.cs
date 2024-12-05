@@ -32,7 +32,7 @@ public class BossAttackHitbox : TimedObject
         damageCoroutine = StartCoroutine(DealDamageWithSphere());
     }
 
-    private void Update()
+    public override void OnUpdate()
     {
         duration -= Time.deltaTime;
 

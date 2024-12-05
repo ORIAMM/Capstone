@@ -43,21 +43,20 @@ public class BossBehaviour : TimedObject, IEntity
         animator = GetComponent<Animator>();
         tempRotateSpeed = RotateSpeed;
     }
-    protected override void Update()
+
+    public override void OnUpdate()
     {
-        base.Update();
         UpdateHealthBar();
 
         if (isAlive)
         {
             ChasePlayer();
         }
-        else {
+        else
+        {
             BossDeath();
         }
     }
-
-
     public override void OnStop()
     {
         if (animator != null)
