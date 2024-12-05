@@ -62,7 +62,6 @@ public class PlayerCombat : MonoBehaviour
         IPmovement = GetComponent<ImprovisedPlayerMovement>();
         _player = GetComponent<Player>();
     }
-
     public void Attack() => coroutine ??= StartCoroutine(Attacking());
     public void Block() => coroutine ??= StartCoroutine(Blocking());
     public void Dodge(Vector2 DodgeInput) => coroutine ??= StartCoroutine(Dodging(DodgeInput));

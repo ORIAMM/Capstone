@@ -177,6 +177,7 @@ public class BossCombat : MonoBehaviour
     {
         var obj = PoolManager.GetObject(info.HitBoxPrefabs, false);
         obj.transform.position = info.HitBox.position;
+        obj.transform.forward = transform.forward;
         obj.SetActive(true);
     }
     private IEnumerator GoToPlayer()

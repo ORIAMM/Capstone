@@ -4926,6 +4926,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 110
+  StartDuration: 0
   duration: 3
   range: 2.39
   targetLayer:

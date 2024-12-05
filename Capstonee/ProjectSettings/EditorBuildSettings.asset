@@ -11,4 +11,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Totti/Scene Totti/BossFight.unity
     guid: dc3b6242dd96d3a4395840cb6a925ff1
+  - enabled: 1
+    path: Assets/[PHILIP]/Menu.unity
+    guid: 2de4b12ebf04f4442804359eb04f9089
+  - enabled: 1
+    path: Assets/[PHILIP]/PilipTesting.unity
+    guid: ede2663959b34a3419d25dc7bf7e225d
   m_configObjects: {}
