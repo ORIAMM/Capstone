@@ -306,7 +306,7 @@
                 {
                     "name": "",
                     "id": "3f9b987b-3dc1-402f-be20-f79995ee9087",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -328,7 +328,7 @@
                 {
                     "name": "",
                     "id": "d46e37ca-4387-4a86-9b80-484496cb88cd",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -350,6 +350,17 @@
                 {
                     "name": "",
                     "id": "87a8bf7d-9442-416c-b253-49e15b99e488",
+                    "path": "<Gamepad>/start",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Escape",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "49622097-e568-43ce-ae3c-e5558af27c6f",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
@@ -360,8 +371,19 @@
                 },
                 {
                     "name": "",
+                    "id": "24f3934c-5569-47b1-8572-4c46d6495468",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Skill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "0ab91387-f57b-48f7-b393-9d144aaf3c51",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
