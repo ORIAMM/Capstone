@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Video;
 
 public class UI_Controller : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class UI_Controller : MonoBehaviour
     public GameObject pauseMenuUI;
     private bool isPaused;
     private string currentMusic;
+
+    [SerializeField] private VideoPlayer videoPlayer; // Tambahkan referensi VideoPlayer
+    [SerializeField] private string nextSceneAfterVideo; // Nama scene tujuan setelah video
 
     void Start()
     {
@@ -128,5 +132,25 @@ public class UI_Controller : MonoBehaviour
     public void DefeatPanel()
     {
 
+    }
+    public void PlayGameWithCutscene()
+    {
+        if (videoPlayer != null)
+        {
+            SoundManager.instance.StopAllMusic();
+            videoPlayer.loopPointReached += OnVideoFinished; // Callback saat video selesai
+            videoPlayer.Play();
+        }
+        else
+        {
+            Debug.LogWarning("VideoPlayer tidak diset. Langsung berpindah scene.");
+            ChangeScene(nextSceneAfterVideo);
+        }
+    }
+
+    private void OnVideoFinished(VideoPlayer vp)
+    {
+        vp.loopPointReached -= OnVideoFinished; // Hapus callback
+        ChangeScene(nextSceneAfterVideo); // Ganti ke scene berikutnya
     }
 }
