@@ -15,11 +15,13 @@ public class Player : MonoBehaviour, IEntity
     private Animator _animator;
     private PlayerControls input;
     private CharacterController controller;
+    private PlayerInputManage inputManage;
 
     [Header("Main Settings")]
     [SerializeField] private ImprovisedPlayerMovement movement;
     [SerializeField] private PlayerCamera playerCam;
     [SerializeField] private PlayerCombat playerCombat;
+    [SerializeField] private int index = 0;
 
     [Header("Player Stat")]
     [SerializeField] private float initial_time = 300f;
@@ -31,6 +33,7 @@ public class Player : MonoBehaviour, IEntity
     [SerializeField] private Transform FacingDirection;
 
     [SerializeField] private float Gravity = 9.81f;
+    public Vector2 MoveValue;
 
     public CameraStyle _CameraStyle;
     private TimeManager timeManager;
@@ -38,18 +41,24 @@ public class Player : MonoBehaviour, IEntity
     public bool Dodging => movement.isDodging != null;
     private void OnEnable()
     {
-        input.Movement.Enable();
-        input.Controls.Enable();
+        //input.Movement.Enable();
+        //input.Controls.Enable();
     }
     private void OnDisable()
     {
-        input.Movement.Disable();
-        input.Controls.Disable();
+        //input.Movement.Disable();
+        //input.Controls.Disable();
+    }
+
+    public int GetIndex()
+    {
+        return index;
     }
     private void Awake()
     {
         Cursor.visible = false;
-        input = new();
+        Cursor.lockState = CursorLockMode.Locked;
+        //input = new();
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
         timeManager = GetComponent<TimeManager>();
@@ -70,7 +79,7 @@ public class Player : MonoBehaviour, IEntity
         //Initialize Camera
         playerCam.PlayerMeshObject = PlayerMeshObject;
         playerCam.FacingDirection = FacingDirection; 
-        playerCam.input = input;
+        //playerCam.input = input;
         playerCam.animator = _animator;
         playerCam._CameraStyle = _CameraStyle;
 
@@ -80,18 +89,18 @@ public class Player : MonoBehaviour, IEntity
         playerCombat.player =  PlayerMeshObject;
 
         //Initialize Input
-        input.Controls.Target.performed += (val) => playerCam.GetTarget();
+        /*input.Controls.Target.performed += (val) => playerCam.GetTarget();
         input.Controls.Attack.performed += (val) => playerCombat.Attack();
         input.Controls.Block.performed += (val) => playerCombat.Block();
         input.Controls.Skill.performed += (val) => timeManager.UseSkill(5f);
         input.Movement.Dodge.performed += (val) => playerCombat.Dodge(MoveValue);
+*/
 
-        //Debug Animation
-        input.Controls.Test.performed += (val) => ReceiveDamage(5);
 
-        //input.Movement.Jump.performed += (val) => movement.Jump();
         //input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
+    public void Attacking() => playerCombat.Attack();
+
 
     private void Update()
     {
@@ -153,6 +162,6 @@ public class Player : MonoBehaviour, IEntity
     {
         Debug.Log("Mati");
     }
-    Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
+    //Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
 
 }

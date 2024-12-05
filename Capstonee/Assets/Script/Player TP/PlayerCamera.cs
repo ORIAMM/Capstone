@@ -22,9 +22,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] float panning_speed;
     //public Action CameraLogic;
 
-/*    [Header("Equip")]
-    [SerializeField] private GameObject sword;
-    [SerializeField] private GameObject swordSheath;*/
+    [SerializeField] private int index = 0;
 
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform FacingDirection;
@@ -36,6 +34,9 @@ public class PlayerCamera : MonoBehaviour
     float mouseX, mouseY;
     private Transform Target;
     private bool isEquipped;
+
+    public Vector2 Input;
+    public Vector2 MouseInput;
     public Transform target
     {
         get
@@ -56,6 +57,11 @@ public class PlayerCamera : MonoBehaviour
         cinemachineFreeLook.m_XAxis.m_InputAxisName = "";
         cinemachineFreeLook.m_YAxis.m_InputAxisName = "";
     }
+
+    public int GetIndex()
+    {
+        return index;
+    }
     private void Update()
     {
         Vector3 Forward = cam.transform.forward;
@@ -75,15 +81,14 @@ public class PlayerCamera : MonoBehaviour
     }
     void BasicCamera()
     {
-        var Input = input.Movement.Move.ReadValue<Vector2>();
+        //var Input = input.Movement.Move.ReadValue<Vector2>();
         Vector3 inputDir = FacingDirection.forward * Input.y + FacingDirection.right * Input.x;
-        if (inputDir != Vector3.zero) PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
-        var MouseInput = input.Controls.Mouse.ReadValue<Vector2>();
+        if (inputDir != Vector3.zero) PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir.normalized, Time.deltaTime * rotationSpeed * 6f);
+        //var MouseInput = input.Controls.Mouse.ReadValue<Vector2>();
         mouseX = MouseInput.x;
         mouseY = MouseInput.y;
 
         player._CameraStyle = CameraStyle.Basic;
-        //_CameraStyle = CameraStyle.Basic;
     }
     void CombatCamera()
     {
@@ -95,10 +100,9 @@ public class PlayerCamera : MonoBehaviour
         mouseX = (viewPos.x - 0.5f + targetLockOffset.x) * panning_speed;
         mouseY = (viewPos.y - 0.5f + targetLockOffset.y) * panning_speed;
         Vector3 inputDir = new(cam.transform.forward.x, 0, cam.transform.forward.z);
-        PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir, Time.deltaTime * rotationSpeed);
+        PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir, Time.deltaTime * rotationSpeed * 6f);
 
         player._CameraStyle = CameraStyle.Combat;
-        //_CameraStyle = CameraStyle.Combat;
     }
 
     /*    public void Equip()
