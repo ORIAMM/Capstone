@@ -2986,7 +2986,7 @@ MonoBehaviour:
   movement: {fileID: 1560858783869766425}
   playerCam: {fileID: 9026998922585884867}
   playerCombat: {fileID: 8121246062078092157}
-  initial_time: 50
+  initial_time: 300
   DmgReduct: 0.5
   HealthPlayer: 0
   PlayerMeshObject: {fileID: 241323238222465198}
@@ -3133,7 +3133,7 @@ MonoBehaviour:
   m_ActionEvents: []
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Movement
+  m_DefaultActionMap: 92760632-c35b-4b7a-b052-2c6fa2ec4fc5
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 5839309838797595243}
 --- !u!1 &7580357265356742510
