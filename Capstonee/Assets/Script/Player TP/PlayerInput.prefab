@@ -114,12 +114,12 @@ MonoBehaviour:
   - m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 7844999153524079238}
-        m_TargetAssemblyTypeName: 
-        m_MethodName: 
-        m_Mode: 1
+        m_TargetAssemblyTypeName: PlayerInputManage, Assembly-CSharp
+        m_MethodName: OnTarget
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -195,9 +195,45 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 0498bada-eb69-4b30-8cb1-d4daa9ef0bfb
     m_ActionName: Controls/Skill[/Keyboard/q,/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 49482588-ecd7-4207-8dd9-a6eec51de2b7
+    m_ActionName: Controls/Move[/XInputControllerWindows/leftStick/up,/XInputControllerWindows1/leftStick/up,/XInputControllerWindows/leftStick/down,/XInputControllerWindows1/leftStick/down,/XInputControllerWindows/leftStick/left,/XInputControllerWindows1/leftStick/left,/XInputControllerWindows/leftStick/right,/XInputControllerWindows1/leftStick/right]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2ab88ed0-81e4-4ab0-893c-2ef4c7fb7e78
+    m_ActionName: Controls/Dodge[/XInputControllerWindows/leftShoulder,/XInputControllerWindows1/leftShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d47aaecf-730d-42f3-8be7-aa15063625ee
+    m_ActionName: Movement/Skill[/XInputControllerWindows/buttonEast,/XInputControllerWindows1/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 776ede7a-fcd0-4a50-ad1e-751ac552d01d
+    m_ActionName: Movement/Escape[/XInputControllerWindows/start,/XInputControllerWindows1/start]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a226e14a-b143-4416-a4bd-fc71c60eb528
+    m_ActionName: Movement/Test
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 02895f25-7c1c-426f-af8a-dc69a795d507
+    m_ActionName: Movement/Block[/XInputControllerWindows/rightShoulder,/XInputControllerWindows1/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1ac39728-e29b-4d50-93dd-075d084e599b
+    m_ActionName: Movement/Attack[/XInputControllerWindows/buttonWest,/XInputControllerWindows1/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 59b130d2-d46e-4492-8866-bdf22f90c528
+    m_ActionName: Movement/Target[/XInputControllerWindows/buttonNorth,/XInputControllerWindows1/buttonNorth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f50a9047-b98c-4372-9b4f-1ffeb97e1c5e
+    m_ActionName: Movement/Mouse[/XInputControllerWindows/rightStick,/XInputControllerWindows1/rightStick]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Movement
+  m_DefaultActionMap: Controls
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!114 &7844999153524079238

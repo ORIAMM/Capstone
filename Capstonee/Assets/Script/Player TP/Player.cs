@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static UnityEngine.InputSystem.InputAction;
 public enum CameraStyle
 {
     Basic, Combat
@@ -13,7 +14,7 @@ public interface IEntity
 public class Player : MonoBehaviour, IEntity
 {
     private Animator _animator;
-    private PlayerControls input;
+    //private PlayerControls input;
     private CharacterController controller;
     private PlayerInputManage inputManage;
 
@@ -58,11 +59,9 @@ public class Player : MonoBehaviour, IEntity
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        //input = new();
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
         timeManager = GetComponent<TimeManager>();
-
         playerCam = GetComponent<PlayerCamera>();
         playerCombat = GetComponent<PlayerCombat>();
 
@@ -99,8 +98,18 @@ public class Player : MonoBehaviour, IEntity
 
         //input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
-    public void Attacking() => playerCombat.Attack();
-
+    public void Attacking()
+    {
+        playerCombat.Attack();
+    }
+    public void Targeting()
+    {
+        playerCam.GetTarget();
+    }
+    public void OnMove(CallbackContext context)
+    {
+        MoveValue = context.action.ReadValue<Vector2>();
+    }
 
     private void Update()
     {

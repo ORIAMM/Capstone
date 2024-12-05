@@ -41,8 +41,11 @@ public class PlayerInputManage : MonoBehaviour
     }
     public void OnMove(CallbackContext context)
     {
-        _Player.MoveValue = context.ReadValue<Vector2>();
-        _PlayerCamera.Input = context.ReadValue<Vector2>();
+        if(_Player != null & _PlayerCamera != null)
+        {
+            _Player.MoveValue = context.ReadValue<Vector2>();
+            _PlayerCamera.Input = context.ReadValue<Vector2>();
+        }
     }
     public void OnDodge(CallbackContext context)
     {
@@ -55,8 +58,11 @@ public class PlayerInputManage : MonoBehaviour
     }
     public void Attack(CallbackContext context)
     {
-        Attacked = context.action.triggered;
-        _Player.Attacking();
+        if (context.action.triggered)
+        {
+            Debug.Log("hei");
+
+        }
     }
     public void Block(CallbackContext context)
     {
@@ -72,6 +78,10 @@ public class PlayerInputManage : MonoBehaviour
     }
     public void OnTarget(CallbackContext context)
     {
-        Target = context.action.triggered;
+        if (context.action.triggered)
+        {
+            Debug.Log("cek");
+            _Player.Targeting();
+        }
     }
 }
