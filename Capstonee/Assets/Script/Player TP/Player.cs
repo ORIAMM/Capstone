@@ -177,6 +177,9 @@ public class Player : MonoBehaviour, IEntity
     }
     public void OnDeath()
     {
+        SoundManager.instance.StopAllMusic();
+        SoundManager.instance.StopAllSFX();
+
         _animator.SetTrigger("Death");
         OnDisable();
 
@@ -190,4 +193,6 @@ public class Player : MonoBehaviour, IEntity
         uI_Controller.Defeat();
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
+
+    public UI_Controller ui;
 }

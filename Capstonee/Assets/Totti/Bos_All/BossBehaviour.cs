@@ -38,6 +38,7 @@ public class BossBehaviour : TimedObject, IEntity
         agent = GetComponent<NavMeshAgent>();
         bossCombat = GetComponent<BossCombat>();
         agent.speed = SPD;
+        CurrTP = MaxTP;
         isAlive = true;
         isPlaySFX = false;
         animator = GetComponent<Animator>();
@@ -52,9 +53,10 @@ public class BossBehaviour : TimedObject, IEntity
         {
             ChasePlayer();
         }
-        else
+
+        if (ui.isLose)
         {
-            BossDeath();
+            isStopped = true;
         }
     }
     public override void OnStop()
@@ -133,10 +135,6 @@ public class BossBehaviour : TimedObject, IEntity
             agent.enabled = false;
         }
 
-        ui.isWin = true;
-        ui.Victory();
-
-        //Debug.Log("Tururururu");
     }
     void UpdateHealthBar()
     {
@@ -160,6 +158,10 @@ public class BossBehaviour : TimedObject, IEntity
     }
     public void OnDeath()
     {
+        SoundManager.instance.StopAllMusic();
+        SoundManager.instance.StopAllSFX();
+        ui.isWin = true;
+        ui.Victory();
         BossDeath();
     }
 }

@@ -9748,7 +9748,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Damage: 120
-  radius: 2.77
+  radius: 5
   attackDuration: 0.5
   AttackLayer:
     serializedVersion: 2

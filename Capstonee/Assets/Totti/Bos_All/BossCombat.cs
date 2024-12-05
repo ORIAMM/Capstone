@@ -73,7 +73,7 @@ public class BossCombat : MonoBehaviour
             {
                 SoundManager.instance.PlaySFX("BossStep");
             }
-            else if (isAttack && SoundManager.instance.IsSFXPlaying("BossStep") || bossBehaviour.isStopped)
+            else if (isAttack && SoundManager.instance.IsSFXPlaying("BossStep") || bossBehaviour.isStopped || !bossBehaviour.isAlive)
             {
                 SoundManager.instance.StopSFX("BossStep");
             }
@@ -87,6 +87,7 @@ public class BossCombat : MonoBehaviour
             {
                 //Debug.Log("ketemu");
                 StartCoroutine(AttackPlayer());
+                bossBehaviour.RotateToTarget(0);
                 lastAttackTime = Time.time;
             }
         }
@@ -99,6 +100,9 @@ public class BossCombat : MonoBehaviour
     private IEnumerator AttackPlayer()
     {
         //Debug.Log("SiapPukul");
+
+        bossBehaviour.RotateToTarget(0);
+
         isAttack = true;
 
         bossBehaviour.agent.ResetPath();
@@ -138,6 +142,7 @@ public class BossCombat : MonoBehaviour
         SoundManager.instance.PlaySFX("Dying");
         StopAllCoroutines();
         bossBehaviour.isAlive = false;
+        bossBehaviour.OnDeath();
         this.enabled = false;
     }
     IEnumerator PlayAnimationYA(TriggerInfo info, float TotalFrames)
