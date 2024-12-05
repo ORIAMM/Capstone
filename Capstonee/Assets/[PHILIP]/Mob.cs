@@ -1,9 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.XR;
 
 //public abstract class AttackInfo : MonoBehaviour
 //{
@@ -48,12 +50,74 @@ using UnityEngine.EventSystems;
 //        yield return PlayAnimation(info, info.TotalFrames);
 //    }
 //}
+
+public class EnemyStats
+{
+    public int MaxHealth;
+    public int ATK;
+    public int DEF;
+    public int SPD;
+    public float ASPD;
+    public float CD;
+}
+public enum Attack_Type
+{
+    Pounch, ChargePounch, Claws, Fissure, Kick
+}
+[Serializable]
+public class EnemyAttackInfo
+{
+    [Serializable]
+    public struct ObjectInfo
+    {
+        [Header("Object Settings")]
+        public GameObject Prefab;
+        public Transform spawn_point;
+
+        [Header("Frame Settings")]
+        public int SpawnFrame;
+    }
+    [Serializable]
+    public struct MoveInfo
+    {
+        [Header("External Settings")]
+        public float animation_speed;
+        public float rotation_speed;
+
+        [Header("Transform Moving Setings")]
+        public float maxdistance;
+        public float lerpEndFrame;
+
+        [Header("Frame Settings")]
+        public int SpawnFrame;
+    }
+    [Serializable]
+    public struct BehaviourInfo
+    {
+        public string TriggerName;
+        public string ANIMATIONNAME;
+        public List<ObjectInfo> objectInfos;
+        public List<MoveInfo> moveInfos;
+        public int TotalFrames;
+    }
+    public Attack_Type attack_Type;
+
+    public float AttackRadius;
+    public BehaviourInfo info;
+    public float delay;
+}
+[Serializable]
+public class AttackPattern
+{
+    public List<Attack_Type> attack_Types;
+}
 public class Mob : TimedObject, IEntity
 {
     [SerializeField] private float Health;
     [SerializeField] private float AttackRadius;
     [SerializeField] private float AttackDelay;
     [SerializeField] private TriggerInfo info;
+    [SerializeField] float RotateOffset;
 
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed;
@@ -88,25 +152,30 @@ public class Mob : TimedObject, IEntity
     public override void OnUpdate()
     {
         Target();
-        if (player && isAttacking == null)
+        if (player)
         {
-            LookToPlayer();
-            GetForwardMove();
+            if (isAttacking == null)
+            {
+                LookToPlayer(RotateOffset);
+                GetForwardMove();
+            }
+
+            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+            if (distanceToPlayer <= AttackRadius && Time.time > atkCooldown)
+            {
+                isAttacking ??= StartCoroutine(PlayAnimation(info, info.TotalFrames));
+            }
         }
         ApplyMovement();
-
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer <= AttackRadius && Time.time > atkCooldown)
-        {
-            isAttacking = StartCoroutine(PlayAnimation(info, info.TotalFrames));
-        }
     }
-    public void LookToPlayer()
+    public void LookToPlayer(float offset)
     {
         Vector3 directionToPlayer = player.transform.position - transform.position;
         directionToPlayer.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+        Quaternion offsetRot = Quaternion.Euler(0, offset, 0);
+        targetRotation *= offsetRot;
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
     public void GetForwardMove()
@@ -155,17 +224,15 @@ public class Mob : TimedObject, IEntity
             animator.speed = 1;
             controller.Move(keptVelocity);
             keptVelocity = Vector3.zero;
-            Debug.Log("Continue");
         }
     }
     public override void OnStop()
     {
         if (animator)
         {
-            animator.speed = 1;
+            animator.speed = 0;
             keptVelocity = controller.velocity;
             controller.Move(Vector3.zero);
-            Debug.Log("Continue");
         }
     }
     public void OnDeath()
@@ -184,8 +251,9 @@ public class Mob : TimedObject, IEntity
     }
     public IEnumerator PlayAnimation(TriggerInfo info, float TotalFrames)
     {
+        Vector3 toKeep = moveDirection;
+        moveDirection = Vector3.zero;
         animator.SetTrigger(info.TriggerName);
-
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(info.ANIMATIONNAME));
 
         foreach (hitBoxInfo trigger in info.hitboxesInfo)
@@ -196,6 +264,7 @@ public class Mob : TimedObject, IEntity
 
             SpawnHitbox(trigger);
         }
+        moveDirection = toKeep;
         isAttacking = null;
         atkCooldown = Time.time + AttackDelay;
     }
@@ -212,7 +281,5 @@ public class Mob : TimedObject, IEntity
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, ChaseRadius);
     }
-
-
 #endif
 }
