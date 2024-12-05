@@ -10,7 +10,7 @@ public class BossAttackHitbox : TimedObject
     public float range;
     public LayerMask targetLayer;
 
-    private ParticleSystem particleSystem;
+    private new ParticleSystem particleSystem;
     private Coroutine damageCoroutine;
 
     private void Awake()

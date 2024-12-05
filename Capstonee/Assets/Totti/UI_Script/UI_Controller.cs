@@ -8,10 +8,11 @@ public class UI_Controller : MonoBehaviour
     private Stack<GameObject> panelHistory = new Stack<GameObject>();
     private GameObject currentPanel;
     private string currentScene;
-    private string currentMusic;
 
     public GameObject pauseMenuUI;
     private bool isPaused;
+    private string currentMusic;
+
     void Start()
     {
         isPaused = false;
