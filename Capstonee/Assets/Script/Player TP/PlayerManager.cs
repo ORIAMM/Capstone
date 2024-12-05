@@ -46,7 +46,7 @@ public class PlayerManager : MonoBehaviour
         //add the layer
         playerParent.GetComponentInChildren<Camera>().cullingMask |= 1 << layerToAdd;
         //set the action in the custom cinemachine Input Handler
-        //playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Mouse");
+        playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Mouse");
 
     }
 }
