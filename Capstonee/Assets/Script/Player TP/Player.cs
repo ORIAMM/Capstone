@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections;
-using TMPro.EditorUtilities;
-using UnityEngine;
-using UnityEngine.AI;
-using UnityEngine.Windows;
-
+﻿using UnityEngine;
 public enum CameraStyle
 {
     Basic, Combat
