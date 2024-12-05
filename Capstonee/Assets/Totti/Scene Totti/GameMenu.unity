@@ -1067,7 +1067,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &439719510
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2936,6 +2936,11 @@ MonoBehaviour:
   - {fileID: 1761306061}
   - {fileID: 900854225}
   pauseMenuUI: {fileID: 0}
+  VictoryPanel: {fileID: 0}
+  DefeatPanel: {fileID: 0}
+  ResultPanel: {fileID: 0}
+  isWin: 0
+  isLose: 0
   videoPlayer: {fileID: 1684296873}
   nextSceneAfterVideo: BossFight
 --- !u!4 &1684296872

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using TMPro;
+using UnityEngine;
 public enum CameraStyle
 {
     Basic, Combat
@@ -20,6 +22,7 @@ public class Player : MonoBehaviour, IEntity
     [SerializeField] private ImprovisedPlayerMovement movement;
     [SerializeField] private PlayerCamera playerCam;
     [SerializeField] private PlayerCombat playerCombat;
+    [SerializeField] private UI_Controller uI_Controller;
 
     [Header("Player Stat")]
     [SerializeField] private float initial_time = 300f;
@@ -40,6 +43,7 @@ public class Player : MonoBehaviour, IEntity
     {
         input.Movement.Enable();
         input.Controls.Enable();
+        StartTicking();
     }
     private void OnDisable()
     {
@@ -85,6 +89,7 @@ public class Player : MonoBehaviour, IEntity
         input.Controls.Block.performed += (val) => playerCombat.Block();
         input.Controls.Skill.performed += (val) => timeManager.UseSkill(5f);
         input.Movement.Dodge.performed += (val) => playerCombat.Dodge(MoveValue);
+        //input.Controls.Escape.performed += (val) => uI_Controller.PauseGame();
 
         //Debug Animation
         input.Controls.Test.performed += (val) => ReceiveDamage(5);
@@ -92,20 +97,23 @@ public class Player : MonoBehaviour, IEntity
         //input.Movement.Jump.performed += (val) => movement.Jump();
         //input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
-
     private void Update()
     {
-        
+        if (HealthPlayer > 0)
+        {
+            FloatToTimeConverse(); // Perbarui timer UI
+        }
+
         if (playerCombat.isBlocking == false && playerCombat.isFall == false && playerCombat.isDodging == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
             switch (_CameraStyle)
             {
-                case (CameraStyle.Basic):
+                case CameraStyle.Basic:
                     movement.Move(adjustedMoveValue);
                     movement.ApplyMove(Gravity);
                     break;
-                case (CameraStyle.Combat):
+                case CameraStyle.Combat:
                     adjustedMoveValue *= 0.5f;
                     if (playerCombat.isAttacking == true)
                     {
@@ -115,19 +123,38 @@ public class Player : MonoBehaviour, IEntity
                     movement.ApplyMove(Gravity);
                     break;
             }
-
         }
-        Ticking();
     }
-
-    public void Ticking()
+    public void FloatToTimeConverse()
     {
-        if (HealthPlayer - Time.time <= 0)
-        {
-            OnDeath();
-        }
+        int totalSeconds = Mathf.CeilToInt(HealthPlayer); // Pembulatan ke atas
+        int minutes = totalSeconds / 60; // Hitung menit
+        int seconds = totalSeconds % 60; // Hitung detik
+
+        TimerText.text = $"{minutes:00}:{seconds:00}"; // Format MM:SS
     }
 
+    public TextMeshProUGUI TimerText;
+    private Coroutine tickingCoroutine;
+    public void StartTicking()
+    {
+        if (tickingCoroutine == null)
+        {
+            tickingCoroutine = StartCoroutine(TickingCoroutine());
+        }
+    }
+    private IEnumerator TickingCoroutine()
+    {
+        while (HealthPlayer > 0)
+        {
+            yield return new WaitForSeconds(1f); // Kurangi setiap detik
+            HealthPlayer--; // Kurangi HealthPlayer setiap detik
+            FloatToTimeConverse(); // Update Timer
+        }
+
+        HealthPlayer = 0; // Pastikan tidak negatif
+        OnDeath(); // Panggil jika waktu habis
+    }
     public void ReceiveDamage(float value)
     {
         if (playerCombat.isFall == true || playerCombat.isDodging == true) return;
@@ -147,12 +174,20 @@ public class Player : MonoBehaviour, IEntity
                 HealthPlayer -= value;
             }
         }
-        
     }
     public void OnDeath()
     {
-        Debug.Log("Mati");
+        _animator.SetTrigger("Death");
+        OnDisable();
+
+        if (tickingCoroutine != null)
+        {
+            StopCoroutine(tickingCoroutine);
+            tickingCoroutine = null;
+        }
+
+        uI_Controller.isLose = true;
+        uI_Controller.Defeat();
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
-
 }

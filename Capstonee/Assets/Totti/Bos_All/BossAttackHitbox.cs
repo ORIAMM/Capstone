@@ -16,7 +16,6 @@ public class BossAttackHitbox : TimedObject
     {
         particleSystem = GetComponent<ParticleSystem>();
     }
-
     public void Initialize(BossBehaviour boss)
     {
         damage = boss.ATK;
@@ -31,7 +30,6 @@ public class BossAttackHitbox : TimedObject
 
         damageCoroutine = StartCoroutine(DealDamageWithSphere());
     }
-
     public override void OnUpdate()
     {
         duration -= Time.deltaTime;
@@ -42,7 +40,6 @@ public class BossAttackHitbox : TimedObject
             duration = StartDuration;
         }
     }
-
     public override void OnContinue()
     {
         if (particleSystem != null)
@@ -55,7 +52,6 @@ public class BossAttackHitbox : TimedObject
             damageCoroutine = StartCoroutine(DealDamageWithSphere());
         }
     }
-
     public override void OnStop()
     {
         if (particleSystem != null)

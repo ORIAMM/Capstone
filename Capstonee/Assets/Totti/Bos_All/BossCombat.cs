@@ -69,11 +69,11 @@ public class BossCombat : MonoBehaviour
     {
         if (bossBehaviour.isAlive)
         {
-            if (!isAttack && !SoundManager.instance.IsSFXPlaying("BossStep"))
+            if (!isAttack && !SoundManager.instance.IsSFXPlaying("BossStep") && !bossBehaviour.isStopped)
             {
                 SoundManager.instance.PlaySFX("BossStep");
             }
-            else if (isAttack && SoundManager.instance.IsSFXPlaying("BossStep"))
+            else if (isAttack && SoundManager.instance.IsSFXPlaying("BossStep") || bossBehaviour.isStopped)
             {
                 SoundManager.instance.StopSFX("BossStep");
             }
@@ -128,6 +128,8 @@ public class BossCombat : MonoBehaviour
         bossBehaviour.agent.speed = bossBehaviour.SPD;
         bossBehaviour.RotateSpeed = Rtemp;
     }
+
+    public UI_Controller ui;
     private void Die()
     {
         animator.enabled = false;

@@ -11,11 +11,17 @@ public class UI_Controller : MonoBehaviour
     private string currentScene;
 
     public GameObject pauseMenuUI;
+    public GameObject VictoryPanel;
+    public GameObject DefeatPanel;
+    public GameObject ResultPanel;
+
     private bool isPaused;
     private string currentMusic;
+    public bool isWin;
+    public bool isLose;
 
-    [SerializeField] private VideoPlayer videoPlayer; // Tambahkan referensi VideoPlayer
-    [SerializeField] private string nextSceneAfterVideo; // Nama scene tujuan setelah video
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private string nextSceneAfterVideo;
 
     void Start()
     {
@@ -54,11 +60,10 @@ public class UI_Controller : MonoBehaviour
                 break;
 
             default:
-                Debug.LogWarning("No audio clip assigned for this scene.");
+                //.LogWarning("No audio clip assigned for this scene.");
                 break;
         }
     }
-
     public void ButtonClicked()
     {
         SoundManager.instance.PlaySFX("UI_Click");
@@ -105,33 +110,50 @@ public class UI_Controller : MonoBehaviour
         {
             Time.timeScale = 0f;
             isPaused = true;
-            if (pauseMenuUI != null)
-            {
-                pauseMenuUI.SetActive(true);
-            }
+            //if (pauseMenuUI != null && is)
+            //{
+            //    pauseMenuUI.SetActive(true);
+            //}
             SoundManager.instance.PauseMusic();
             SoundManager.instance.PauseSfx();
+            
         }
 
         else if (isPaused)
         {
             Time.timeScale = 1f;
             isPaused = false;
-            if (pauseMenuUI != null)
-            {
-                pauseMenuUI.SetActive(false);
-            }
+            //if (pauseMenuUI != null)
+            //{
+            //    pauseMenuUI.SetActive(false);
+            //}
             SoundManager.instance.UnPauseMusic();
             SoundManager.instance.UnPauseSfx();
         }
     }
-    public void VictoryPanel()
+    public void Victory()
     {
-
+        if (isWin)
+        {
+            PauseGame();
+            VictoryPanel.SetActive(true);
+            Invoke("Result", 2f);
+        }
     }
-    public void DefeatPanel()
+    public void Defeat()
     {
-
+        if (isLose)
+        {
+            PauseGame();
+            DefeatPanel.SetActive(true);
+            SoundManager.instance.PlaySFX("PlayerDeath");
+        }
+    }
+    public void Result()
+    {
+        VictoryPanel.SetActive(false);
+        ResultPanel.SetActive(true);
+        SoundManager.instance.PlaySFX("Victory");
     }
     public void PlayGameWithCutscene()
     {
@@ -143,11 +165,10 @@ public class UI_Controller : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("VideoPlayer tidak diset. Langsung berpindah scene.");
+            //Debug.LogWarning("VideoPlayer tidak diset. Langsung berpindah scene.");
             ChangeScene(nextSceneAfterVideo);
         }
     }
-
     private void OnVideoFinished(VideoPlayer vp)
     {
         vp.loopPointReached -= OnVideoFinished; // Hapus callback

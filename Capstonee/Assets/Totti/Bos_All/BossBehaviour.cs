@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-
 public class BossBehaviour : TimedObject, IEntity
 {
     [Header("Object Reference")]
@@ -25,7 +24,7 @@ public class BossBehaviour : TimedObject, IEntity
     public float SkillDuration;
     public int RotateSpeed;
     public float RotateOffset;
-    private bool isStopped;
+    public bool isStopped;
     private int tempRotateSpeed;
 
     public bool isAlive;
@@ -124,6 +123,8 @@ public class BossBehaviour : TimedObject, IEntity
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, RotateSpeed);
         }
     }
+
+    public UI_Controller ui;
     void BossDeath()
     {
         if (agent.enabled)
@@ -131,6 +132,9 @@ public class BossBehaviour : TimedObject, IEntity
             agent.isStopped = true;
             agent.enabled = false;
         }
+
+        ui.isWin = true;
+        ui.Victory();
 
         //Debug.Log("Tururururu");
     }
@@ -147,8 +151,6 @@ public class BossBehaviour : TimedObject, IEntity
 
         CurrTP -= (int)value - DEF;
 
-        //Debug.Log($"Boss took {value} damage. Current HP: {CurrTP}");
-
         if (CurrTP <= 0)
         {
             CurrTP = 0;
@@ -160,6 +162,4 @@ public class BossBehaviour : TimedObject, IEntity
     {
         BossDeath();
     }
-
-
 }

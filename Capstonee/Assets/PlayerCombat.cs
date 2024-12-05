@@ -95,7 +95,6 @@ public class PlayerCombat : MonoBehaviour
         }
         
     }
-    
     public IEnumerator Blocking()
     {
         if (isBlocking == false && _player._CameraStyle == CameraStyle.Combat)
@@ -178,7 +177,8 @@ public class PlayerCombat : MonoBehaviour
                 {
                     hitEnemies.Add(enemy);
                     enemy.ReceiveDamage(70);
-                    _player.HealthPlayer += 20f;
+                    _player.HealthPlayer += 30f;
+                    SoundManager.instance.PlaySFX("BossHited");
                 }
             }
         }
