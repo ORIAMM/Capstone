@@ -25,7 +25,7 @@ public class BossBehaviour : TimedObject, IEntity
     public float SkillDuration;
     public int RotateSpeed;
     public float RotateOffset;
-
+    private bool isStopped;
     private int tempRotateSpeed;
 
     public bool isAlive;
@@ -35,6 +35,7 @@ public class BossBehaviour : TimedObject, IEntity
 
     private void Start()
     {
+        isStopped = false;
         agent = GetComponent<NavMeshAgent>();
         bossCombat = GetComponent<BossCombat>();
         agent.speed = SPD;
@@ -61,14 +62,15 @@ public class BossBehaviour : TimedObject, IEntity
     {
         if (animator != null)
         {
+            isStopped = true;
             animator.speed = 0; // Freeze the animation
-            agent.speed = 0;
             RotateSpeed = 0;
-
+            agent.ResetPath();
+            agent.isStopped = true;
+            agent.speed = 0;
+            SoundManager.instance.PauseSfx();
         }
     }
-
-
     public override void OnContinue()
     {
         if (animator != null)
@@ -76,31 +78,20 @@ public class BossBehaviour : TimedObject, IEntity
             agent.speed = SPD;
             animator.speed = 1; // Resume the Animator
             RotateSpeed = tempRotateSpeed;
+            agent.isStopped = false;
+            isStopped = false;
+            SoundManager.instance.UnPauseSfx();
         }
     }
-
-
     void ChasePlayer()
     {
         FindPlayer();
 
-        if (player != null && !bossCombat.isAttack)
+        if (player != null && !bossCombat.isAttack && !isStopped)
         {
             agent.SetDestination(player.position);
             
-            //if (!isPlaySFX)
-            //{
-            //    Debug.Log("Musik");
-            //    SoundManager.instance.PlaySFX("BossStep");
-            //    isPlaySFX = true;
-            //}
         }
-        //else if (bossCombat.isAttack)
-        //{
-        //    Debug.Log("Berhentii");
-        //    SoundManager.instance.StopSFX("BossStep");
-        //    isPlaySFX = false;
-        //}
         
         RotateToTarget(RotateOffset);
     }
@@ -122,7 +113,7 @@ public class BossBehaviour : TimedObject, IEntity
         Vector3 dir = player.position - transform.position;
         dir.y = 0;
 
-        if (dir.magnitude > 0.1f)
+        if (dir.magnitude > 0.1f && !isStopped)
         {
             // Hitung rotasi target dengan offset pada sumbu Y
             Quaternion targetRot = Quaternion.LookRotation(dir);

@@ -29,7 +29,6 @@ public class SoundManager : MonoBehaviour
     public Sound[] sfx;
 
     public static SoundManager instance;
-
     private void Awake()
     {
         if (instance == null)
@@ -247,5 +246,4 @@ public class SoundManager : MonoBehaviour
             }
         }
     }
-
 }
