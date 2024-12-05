@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public class BossAttackHitbox : TimedObject
 {
     [Header("Attack Settings")]
@@ -33,7 +32,7 @@ public class BossAttackHitbox : TimedObject
         damageCoroutine = StartCoroutine(DealDamageWithSphere());
     }
 
-    private void Update()
+    public override void OnUpdate()
     {
         duration -= Time.deltaTime;
 

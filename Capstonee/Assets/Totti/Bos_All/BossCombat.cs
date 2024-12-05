@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 [Serializable]
 public struct hitBoxInfo
 {
@@ -150,33 +151,13 @@ public class BossCombat : MonoBehaviour
             yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > NormalizedTime);
 
             SpawnHitbox(trigger);
-
-            if (info.TriggerName == "trigger1")
-            {
-                SoundManager.instance.PlaySFX("ChargePounch");
-            }
-            else if (info.TriggerName == "trigger2")
-            {
-                SoundManager.instance.PlaySFX("Claws");
-            }
-            else if (info.TriggerName == "trigger3")
-            {
-                SoundManager.instance.PlaySFX("Fissure");
-            }
-            else if (info.TriggerName == "trigger4")
-            {
-                SoundManager.instance.PlaySFX("Pounch");
-            }
-            else if (info.TriggerName == "trigger5")
-            {
-                SoundManager.instance.PlaySFX("Kick");
-            }
         }
     }
     private void SpawnHitbox(hitBoxInfo info)
     {
         var obj = PoolManager.GetObject(info.HitBoxPrefabs, false);
         obj.transform.position = info.HitBox.position;
+        obj.transform.forward = transform.forward;
         obj.SetActive(true);
     }
     private IEnumerator GoToPlayer()

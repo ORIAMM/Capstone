@@ -57,7 +57,7 @@ public class Player : MonoBehaviour, IEntity
         playerCam = GetComponent<PlayerCamera>();
         playerCombat = GetComponent<PlayerCombat>();
 
-        //Initialize Health
+        //Initialize initial_Health
         HealthPlayer = Time.time + initial_time;
 
         //Initialize Movement
