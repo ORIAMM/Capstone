@@ -147,6 +147,7 @@ public class BossCombat : MonoBehaviour
     }
     IEnumerator PlayAnimationYA(TriggerInfo info, float TotalFrames)
     {
+        bossBehaviour.RotateToTarget(0);
         animator.SetTrigger(info.TriggerName);
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(info.ANIMATIONNAME));
@@ -202,5 +203,9 @@ public class BossCombat : MonoBehaviour
     public void Fissures()
     {
         SoundManager.instance.PlaySFX("Fissure");
+    }
+    public void Claws()
+    {
+        SoundManager.instance.PlaySFX("Claws");
     }
 }

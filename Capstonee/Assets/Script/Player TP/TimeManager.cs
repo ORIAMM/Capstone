@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering;
 
 public class TimeManager : MonoBehaviour
 {
@@ -13,11 +15,19 @@ public class TimeManager : MonoBehaviour
     public float CurrSkillCD;
     public bool CoolDown;
 
+    [Header("Post Processing")]
+    [SerializeField] private Volume globalVolume; // Referensi ke Global Volume
+    private ColorAdjustments colorAdjustments; // Untuk mengontrol efek Color Adjustments
+
     bool skillCooldown => Time.time >= skillTime;
     private void Awake()
     {
         instance = this;
         animator = GetComponent<Animator>();
+        if (globalVolume != null && globalVolume.profile.TryGet<ColorAdjustments>(out var adjustments))
+        {
+            colorAdjustments = adjustments;
+        }
     }
     private void Start()
     {
@@ -45,7 +55,19 @@ public class TimeManager : MonoBehaviour
             Debug.Log("STOPPPP");
             isStopped = true;
             animator.SetTrigger("Skill");
+
+            if (colorAdjustments != null)
+            {
+                colorAdjustments.saturation.value = -100f; // Ubah saturation menjadi hitam putih
+            }
+            SoundManager.instance.PlaySFX("TimeStop");
+
             yield return new WaitForSeconds(Timer);
+
+            if (colorAdjustments != null)
+            {
+                colorAdjustments.saturation.value = 0f; // Normal saturation
+            }
 
             Debug.Log("Jalan");
             isStopped = false;

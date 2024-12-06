@@ -748,7 +748,7 @@ MonoBehaviour:
     loop: 0
     Volume: 1
     source: {fileID: 0}
-  - name: TimeStopCall
+  - name: TimeStop
     clip: {fileID: 8300000, guid: 46780360c41d5e647892561b46580d2d, type: 3}
     loop: 0
     Volume: 1
@@ -2943,6 +2943,11 @@ MonoBehaviour:
   isLose: 0
   videoPlayer: {fileID: 1684296873}
   nextSceneAfterVideo: BossFight
+  TimeElapsed: 0
+  cd: {fileID: 0}
+  player: {fileID: 0}
+  _timeremain: {fileID: 0}
+  _timeelapsed: {fileID: 0}
 --- !u!4 &1684296872
 Transform:
   m_ObjectHideFlags: 0

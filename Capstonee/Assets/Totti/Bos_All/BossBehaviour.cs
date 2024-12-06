@@ -114,7 +114,7 @@ public class BossBehaviour : TimedObject, IEntity
         Vector3 dir = player.position - transform.position;
         dir.y = 0;
 
-        if (dir.magnitude > 0.1f && !isStopped)
+        if (!isStopped)
         {
             // Hitung rotasi target dengan offset pada sumbu Y
             Quaternion targetRot = Quaternion.LookRotation(dir);
@@ -124,7 +124,32 @@ public class BossBehaviour : TimedObject, IEntity
             // Rotasikan objek menuju target dengan offset
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, RotateSpeed);
         }
+
     }
+    //public void RotateToTarget(float offsetY)
+    //{
+    //    // Hitung arah ke target
+    //    Vector3 dir = player.position - transform.position;
+    //    dir.y = 0;
+
+    //    // Hitung jarak ke target
+    //    float distanceToTarget = dir.magnitude;
+
+    //    // Tentukan jarak minimum untuk melakukan rotasi
+    //    float minDistance = -1f; // Sesuaikan nilai ini dengan kebutuhan
+
+    //    if (!isStopped && distanceToTarget > minDistance)
+    //    {
+    //        // Hitung rotasi target dengan offset pada sumbu Y
+    //        Quaternion targetRot = Quaternion.LookRotation(dir);
+    //        Quaternion offsetRot = Quaternion.Euler(0, offsetY, 0);
+    //        targetRot *= offsetRot;
+
+    //        // Rotasikan objek menuju target dengan offset
+    //        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, RotateSpeed * Time.deltaTime);
+    //    }
+    //}
+
 
     public UI_Controller ui;
     void BossDeath()

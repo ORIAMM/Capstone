@@ -93,7 +93,6 @@ public class PlayerCombat : MonoBehaviour
             time = Time.time + ComboInterval;
             coroutine = null;
         }
-        
     }
     public IEnumerator Blocking()
     {
@@ -163,7 +162,6 @@ public class PlayerCombat : MonoBehaviour
 
         }
     }
-
     public void hit()
     {
         bool isHit = Physics.CheckSphere(attackPoint.position, 0.5f, EnemyL);
@@ -177,7 +175,7 @@ public class PlayerCombat : MonoBehaviour
                 {
                     hitEnemies.Add(enemy);
                     enemy.ReceiveDamage(70);
-                    _player.HealthPlayer += 30f;
+                    _player.HealthPlayer += 10f;
                     SoundManager.instance.PlaySFX("BossHited");
                 }
             }

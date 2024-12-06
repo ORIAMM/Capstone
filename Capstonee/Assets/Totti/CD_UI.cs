@@ -19,7 +19,6 @@ public class CD_UI : MonoBehaviour
             PlayCDAnim();
         }
     }
-
     public void PlayCDAnim()
     {
         animator.Play("Cooldown_anim");

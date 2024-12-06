@@ -62,7 +62,7 @@ public class Player : MonoBehaviour, IEntity
         playerCombat = GetComponent<PlayerCombat>();
 
         //Initialize initial_Health
-        HealthPlayer = Time.time + initial_time;
+        HealthPlayer = initial_time;
 
         //Initialize Movement
         movement.camerapos = Camera.main.transform;
@@ -114,7 +114,7 @@ public class Player : MonoBehaviour, IEntity
                     movement.ApplyMove(Gravity);
                     break;
                 case CameraStyle.Combat:
-                    adjustedMoveValue *= 0.5f;
+                    adjustedMoveValue *= 0.2f;
                     if (playerCombat.isAttacking == true)
                     {
                         adjustedMoveValue *= 0.05f;
@@ -147,13 +147,13 @@ public class Player : MonoBehaviour, IEntity
     {
         while (HealthPlayer > 0)
         {
-            yield return new WaitForSeconds(1f); // Kurangi setiap detik
-            HealthPlayer--; // Kurangi HealthPlayer setiap detik
-            FloatToTimeConverse(); // Update Timer
+            yield return new WaitForSeconds(1f);
+            HealthPlayer--;
+            FloatToTimeConverse();
         }
 
-        HealthPlayer = 0; // Pastikan tidak negatif
-        OnDeath(); // Panggil jika waktu habis
+        HealthPlayer = 0;
+        OnDeath();
     }
     public void ReceiveDamage(float value)
     {
@@ -193,6 +193,4 @@ public class Player : MonoBehaviour, IEntity
         uI_Controller.Defeat();
     }
     Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
-
-    public UI_Controller ui;
 }

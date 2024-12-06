@@ -62,6 +62,9 @@ public class UI_Controller : MonoBehaviour
                 currentMusic = "BossFightTheme";
                 SoundManager.instance.LoadPref();
                 SoundManager.instance.PlayMusic("BossFightTheme");
+
+                Cursor.visible = false;
+
                 isLose = false;
                 isWin = false;
                 break;
@@ -147,6 +150,7 @@ public class UI_Controller : MonoBehaviour
     {
         if (isWin)
         {
+            Cursor.visible = true;
             VictoryPanel.SetActive(true);
             Invoke("Result", 1f);
         }
@@ -155,6 +159,7 @@ public class UI_Controller : MonoBehaviour
     {
         if (isLose)
         {
+            Cursor.visible = true;
             DefeatPanel.SetActive(true);
             Time.timeScale = 0.1f;
 
