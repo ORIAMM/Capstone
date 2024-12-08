@@ -36,6 +36,8 @@ public class PlayerCamera : MonoBehaviour
     float mouseX, mouseY;
     private Transform Target;
     private bool isEquipped;
+    float AxisX;
+    float AxisY;
     public Transform target
     {
         get
@@ -55,6 +57,7 @@ public class PlayerCamera : MonoBehaviour
         Transform playerParent = player.transform.parent;
         cam = playerParent.GetComponentInChildren<Camera>();
         //cam = Camera.main;
+        cinemachineFreeLook = playerParent.GetComponentInChildren<CinemachineFreeLook>();
         cinemachineFreeLook.m_XAxis.m_InputAxisName = "";
         cinemachineFreeLook.m_YAxis.m_InputAxisName = "";
     }

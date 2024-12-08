@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class ToggleCam : MonoBehaviour
 {
     private PlayerInputManager playerInputManager;
+    public GameObject Canvas;
 
     private void Awake()
     {
@@ -25,6 +26,7 @@ public class ToggleCam : MonoBehaviour
     private void ToggleThis(PlayerInput player)
     {
         this.gameObject.SetActive(false);
+        Canvas.SetActive(true);
     }
 
 

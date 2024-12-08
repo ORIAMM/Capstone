@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.InputSystem;
 public enum CameraStyle
 {
@@ -32,11 +33,15 @@ public class Player : MonoBehaviour, IEntity
     [Header("References")]
     [SerializeField] private Transform PlayerMeshObject;
     [SerializeField] private Transform FacingDirection;
-
+    [SerializeField] private PlayerTP playerTP;
+    
+    public UI_Controller UIController;
     [SerializeField] private float Gravity = 9.81f;
 
+    private Animator animator;
     public CameraStyle _CameraStyle;
     private TimeManager timeManager;
+    private bool isDead = false;
     public bool isCombat => playerCam.target != null;
     public bool Dodging => movement.isDodging != null;
     private void OnEnable()
@@ -51,17 +56,16 @@ public class Player : MonoBehaviour, IEntity
     {
         Cursor.visible = false;
         actionAsset = this.GetComponent<PlayerInput>().actions;
-        Action = actionAsset.FindActionMap("Player");
-        // input = GetComponent<PlayerControls>();
+        Action = actionAsset.FindActionMap(GetComponent<PlayerInput>().defaultActionMap);
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
-        timeManager = GetComponent<TimeManager>();
-
+        timeManager = FindObjectOfType<TimeManager>();
+        animator = GetComponent<Animator>();
         playerCam = GetComponent<PlayerCamera>();
         playerCombat = GetComponent<PlayerCombat>();
-
-        //Initialize initial_Health
-        HealthPlayer = Time.time + initial_time;
+        UIController = FindObjectOfType<UI_Controller>().GetComponent<UI_Controller>();
+        
+        //playerTP = FindObjectOfType<PlayerTP>().GetComponent<PlayerTP>();    
 
         //Initialize Movement
         movement.camerapos = Camera.main.transform;
@@ -91,20 +95,16 @@ public class Player : MonoBehaviour, IEntity
         Action.FindAction("Target").performed += (val) => playerCam.GetTarget();
         Action.FindAction("Attack").performed += (val) => playerCombat.Attack();
         Action.FindAction("Block").performed += (val) => playerCombat.Block();
-        Action.FindAction("Skill").performed += (val) => timeManager.UseSkill(5f);
+        Action.FindAction("Skill").performed += (val) => UseSkill();
         Action.FindAction("Dodge").performed += (val) => playerCombat.Dodge(MoveValue);
+        Action.FindAction("Escape").performed += (val) => UIController.PauseGame();
 
-        //Debug Animation
-        //input.Controls.Test.performed += (val) => ReceiveDamage(5);
-
-        //input.Movement.Jump.performed += (val) => movement.Jump();
-        //input.Movement.Dodge.performed += (val) => movement.Dodge();
     }
 
     private void Update()
     {
         
-        if (playerCombat.isBlocking == false && playerCombat.isFall == false && playerCombat.isDodging == false)
+        if (playerCombat.isBlocking == false && playerCombat.isFall == false && playerCombat.isDodging == false && isDead == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
             switch (_CameraStyle)
@@ -125,15 +125,26 @@ public class Player : MonoBehaviour, IEntity
             }
 
         }
-        Ticking();
+        Dead();
     }
 
-    public void Ticking()
+    public void UseSkill()
     {
-        if (HealthPlayer - Time.time <= 0)
+        if (timeManager.isStopped == false && timeManager.skillCooldown)
+        {
+            animator.SetTrigger("Skill");
+            timeManager.UseSkill(5f);
+        }
+    }
+    private Coroutine tickingCoroutine;
+
+    public void Dead()
+    {
+        if (PlayerTP.instance.HealthPlayer <= 0)
         {
             OnDeath();
         }
+        else return;
     }
 
     public void ReceiveDamage(float value)
@@ -146,20 +157,22 @@ public class Player : MonoBehaviour, IEntity
             {
                 Debug.Log("Blocked");
                 playerCombat.Impact();
-                HealthPlayer -= value * DmgReduct;
+                playerTP.HealthPlayer -= value * DmgReduct;
             }
             else
             {
                 Debug.Log("Fall");
-                playerCombat.Interrupt();
-                HealthPlayer -= value;
+                playerCombat.Interupt();
+                playerTP.HealthPlayer -= value;
             }
         }
         
     }
     public void OnDeath()
     {
-        Debug.Log("Mati");
+        isDead = true;
+        animator.SetTrigger("Death");
+        UIController.DefeatPanel();
     }
     Vector2 MoveValue => Action.FindAction("Move").ReadValue<Vector2>();
 

@@ -6,13 +6,15 @@ public class TimeManager : MonoBehaviour
 {
     public static TimeManager instance;
     [HideInInspector] public bool isStopped;
-    [HideInInspector] public Animator animator;
+    public Animator animator;
     [SerializeField] private float skillCoolTime;
     float skillTime = 0;
-    bool skillCooldown => Time.time >= skillTime;
+    public PlayerTP playerTP;
+    public bool skillCooldown => Time.time >= skillTime;
     private void Awake()
     {
         instance = this;
+        playerTP = FindObjectOfType<PlayerTP>().GetComponent<PlayerTP>();
     }
 
     private Coroutine coroutine;
@@ -23,15 +25,17 @@ public class TimeManager : MonoBehaviour
     {
         if (isStopped == false && skillCooldown)
         {
-            skillTime = Time.time - skillCoolTime;
+            
             Debug.Log("STOPPPP");
+            playerTP.HealthPlayer -= 50f;
             isStopped = true;
-            animator.SetTrigger("Skill");
+            animator.SetTrigger("Used");
             yield return new WaitForSeconds(Timer);
 
             Debug.Log("Jalan");
             isStopped = false;
             coroutine = null;
+            skillTime = Time.time - skillCoolTime;
         }
     }
 }

@@ -66,6 +66,8 @@ public class PlayerCombat : MonoBehaviour
     public void Block() => coroutine ??= StartCoroutine(Blocking());
     public void Dodge(Vector2 DodgeInput) => coroutine ??= StartCoroutine(Dodging(DodgeInput));
 
+    public void Interupt() => StartCoroutine(Interupting());
+
     public IEnumerator Attacking()
     {
         if (_player._CameraStyle == CameraStyle.Combat)
@@ -139,7 +141,7 @@ public class PlayerCombat : MonoBehaviour
                         IPmovement.ApplyMove(0);
                         yield return null;
                     }
-                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
+                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7f);
                     isDodging = false;
                     coroutine = null;
 
@@ -156,7 +158,7 @@ public class PlayerCombat : MonoBehaviour
                         IPmovement.ApplyMove(0);
                         yield return null;
                     }
-                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
+                    yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.7f);
                     isDodging = false;
                     coroutine = null;
                     break;
@@ -194,7 +196,7 @@ public class PlayerCombat : MonoBehaviour
         isBlocking = false;
         coroutine = null;
     }
-    public IEnumerator Interrupt()
+    public IEnumerator Interupting()
     {
         Debug.Log("Interrupt");
         if (isFall == false)

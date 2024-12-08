@@ -67,6 +67,7 @@ public class BossCombat : MonoBehaviour
     }
     private void Update()
     {
+        FindPlayer();
         if (bossBehaviour.isAlive)
         {
             if (!isAttack && !SoundManager.instance.IsSFXPlaying("BossStep"))
@@ -93,6 +94,19 @@ public class BossCombat : MonoBehaviour
         else if (bossBehaviour.CurrTP <= 0)
         {
             Die();
+        }
+    }
+
+    public void FindPlayer()
+    {
+        if (player == null)
+        {
+            GameObject playerObject = GameObject.FindGameObjectWithTag("Player");
+
+            if (playerObject != null)
+            {
+                player = playerObject.transform;
+            }
         }
     }
 

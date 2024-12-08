@@ -32,6 +32,7 @@ public class BossBehaviour : TimedObject, IEntity
     private bool isPlaySFX;
     private TimeManager timeManager;
     private Animator animator;
+    public UI_Controller UIcontroller;
 
     private void Start()
     {
@@ -116,6 +117,7 @@ public class BossBehaviour : TimedObject, IEntity
             }
         }
     }
+
     public void RotateToTarget(float offsetY)
     {
         // Hitung arah ke target
@@ -140,6 +142,7 @@ public class BossBehaviour : TimedObject, IEntity
             agent.isStopped = true;
             agent.enabled = false;
         }
+        UIcontroller.VictoryPanel();
 
         //Debug.Log("Tururururu");
     }

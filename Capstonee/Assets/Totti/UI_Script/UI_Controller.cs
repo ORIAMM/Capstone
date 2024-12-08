@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
+using UnityEngine.InputSystem;
 
 public class UI_Controller : MonoBehaviour
 {
@@ -14,8 +15,13 @@ public class UI_Controller : MonoBehaviour
     private bool isPaused;
     private string currentMusic;
 
+    public GameObject _VictoryPanel;
+    public GameObject _DefeatPanel;
+
     [SerializeField] private VideoPlayer videoPlayer; // Tambahkan referensi VideoPlayer
     [SerializeField] private string nextSceneAfterVideo; // Nama scene tujuan setelah video
+
+    public InputAction Action;
 
     void Start()
     {
@@ -32,6 +38,7 @@ public class UI_Controller : MonoBehaviour
         }
         
         GetMusic();
+
     }
     public void GetMusic()
     {
@@ -127,11 +134,11 @@ public class UI_Controller : MonoBehaviour
     }
     public void VictoryPanel()
     {
-
+        _VictoryPanel.SetActive(true);
     }
     public void DefeatPanel()
     {
-
+        _DefeatPanel.SetActive(true);
     }
     public void PlayGameWithCutscene()
     {
