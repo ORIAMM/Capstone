@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.InputSystem;
 public enum CameraStyle
 {
     Basic, Combat
@@ -33,9 +35,11 @@ public class Player : MonoBehaviour, IEntity
     [SerializeField] private float Gravity = 9.81f;
 
     public CameraStyle _CameraStyle;
-    private TimeManager timeManager;
     public bool isCombat => playerCam.target != null;
     public bool Dodging => movement.isDodging != null;
+    private InputActionAsset _actionAsset;
+    private InputActionMap InputAction;
+    private PlayerInput playerInput;
     private void OnEnable()
     {
         input.Movement.Enable();
@@ -50,9 +54,13 @@ public class Player : MonoBehaviour, IEntity
     {
         Cursor.visible = false;
         input = new();
+
+        _actionAsset = this.GetComponent<PlayerInput>().actions;
+        InputAction = _actionAsset.FindActionMap("Player");
+
+
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
-        timeManager = GetComponent<TimeManager>();
 
         playerCam = GetComponent<PlayerCamera>();
         playerCombat = GetComponent<PlayerCombat>();
@@ -70,27 +78,37 @@ public class Player : MonoBehaviour, IEntity
         //Initialize Camera
         playerCam.PlayerMeshObject = PlayerMeshObject;
         playerCam.FacingDirection = FacingDirection; 
-        playerCam.input = input;
-        playerCam.animator = _animator;
+        //playerCam.input = input;
+        playerCam.action = InputAction;
         playerCam._CameraStyle = _CameraStyle;
 
         //Initialize Combat
         playerCombat.animator = _animator;
-        timeManager.animator = _animator;
         playerCombat.player =  PlayerMeshObject;
 
         //Initialize Input
-        input.Controls.Target.performed += (val) => playerCam.GetTarget();
+        /*input.Controls.Target.performed += (val) => playerCam.GetTarget();
         input.Controls.Attack.performed += (val) => playerCombat.Attack();
         input.Controls.Block.performed += (val) => playerCombat.Block();
         input.Controls.Skill.performed += (val) => timeManager.UseSkill(5f);
-        input.Movement.Dodge.performed += (val) => playerCombat.Dodge(MoveValue);
+        input.Movement.Dodge.performed += (val) => playerCombat.Dodge(MoveValue);*/
+
+        InputAction.FindAction("Target").performed += (val) => playerCam.GetTarget();
+        InputAction.FindAction("Attack").performed += (val) => playerCombat.Attack();
+        InputAction.FindAction("Block").performed += (val) => playerCombat.Block();
+        InputAction.FindAction("Skill").performed += (val) => OnSkill();
+        InputAction.FindAction("Dodge").performed += (val) => playerCombat.Dodge(MoveValue);
 
         //Debug Animation
         input.Controls.Test.performed += (val) => ReceiveDamage(5);
 
         //input.Movement.Jump.performed += (val) => movement.Jump();
         //input.Movement.Dodge.performed += (val) => movement.Dodge();
+    }
+    public void OnSkill()
+    {
+        _animator.SetTrigger("Skill");
+        TimeManager.instance.UseSkill(5f);
     }
 
     private void Update()
@@ -143,7 +161,7 @@ public class Player : MonoBehaviour, IEntity
             else
             {
                 Debug.Log("Fall");
-                playerCombat.Interrupt();
+                playerCombat.StartCoroutine("Interrupt");
                 HealthPlayer -= value;
             }
         }
@@ -153,6 +171,6 @@ public class Player : MonoBehaviour, IEntity
     {
         Debug.Log("Mati");
     }
-    Vector2 MoveValue => input.Movement.Move.ReadValue<Vector2>();
+    Vector2 MoveValue => InputAction.FindAction("Move").ReadValue<Vector2>();
 
 }

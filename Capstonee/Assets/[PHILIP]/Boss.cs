@@ -8,14 +8,15 @@ using UnityEngine.UI;
 public class Boss : TimedObject, IEntity
 {
     [Header("Enemy Stats")]
-    [SerializeField] private EnemyStats enemyStats;
-
+    [SerializeField] private float MaxHealth;
+    
     [Header("Movement Settings")]
     [SerializeField] private float movementSpeed;
     [SerializeField] private float Offset;
     [SerializeField] private float RotateSpeed;
     [SerializeField] private float DampingValue;
     [SerializeField] private float gravity;
+    [SerializeField] private float increasedSpeed = 1;
 
     [Header("Target Settings")]
     [SerializeField] private float TargetRadius;
@@ -39,7 +40,7 @@ public class Boss : TimedObject, IEntity
         {
             Health = value;
             if (Health <= 0) OnDeath();
-            else if (BossHPBar) BossHPBar.fillAmount = Health / enemyStats.MaxHealth;
+            else if (BossHPBar) BossHPBar.fillAmount = Health / MaxHealth;
         }
     }
     private Transform target;
@@ -47,6 +48,7 @@ public class Boss : TimedObject, IEntity
     private Vector3 moveDirection, keptVelocity;
     private int patternCount, atkinfoCount, patternNextLine;
     private float atkRadius, atkCooldown;
+    private float keptAnimationSpeed;
 
     private EnemyAttackInfo currentAttackInfo;
     private AttackPattern pattern;
@@ -55,11 +57,11 @@ public class Boss : TimedObject, IEntity
     private CharacterController controller;
     private Animator animator;
 
-    float rotspeed = 0;
-    float endLerp = 0, startLerp = 0;
-    Vector3 playerpos = Vector3.zero;
+    float rotspeed = 0, mainrotspeed, toMove;
+    float endLerp = 0;
     private void Awake()
     {
+        _health = MaxHealth;
         controller = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
         patternCount = AttackPatterns.Count;
@@ -68,22 +70,28 @@ public class Boss : TimedObject, IEntity
     private void Start()
     {
         currentAttackInfo = null;
+        mainrotspeed = RotateSpeed;
     }
     public override void OnUpdate()
     {
-        if (isAttacking != null) transform.position += Vector3.left * 10;
         currentAttackInfo ??= QueueNextAttack();
 
         if (rotspeed != 0) LookToPlayer(0, rotspeed);
         if (target)
         {
-            if (playerpos != Vector3.zero)
+            if (toMove != 0)
             {
                 float time = animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
-                float lerpTime = Mathf.Clamp01((time - startLerp) / (startLerp - endLerp));
-                transform.position = Vector3.Lerp(transform.position, playerpos, lerpTime);
-                if (lerpTime == 1) playerpos = Vector3.zero;
-                Debug.Log("LERPING");
+
+                if (time > endLerp)
+                {
+                    toMove = 0;
+                    moveDirection = new Vector3(0, moveDirection.y, 0);
+                }
+                else
+                {
+                    moveDirection = toMove * transform.forward;
+                }
             }
             else if (currentAttackInfo != null && isInRange(atkRadius) && Time.time > atkCooldown)
             {
@@ -91,11 +99,11 @@ public class Boss : TimedObject, IEntity
             }
             else if (isAttacking == null)
             {
-                LookToPlayer(Offset, RotateSpeed);
+                LookToPlayer(Offset, mainrotspeed);
                 GetForwardMove();
             }
         }
-        ApplyMovement();
+        ApplyMovement(toMove == 0);
     }
     public bool isInRange(float radius)
     {
@@ -135,7 +143,7 @@ public class Boss : TimedObject, IEntity
     {
         if (animator)
         {
-            animator.speed = 1;
+            animator.speed = keptAnimationSpeed;
             controller.Move(keptVelocity);
             keptVelocity = Vector3.zero;
         }
@@ -144,6 +152,7 @@ public class Boss : TimedObject, IEntity
     {
         if (animator)
         {
+            keptAnimationSpeed = animator.speed;
             animator.speed = 0;
             keptVelocity = controller.velocity;
             controller.Move(Vector3.zero);
@@ -155,7 +164,9 @@ public class Boss : TimedObject, IEntity
     }
     public void OnDeath()
     {
-
+        animator.SetTrigger("Dying");
+        SoundManager.instance.PlaySFX("Dying");
+        UI_Controller.instance.isWin = true;
     }
     #region Movement, Target, rotation
     public void GetForwardMove()
@@ -163,11 +174,15 @@ public class Boss : TimedObject, IEntity
         var forward = movementSpeed * transform.forward;
         moveDirection += new Vector3(forward.x, 0, forward.z);
     }
-    public void ApplyMovement()
+    public void ApplyMovement(bool dontUseClamping)
     {
         float yMagnitude = moveDirection.y;
-        moveDirection = Vector3.Slerp(moveDirection, Vector3.zero, Time.deltaTime * DampingValue);
-        moveDirection = Vector3.ClampMagnitude(new Vector3(moveDirection.x, 0, moveDirection.z), movementSpeed) + Vector3.up * yMagnitude;
+        if (dontUseClamping)
+        {
+            moveDirection = Vector3.Slerp(moveDirection, Vector3.zero, Time.deltaTime * DampingValue);
+            moveDirection = Vector3.ClampMagnitude(new Vector3(moveDirection.x, 0, moveDirection.z), movementSpeed) + Vector3.up * yMagnitude;
+        }
+        //mainrotspeed = Mathf.Lerp(mainrotspeed, 0, new Vector3(moveDirection.x, 0, moveDirection.z).magnitude / movementSpeed);
         controller.Move(moveDirection * Time.deltaTime);
         moveDirection.y -= gravity * Time.deltaTime;
     }
@@ -218,13 +233,15 @@ public class Boss : TimedObject, IEntity
                 EnemyAttackInfo.MoveInfo move = moveInfo[moveIndex];
                 float NormalizedTime = (float)move.SpawnFrame / TotalFrames;
                 yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > NormalizedTime);
-                animator.speed = move.animation_speed;
+                animator.speed = move.animation_speed == 0 ? 1 : move.animation_speed;
                 rotspeed = move.rotation_speed;
-                if (move.maxdistance != 0)
+                if (move.speed != 0)
                 {
-                    playerpos = isInRange(move.maxdistance) ? target.position : transform.forward * move.maxdistance;
+                    Vector3 playerpos = isInRange(move.range) ? target.position * increasedSpeed : transform.position + transform.forward * move.speed;
+                    //playerpos = transform.forward * move.speed;
+                    playerpos = playerpos - transform.position;
                     endLerp = move.lerpEndFrame / TotalFrames;
-                    startLerp = NormalizedTime;
+                    toMove = playerpos.magnitude;
                 }
                 moveIndex++;
             }
@@ -241,7 +258,7 @@ public class Boss : TimedObject, IEntity
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1);
         atkCooldown = Time.time + currentAttackInfo.delay;
 
-        playerpos = Vector3.zero;
+        animator.speed = 1;
         rotspeed = 0;
         moveDirection = toKeep;
         isAttacking = null;
@@ -256,4 +273,12 @@ public class Boss : TimedObject, IEntity
         obj.SetActive(true);
     }
     #endregion
+#if UNITY_EDITOR
+    [SerializeField] private float range;
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red; 
+        Gizmos.DrawWireSphere(transform.position, range);
+    }
+#endif
 }

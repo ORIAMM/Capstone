@@ -26,7 +26,7 @@ public class PlayerCombat : MonoBehaviour
     //Reference
     private ImprovisedPlayerMovement IPmovement;
     private PlayerCamera PlayerCamera;
-    private HashSet<BossBehaviour> hitEnemies = new HashSet<BossBehaviour>();
+    private HashSet<IEntity> hitEnemies = new HashSet<IEntity>();
     private Player _player;
 
     [HideInInspector] public Transform player;
@@ -173,7 +173,7 @@ public class PlayerCombat : MonoBehaviour
             Collider[] hitenemy = Physics.OverlapSphere(attackPoint.position, 0.5f, EnemyL);
             foreach (Collider col in hitenemy)
             {
-                BossBehaviour enemy = col.gameObject.GetComponent<BossBehaviour>();
+                IEntity enemy = col.gameObject.GetComponent<IEntity>();
                 if (enemy != null && !hitEnemies.Contains(enemy))
                 {
                     hitEnemies.Add(enemy);
@@ -202,7 +202,7 @@ public class PlayerCombat : MonoBehaviour
             isFall = true;
             StopCoroutine(Attacking());
             animator.SetTrigger("Fall");
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2.5f);
 
             coroutine = null;
             isAttacking = false;

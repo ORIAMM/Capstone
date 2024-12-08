@@ -20,6 +20,7 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] float minDistance;
     [SerializeField] LayerMask layerMask;
     [SerializeField] float panning_speed;
+    public float multiplier = 1;
     //public Action CameraLogic;
 
 /*    [Header("Equip")]
@@ -31,6 +32,7 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector] public Transform PlayerMeshObject;
     [HideInInspector] public PlayerControls input;
     private Camera cam;
+    [HideInInspector] public InputActionMap action;
 
     private Player player;
     float mouseX, mouseY;
@@ -70,15 +72,15 @@ public class PlayerCamera : MonoBehaviour
         {
             BasicCamera();
         }
-        cinemachineFreeLook.m_XAxis.m_InputAxisValue = mouseX;
-        cinemachineFreeLook.m_YAxis.m_InputAxisValue = mouseY;
+        cinemachineFreeLook.m_XAxis.m_InputAxisValue = mouseX * multiplier;
+        cinemachineFreeLook.m_YAxis.m_InputAxisValue = mouseY * multiplier;
     }
     void BasicCamera()
     {
-        var Input = input.Movement.Move.ReadValue<Vector2>();
+        var Input = action.FindAction("Move").ReadValue<Vector2>();
         Vector3 inputDir = FacingDirection.forward * Input.y + FacingDirection.right * Input.x;
         if (inputDir != Vector3.zero) PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir.normalized, Time.deltaTime * rotationSpeed);
-        var MouseInput = input.Controls.Mouse.ReadValue<Vector2>();
+        var MouseInput = action.FindAction("Mouse").ReadValue<Vector2>();
         mouseX = MouseInput.x;
         mouseY = MouseInput.y;
 

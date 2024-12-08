@@ -6,10 +6,10 @@ public class TimeManager : MonoBehaviour
 {
     public static TimeManager instance;
     [HideInInspector] public bool isStopped;
-    [HideInInspector] public Animator animator;
+    [SerializeField] private Animator animator;
     [SerializeField] private float skillCoolTime;
     float skillTime = 0;
-    bool skillCooldown => Time.time >= skillTime;
+    bool Skillready => Time.time >= skillTime;
     private void Awake()
     {
         instance = this;
@@ -21,14 +21,14 @@ public class TimeManager : MonoBehaviour
 
     public IEnumerator StopTime(float Timer)
     {
-        if (isStopped == false && skillCooldown)
+        if (isStopped == false && Skillready)
         {
-            skillTime = Time.time - skillCoolTime;
+            skillTime = Time.time + skillCoolTime;
+            Debug.Log(skillTime);
             Debug.Log("STOPPPP");
             isStopped = true;
-            animator.SetTrigger("Skill");
+            animator.Play("Cooldown_anim");
             yield return new WaitForSeconds(Timer);
-
             Debug.Log("Jalan");
             isStopped = false;
             coroutine = null;

@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Totti/Scene Totti/GameMenu.unity
     guid: ccd4069f9b00715468ad623712a7d46f
   - enabled: 1
-    path: Assets/Totti/Scene Totti/BossFight.unity
+    path: Assets/Totti/Scene Totti/obsolete/BossFight.unity
     guid: dc3b6242dd96d3a4395840cb6a925ff1
   - enabled: 1
     path: Assets/[PHILIP]/Menu.unity

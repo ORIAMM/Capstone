@@ -51,6 +51,7 @@ using UnityEngine.InputSystem.XR;
 //    }
 //}
 
+[SerializeField]
 public class EnemyStats
 {
     public int MaxHealth;
@@ -85,8 +86,9 @@ public class EnemyAttackInfo
         public float rotation_speed;
 
         [Header("Transform Moving Setings")]
-        public float maxdistance;
+        public float speed;
         public float lerpEndFrame;
+        public float range;
 
         [Header("Frame Settings")]
         public int SpawnFrame;
@@ -276,6 +278,7 @@ public class Mob : TimedObject, IEntity
         obj.SetActive(true);
     }
 #if UNITY_EDITOR
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.yellow;
