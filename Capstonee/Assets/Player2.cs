@@ -1,6 +1,9 @@
 using UnityEngine;
 using System;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
+using TMPro;
+using DG.Tweening;
 
 [RequireComponent(typeof(CharacterController))]
 public class Player2 : MonoBehaviour, IEntity
@@ -17,6 +20,7 @@ public class Player2 : MonoBehaviour, IEntity
     [SerializeField] private float initial_time = 300f;
     [SerializeField] private float DmgReduct = 0.5f;
     public float HealthPlayer;
+    public float TempHealth;
 
     [Header("References")]
     [SerializeField] private Transform CameraTransform;
@@ -25,10 +29,17 @@ public class Player2 : MonoBehaviour, IEntity
 
     [SerializeField] private float Gravity = 9.81f;
 
+    [HideInInspector] public Slider HealthSlider;
+    [HideInInspector] public TextMeshProUGUI time;
+    [HideInInspector] public GameObject DeathPanel;
+
     public CameraStyle _CameraStyle;
     [NonSerialized] public float modifierMultiplier = 1;
     public bool isCombat => playerCam.target != null;
     public bool Dodging => playerCombat.isDodging;
+    private bool isDead = false;
+
+    private PlayerInput pi;
     private InputActionAsset _actionAsset;
     private InputActionMap InputAction;
     private PlayerInput playerInput;
@@ -37,6 +48,7 @@ public class Player2 : MonoBehaviour, IEntity
         Cursor.visible = false;
         _actionAsset = GetComponent<PlayerInput>().actions;
         InputAction = _actionAsset.FindActionMap("Player");
+        pi = GetComponent<PlayerInput>();   
 
         _animator = GetComponent<Animator>();
         controller = GetComponent<CharacterController>();
@@ -46,6 +58,15 @@ public class Player2 : MonoBehaviour, IEntity
 
         //Initialize initial_Health
         HealthPlayer = Time.time + initial_time;
+
+        TempHealth = HealthPlayer;
+        if (HealthSlider != null)
+        {
+            HealthSlider.value = TempHealth;
+            HealthSlider.maxValue = HealthPlayer;
+            HealthSlider.minValue = Time.time;
+        }
+        else Debug.LogError("GK ADA");
 
         //Initialize Movement
         movement.camerapos = CameraTransform;
@@ -101,11 +122,22 @@ public class Player2 : MonoBehaviour, IEntity
         {
             OnDeath();
         }
+        TempHealth -= Time.deltaTime;
+        HealthSlider.value = TempHealth;
+        FloatToTimeConverse();
+    }
+    public void FloatToTimeConverse()
+    {
+        int totalSeconds = Mathf.CeilToInt(TempHealth - Time.time); // Pembulatan ke atas
+        int minutes = totalSeconds / 60; // Hitung menit
+        int seconds = totalSeconds % 60; // Hitung detik
+
+        time.text = $"{minutes:00}:{seconds:00}"; // Format MM:SS
     }
 
     public void ReceiveDamage(float value)
     {
-        if (playerCombat.isFall == true || playerCombat.isDodging == true) return;
+        if (playerCombat.isFall == true || playerCombat.isDodging == true || isDead == true) return;
 
         Debug.Log("receive");
         if (playerCombat.isBlocking == true)
@@ -113,18 +145,31 @@ public class Player2 : MonoBehaviour, IEntity
             Debug.Log("Blocked");
             playerCombat.Impact();
             HealthPlayer -= value * DmgReduct;
+            TempHealth -= value * DmgReduct;
         }
         else
         {
             Debug.Log("Fall");
             playerCombat.OnHit();
             HealthPlayer -= value;
+            TempHealth -= value;   
         }
 
     }
     public void OnDeath()
     {
-        Debug.Log("Mati");
+        if (isDead == false)
+        {
+            isDead = true;
+            _animator.SetTrigger("Die");
+            DeathPanel.SetActive(true);
+            var CGdeath = DeathPanel.GetComponent<CanvasGroup>();
+            CGdeath.DOFade(1, 0.5f);
+            pi.enabled = false;
+            UIManage.instance.Deathcount++;
+        }
+        
+        
     }
     Vector2 MoveValue => InputAction.FindAction("Move").ReadValue<Vector2>();
 }

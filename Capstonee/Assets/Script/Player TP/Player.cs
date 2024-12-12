@@ -1,6 +1,8 @@
 ﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 public enum CameraStyle
 {
     Basic, Combat
@@ -31,8 +33,10 @@ public class Player : MonoBehaviour, IEntity
     [Header("References")]
     [SerializeField] private Transform PlayerMeshObject;
     [SerializeField] private Transform FacingDirection;
-
     [SerializeField] private float Gravity = 9.81f;
+
+    [HideInInspector] public Slider HealthSlider;
+    [HideInInspector] public TextMeshProUGUI time;
 
     public CameraStyle _CameraStyle;
     public bool isCombat => playerCam.target != null;

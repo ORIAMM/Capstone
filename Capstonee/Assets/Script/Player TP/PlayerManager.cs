@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Cinemachine;
+using UnityEngine.UI;
+using TMPro;
 public class PlayerManager : MonoBehaviour
 {
     private List<PlayerInput> players = new List<PlayerInput>();
@@ -15,8 +17,13 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject playerUI;
     [SerializeField] private GameObject prefabHealth;
     [SerializeField] private Transform PanelHealth;
+    [SerializeField] private Transform MultiDeath;
+    [SerializeField] private GameObject prefabDeath;
 
     private PlayerInputManager playerInputManager;
+
+    public int CountPlayer;
+
 
     private void Awake()
     {
@@ -35,29 +42,58 @@ public class PlayerManager : MonoBehaviour
 
     public void AddPlayer(PlayerInput player)
     {
+        CountPlayer++;
         Debug.Log("Add");
         players.Add(player);
 
-        //need to use the parent due to the structure of the prefab
         Transform playerParent = player.transform.parent;
         playerParent.position = startingPoints[players.Count - 1].position;
 
-        //convert layer mask (bit) to an integer 
         int layerToAdd = (int)Mathf.Log(playerLayers[players.Count - 1].value, 2);
 
-        //set the layer
         playerParent.GetComponentInChildren<CinemachineFreeLook>().gameObject.layer = layerToAdd;
-        //add the layer
         playerParent.GetComponentInChildren<Camera>().cullingMask |= 1 << layerToAdd;
 
         cam.gameObject.SetActive(false);
         playerUI.SetActive(true);
 
-        Instantiate(prefabHealth, PanelHealth);
+        GameObject InstantiateHealth = Instantiate(prefabHealth, PanelHealth);
+        if (InstantiateHealth == null)
+        {
+            Debug.LogError("Failed to instantiate prefabHealth!");
+            return;
+        }
 
-        //set the action in the custom cinemachine Input Handler
-        //playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Mouse");
-        //Debug.Log(player.actions.FindAction("Mouse"));
+        GameObject InstantiateDeath = Instantiate(prefabDeath, MultiDeath);
+
+        var PLAYER = player.GetComponentInParent<Player2>();
+        if (PLAYER == null)
+        {
+            Debug.LogError("Failed to instantiate prefabHealth!");
+            return;
+        }
+
+        Slider slider = InstantiateHealth.GetComponentInChildren<Slider>();
+        TextMeshProUGUI timeText = InstantiateHealth.GetComponentInChildren<TextMeshProUGUI>();
+        if (slider == null || timeText == null)
+        {
+            Debug.LogError("Health UI prefab missing required components (Slider or TextMeshProUGUI).");
+            return;
+        }
+
+
+        if (PLAYER != null)
+        {
+            PLAYER.HealthSlider = InstantiateHealth.GetComponentInChildren<Slider>();
+            PLAYER.time = InstantiateHealth.GetComponentInChildren<TextMeshProUGUI>();
+            PLAYER.DeathPanel = InstantiateDeath;
+
+            PLAYER.HealthSlider.maxValue = PLAYER.HealthPlayer;
+            PLAYER.HealthSlider.value = PLAYER.TempHealth;
+
+
+        }
+
 
     }
 }

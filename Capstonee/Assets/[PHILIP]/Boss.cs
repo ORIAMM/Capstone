@@ -165,7 +165,8 @@ public class Boss : TimedObject, IEntity
     {
         animator.SetTrigger("Dying");
         SoundManager.instance.PlaySFX("Dying");
-        UI_Controller.instance.isWin = true;
+        UIManage.instance.Win();
+        //UI_Controller.instance.isWin = true;
     }
     #region Movement, Target, rotation
     public void GetForwardMove()
