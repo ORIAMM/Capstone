@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using System.Collections;
 
 [RequireComponent(typeof(CharacterController))]
 public class Player2 : MonoBehaviour, IEntity
@@ -124,7 +125,10 @@ public class Player2 : MonoBehaviour, IEntity
         }
         TempHealth -= Time.deltaTime;
         HealthSlider.value = TempHealth;
-        FloatToTimeConverse();
+        if (TempHealth >= 0)
+        {
+            FloatToTimeConverse();
+        }
     }
     public void FloatToTimeConverse()
     {
@@ -161,15 +165,19 @@ public class Player2 : MonoBehaviour, IEntity
         if (isDead == false)
         {
             isDead = true;
-            _animator.SetTrigger("Die");
-            DeathPanel.SetActive(true);
-            var CGdeath = DeathPanel.GetComponent<CanvasGroup>();
-            CGdeath.DOFade(1, 0.5f);
-            pi.enabled = false;
-            UIManage.instance.Deathcount++;
+            StartCoroutine(AfterDeath());
         }
-        
-        
+    }
+    IEnumerator AfterDeath()
+    {
+        _animator.SetTrigger("Die");
+        DeathPanel.SetActive(true);
+        var CGdeath = DeathPanel.GetComponent<CanvasGroup>();
+        CGdeath.DOFade(1, 0.5f);
+        pi.enabled = false;
+        UIManage.instance.Deathcount += 1;
+        yield return new WaitForSeconds(0.5f);
+        UIManage.instance.DeathCheck();
     }
     Vector2 MoveValue => InputAction.FindAction("Move").ReadValue<Vector2>();
 }

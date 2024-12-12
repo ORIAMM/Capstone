@@ -20,22 +20,20 @@ public class UIManage : MonoBehaviour
     private void Awake()
     {
         if (instance == null) instance = this;
-        PIM = FindObjectOfType<PlayerInputManager>();
+        //PIM = FindObjectOfType<PlayerInputManager>();
     }
 
-    private void Update()
-    {
-        DeathCheck();
-    }
 
     public void DeathCheck()
     {
-        if (Deathcount == PIM.playerCount)
+        Debug.LogWarning(Deathcount);
+        if (Deathcount >= PIM.playerCount)
         {
             Back.SetActive(true);
             Cursor.visible = true;
             Time.timeScale = 0.1f;
         }
+        else Debug.LogWarning("Not Done");
     }
     public void Win()
     {

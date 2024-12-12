@@ -19,6 +19,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private Transform PanelHealth;
     [SerializeField] private Transform MultiDeath;
     [SerializeField] private GameObject prefabDeath;
+    [SerializeField] private GameObject info;
 
     private PlayerInputManager playerInputManager;
 
@@ -56,6 +57,7 @@ public class PlayerManager : MonoBehaviour
 
         cam.gameObject.SetActive(false);
         playerUI.SetActive(true);
+        info.SetActive(false);
 
         GameObject InstantiateHealth = Instantiate(prefabHealth, PanelHealth);
         if (InstantiateHealth == null)
