@@ -99,7 +99,7 @@ public class Player2 : MonoBehaviour, IEntity
     }
     public void OnSkill()
     {
-        if (TimeManager.instance.OnCooldown == null)
+        if (TimeManager.instance.OnCooldown == null && TimeManager.instance.Skillready)
         {
             _animator.SetTrigger("Skill");
             TimeManager.instance.UseSkill(5f);
