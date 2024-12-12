@@ -18,7 +18,7 @@ public class Timer
         if (waitTime < 0) onTime?.Invoke();
     }
 }
-public class VideoPlayerHandler : MonoBehaviour
+public class VideoPlayerHandler : MonoBehaviour, ICommand
 {
     [SerializeField] private string sceneName;
     [SerializeField] private GameObject Canvas;
@@ -34,16 +34,27 @@ public class VideoPlayerHandler : MonoBehaviour
     }
     public void PlayVideo()
     {
-        timer = new(1, () =>
-        {
-            Canvas.SetActive(false);
-            videoPlayer.Play();
-        });
-        videoPlayer.loopPointReached += ChangeScene;
+        Invoker.ExecuteCommand(this);
     }
     private void ChangeScene(VideoPlayer vp)
     {
         vp.loopPointReached -= ChangeScene; 
         GameManager.ChangeScene(sceneName); 
+    }
+
+    public void Execute()
+    {
+        timer = new(1, () =>
+        {
+            videoPlayer.Play();
+            Canvas.SetActive(false);
+        });
+        videoPlayer.loopPointReached += ChangeScene;
+    }
+
+    public void Undo()
+    {
+        Debug.Log(videoPlayer.frameCount - 1);
+        videoPlayer.frame = (long)videoPlayer.frameCount - 1;
     }
 }

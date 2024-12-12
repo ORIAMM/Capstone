@@ -77,7 +77,7 @@ public class Player : MonoBehaviour, IEntity
 
         //Initialize Camera
         playerCam.PlayerMeshObject = PlayerMeshObject;
-        playerCam.FacingDirection = FacingDirection; 
+        playerCam.FacingDirection = FacingDirection;
         //playerCam.input = input;
         playerCam.action = InputAction;
         playerCam._CameraStyle = _CameraStyle;
@@ -107,13 +107,15 @@ public class Player : MonoBehaviour, IEntity
     }
     public void OnSkill()
     {
-        _animator.SetTrigger("Skill");
-        TimeManager.instance.UseSkill(5f);
+        if (TimeManager.instance.OnCooldown == null)
+        {
+            _animator.SetTrigger("Skill");
+            TimeManager.instance.UseSkill(5f);
+        }
     }
 
     private void Update()
     {
-        
         if (playerCombat.isBlocking == false && playerCombat.isFall == false && playerCombat.isDodging == false)
         {
             Vector2 adjustedMoveValue = MoveValue;
@@ -149,21 +151,19 @@ public class Player : MonoBehaviour, IEntity
     public void ReceiveDamage(float value)
     {
         if (playerCombat.isFall == true || playerCombat.isDodging == true) return;
+
+        Debug.Log("receive");
+        if (playerCombat.isBlocking == true)
+        {
+            Debug.Log("Blocked");
+            playerCombat.Impact();
+            HealthPlayer -= value * DmgReduct;
+        }
         else
         {
-            Debug.Log("receive");
-            if (playerCombat.isBlocking == true)
-            {
-                Debug.Log("Blocked");
-                playerCombat.Impact();
-                HealthPlayer -= value * DmgReduct;
-            }
-            else
-            {
-                Debug.Log("Fall");
-                playerCombat.StartCoroutine("Interrupt");
-                HealthPlayer -= value;
-            }
+            Debug.Log("Fall");
+            playerCombat.StartCoroutine("Interrupt");
+            HealthPlayer -= value;
         }
         
     }
@@ -172,5 +172,4 @@ public class Player : MonoBehaviour, IEntity
         Debug.Log("Mati");
     }
     Vector2 MoveValue => InputAction.FindAction("Move").ReadValue<Vector2>();
-
 }

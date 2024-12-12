@@ -159,7 +159,7 @@ Camera:
   m_GameObject: {fileID: 1175182}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 2
   m_BackGroundColor: {r: 0, g: 0, b: 0, a: 1}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -887,6 +887,11 @@ MonoBehaviour:
     source: {fileID: 0}
   - name: TimeStopTick
     clip: {fileID: 8300000, guid: 32da4973cdc35d74cb5427b61ea7d87d, type: 3}
+    loop: 0
+    Volume: 1
+    source: {fileID: 0}
+  - name: Click
+    clip: {fileID: 8300000, guid: f714c0fc55816ac4ab4093a08bc1892d, type: 3}
     loop: 0
     Volume: 1
     source: {fileID: 0}
@@ -2581,24 +2586,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 853690347}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Open
+        m_MethodName: OpenWithSound
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 900854225}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 284639102}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: f714c0fc55816ac4ab4093a08bc1892d,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2673,6 +2665,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ThemeSong: MainMenuTheme
   mainPanel: {fileID: 904381944}
+  clip: {fileID: 8300000, guid: f714c0fc55816ac4ab4093a08bc1892d, type: 3}
   escape:
     m_Name: Escape
     m_Type: 0
@@ -2684,6 +2677,14 @@ MonoBehaviour:
     - m_Name: 
       m_Id: 1147c79e-53d7-485c-be3e-567a287bf984
       m_Path: <Keyboard>/escape
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Escape
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 0ba6fffb-bcb2-4f7e-aa09-5cd2b4f85af6
+      m_Path: <Gamepad>/start
       m_Interactions: 
       m_Processors: 
       m_Groups: 
@@ -2790,24 +2791,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 853690347}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Open
+        m_MethodName: OpenWithSound
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 904381944}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 284639102}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: f714c0fc55816ac4ab4093a08bc1892d,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3166,7 +3154,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 853690347}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Close
+        m_MethodName: CloseWithSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3591,7 +3579,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 853690347}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Close
+        m_MethodName: CloseWithSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4133,16 +4121,16 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1993922318}
-        m_TargetAssemblyTypeName: UnityEngine.Video.VideoPlayer, UnityEngine
-        m_MethodName: Play
+      - m_Target: {fileID: 1993922320}
+        m_TargetAssemblyTypeName: VideoPlayerHandler, Assembly-CSharp
+        m_MethodName: PlayVideo
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: PilipTesting
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1976508737
@@ -4339,6 +4327,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7c2164e76ec6d849bab632bb69ed07f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneName: PilipTesting
   Canvas: {fileID: 352934053}
 --- !u!1 &2018153488
 GameObject:
@@ -4425,24 +4414,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 853690347}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Open
+        m_MethodName: OpenWithSound
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1761306061}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 1
-        m_CallState: 2
-      - m_Target: {fileID: 284639102}
-        m_TargetAssemblyTypeName: UnityEngine.AudioSource, UnityEngine
-        m_MethodName: PlayOneShot
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: f714c0fc55816ac4ab4093a08bc1892d,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4570,7 +4546,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 853690347}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: Close
+        m_MethodName: CloseWithSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

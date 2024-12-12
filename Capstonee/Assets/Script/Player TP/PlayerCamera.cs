@@ -31,9 +31,10 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform FacingDirection;
     [HideInInspector] public Transform PlayerMeshObject;
-    [HideInInspector] public PlayerControls input;
-    private Camera cam;
+    //[HideInInspector] public PlayerControls input;
     [HideInInspector] public InputActionMap action;
+    private Camera cam;
+
 
     private Player player;
     float mouseX, mouseY;

@@ -59,6 +59,7 @@ public class GameManager : MonoBehaviour
     
     public static bool IsPaused;
 
+    [SerializeField] private AudioClip clip;
     [SerializeField] private InputAction escape;
     private void OnEnable()
     {
@@ -71,6 +72,7 @@ public class GameManager : MonoBehaviour
     public void Awake()
     {
         escape.performed += (val) => OnEscape();
+        Application.targetFrameRate = 30;
     }
     private void Start()
     {
@@ -78,8 +80,8 @@ public class GameManager : MonoBehaviour
     }
     public void OnEscape()
     {
-        if (Invoker.count > 0) Close();
-        else Open(mainPanel);
+        if (Invoker.count > 0) CloseWithSound();
+        else OpenWithSound(mainPanel);
     }
     public static void PauseGame(bool isPause)
     {
@@ -100,6 +102,18 @@ public class GameManager : MonoBehaviour
     public void QuitGame() => Application.Quit();
     public static void Open(GameObject obj) => Invoker.ExecuteCommand(new OpenCommand(obj));
     public static void Close() => Invoker.UndoCommand();
+
+    public void OpenWithSound(GameObject obj)
+    {
+        if(clip != null)SoundManager.instance.PlaySFX(clip.name);
+        Open(obj);
+    }
+
+    public void CloseWithSound()
+    {
+        if (clip != null) SoundManager.instance.PlaySFX(clip.name);
+        Close();
+    }
 
     [System.Serializable]
     public class MenuSettings

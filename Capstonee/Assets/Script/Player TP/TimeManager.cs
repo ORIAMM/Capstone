@@ -15,9 +15,9 @@ public class TimeManager : MonoBehaviour
         instance = this;
     }
 
-    private Coroutine coroutine;
+    public Coroutine OnCooldown;
 
-    public void UseSkill(float time) => coroutine ??= StartCoroutine(StopTime(time));
+    public void UseSkill(float time) => OnCooldown ??= StartCoroutine(StopTime(time));
 
     public IEnumerator StopTime(float Timer)
     {
@@ -31,7 +31,7 @@ public class TimeManager : MonoBehaviour
             yield return new WaitForSeconds(Timer);
             Debug.Log("Jalan");
             isStopped = false;
-            coroutine = null;
         }
+        OnCooldown = null;
     }
 }

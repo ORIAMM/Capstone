@@ -135,7 +135,7 @@ public class PlayerCombat : MonoBehaviour
                     while (elapsedCombatTime < combatDodgeDuration)
                     {
                         elapsedCombatTime += Time.deltaTime;
-                        IPmovement.Dash();
+                        IPmovement.Dash(DodgeInput);
                         IPmovement.ApplyMove(0);
                         yield return null;
                     }
@@ -152,7 +152,7 @@ public class PlayerCombat : MonoBehaviour
                     while (elapsedTime < dodgeDuration)
                     {
                         elapsedTime += Time.deltaTime;
-                        IPmovement.Dash();
+                        IPmovement.Dash(DodgeInput);
                         IPmovement.ApplyMove(0);
                         yield return null;
                     }
