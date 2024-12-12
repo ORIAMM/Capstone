@@ -11,7 +11,14 @@ public class PlayerManager : MonoBehaviour
     [SerializeField]
     private List<LayerMask> playerLayers;
 
+    [SerializeField] private Camera cam;
+    [SerializeField] private GameObject playerUI;
+    [SerializeField] private GameObject prefabHealth;
+    [SerializeField] private Transform PanelHealth;
+
     private PlayerInputManager playerInputManager;
+
+    
 
     private void Awake()
     {
@@ -44,6 +51,12 @@ public class PlayerManager : MonoBehaviour
         playerParent.GetComponentInChildren<CinemachineFreeLook>().gameObject.layer = layerToAdd;
         //add the layer
         playerParent.GetComponentInChildren<Camera>().cullingMask |= 1 << layerToAdd;
+
+        cam.gameObject.SetActive(false);
+        playerUI.SetActive(true);
+
+        Instantiate(prefabHealth, PanelHealth);
+
         //set the action in the custom cinemachine Input Handler
         //playerParent.GetComponentInChildren<InputHandler>().horizontal = player.actions.FindAction("Mouse");
         //Debug.Log(player.actions.FindAction("Mouse"));
