@@ -19,7 +19,8 @@ public class PlayerCamera : MonoBehaviour
     [SerializeField] float maxDistance;
     [SerializeField] float minDistance;
     [SerializeField] LayerMask layerMask;
-    [SerializeField] float panning_speed;
+    [SerializeField] float X_panning_speed;
+    [SerializeField] float Y_panning_speed;
     public float multiplier = 1;
     //public Action CameraLogic;
 
@@ -30,9 +31,10 @@ public class PlayerCamera : MonoBehaviour
     [HideInInspector] public Animator animator;
     [HideInInspector] public Transform FacingDirection;
     [HideInInspector] public Transform PlayerMeshObject;
-    [HideInInspector] public PlayerControls input;
-    private Camera cam;
+    //[HideInInspector] public PlayerControls input;
     [HideInInspector] public InputActionMap action;
+    private Camera cam;
+
 
     private Player player;
     float mouseX, mouseY;
@@ -94,8 +96,8 @@ public class PlayerCamera : MonoBehaviour
         //float pan_speed = Mathf.Pow(panning_speed, 1 - diff);
         //if (aimIcon) aimIcon.transform.position = mainCamera.WorldToScreenPoint(target.position);
         if (Vector3.Distance(target.position, transform.position) < minDistance) return;
-        mouseX = (viewPos.x - 0.5f + targetLockOffset.x) * panning_speed;
-        mouseY = (viewPos.y - 0.5f + targetLockOffset.y) * panning_speed;
+        mouseX = (viewPos.x - 0.5f + targetLockOffset.x) * X_panning_speed;
+        mouseY = (viewPos.y - 0.5f + targetLockOffset.y) * Y_panning_speed;
         Vector3 inputDir = new(cam.transform.forward.x, 0, cam.transform.forward.z);
         PlayerMeshObject.forward = Vector3.Slerp(PlayerMeshObject.forward, inputDir, Time.deltaTime * rotationSpeed);
 

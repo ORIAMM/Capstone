@@ -113,7 +113,6 @@ public class Boss : TimedObject, IEntity
 
     public EnemyAttackInfo QueueNextAttack()
     {
-        Debug.Log("DODODOOD");
         Target();
         if(target != null)
         {
@@ -216,7 +215,6 @@ public class Boss : TimedObject, IEntity
     #region AtkPatterns
     public IEnumerator PlayAnimation()
     {
-        Debug.Log("ANIMATIONPLAYING");
         int TotalFrames = currentAttackInfo.info.TotalFrames;
         var objectInfo = currentAttackInfo.info.objectInfos;
         var moveInfo = currentAttackInfo.info.moveInfos;
@@ -250,7 +248,6 @@ public class Boss : TimedObject, IEntity
                 EnemyAttackInfo.ObjectInfo obj = objectInfo[objectIndex];
                 float NormalizedTime = (float)obj.SpawnFrame / TotalFrames;
                 yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > NormalizedTime);
-                Debug.Log($"{animator.GetCurrentAnimatorStateInfo(0).normalizedTime}, {NormalizedTime}");
                 SpawnHitbox(obj);
                 objectIndex++;
             }
@@ -262,7 +259,6 @@ public class Boss : TimedObject, IEntity
         rotspeed = 0;
         moveDirection = toKeep;
         isAttacking = null;
-            Debug.Log("ANIMATIONFINISHED");
         currentAttackInfo = null;
     }
     private void SpawnHitbox(EnemyAttackInfo.ObjectInfo info)

@@ -65,16 +65,25 @@ public class ImprovisedPlayerMovement : MonoBehaviour
             animator.SetFloat("VelY", Vector3.Dot(forwardVel, velValue) / player_speed);
         }
     }
-
-    public void Dash()
+    public void ApplyMove(bool noClamps = false)
     {
-        //controller.Move(moveDirection * Time.deltaTime);
+        float yMagnitude = moveDirection.y;
+        if (!noClamps)
+        {
+            moveDirection = Vector3.Slerp(moveDirection, Vector3.zero, Time.deltaTime * DampingValue);
+            moveDirection = Vector3.ClampMagnitude(new Vector3(moveDirection.x, 0, moveDirection.z), player_speed) + Vector3.up * yMagnitude;
+        }
+        controller.Move(moveDirection * Time.deltaTime);
+    }
+
+    public void Dash(Vector2 DodgeInput)
+    {
+        Vector2 direction = DodgeInput.magnitude == 0 ? player.forward : player.TransformDirection(DodgeInput);
         float dashSpeed = 5f; // Adjust the dash speed as needed
-        Vector3 dashDirection = player.forward * dashSpeed;
+        Vector3 dashDirection = direction * dashSpeed;
 
         // Apply movement
         controller.Move(dashDirection * Time.deltaTime);
-
     }
 
 }

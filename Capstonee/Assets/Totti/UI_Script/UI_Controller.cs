@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 using UnityEngine.Windows;
-
 public class UI_Controller : MonoBehaviour
 {
     public static UI_Controller instance;
