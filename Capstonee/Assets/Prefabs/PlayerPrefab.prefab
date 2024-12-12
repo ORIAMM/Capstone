@@ -874,7 +874,8 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 512
-  panning_speed: 79
+  X_panning_speed: 70
+  Y_panning_speed: 20
   multiplier: 7.34
   animator: {fileID: 0}
   FacingDirection: {fileID: 0}

@@ -2838,8 +2838,18 @@ MonoBehaviour:
   - {fileID: 1761306061}
   - {fileID: 900854225}
   pauseMenuUI: {fileID: 0}
+  VictoryPanel: {fileID: 0}
+  DefeatPanel: {fileID: 0}
+  ResultPanel: {fileID: 0}
+  isWin: 0
+  isLose: 0
   videoPlayer: {fileID: 1684296873}
   nextSceneAfterVideo: BossFight
+  TimeElapsed: 0
+  cd: {fileID: 0}
+  player: {fileID: 0}
+  _timeremain: {fileID: 0}
+  _timeelapsed: {fileID: 0}
 --- !u!4 &1684296872
 Transform:
   m_ObjectHideFlags: 0
