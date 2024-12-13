@@ -164,7 +164,7 @@ public class Boss : TimedObject, IEntity
     public void OnDeath()
     {
         animator.SetTrigger("Dying");
-        SoundManager.instance.PlaySFX("Dying");
+        //SoundManager.instance.PlaySFX("Dying");
         UIManage.instance.Win();
         //UI_Controller.instance.isWin = true;
     }

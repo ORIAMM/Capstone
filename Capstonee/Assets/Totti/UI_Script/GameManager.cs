@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private AudioClip clip;
     [SerializeField] private InputAction escape;
+
+
     private void OnEnable()
     {
         escape.Enable();

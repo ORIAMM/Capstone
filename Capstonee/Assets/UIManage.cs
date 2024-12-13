@@ -31,6 +31,7 @@ public class UIManage : MonoBehaviour
         {
             Back.SetActive(true);
             Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
             Time.timeScale = 0.1f;
         }
         else Debug.LogWarning("Not Done");
@@ -51,7 +52,8 @@ public class UIManage : MonoBehaviour
     IEnumerator Result()
     {
         Time.timeScale = 0.1f;
-
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
         WinPanel.SetActive(true);
         var CGVictory = WinPanel.GetComponent<CanvasGroup>();
         CGVictory.DOFade(1, 0.5f);

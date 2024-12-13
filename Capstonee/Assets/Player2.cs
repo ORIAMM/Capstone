@@ -16,6 +16,7 @@ public class Player2 : MonoBehaviour, IEntity
     [SerializeField] private ImprovisedPlayerMovement2 movement;
     [SerializeField] private PlayerCamera2 playerCam;
     [SerializeField] private CombatHandler playerCombat;
+    [SerializeField] private PlayerInput PI;
 
     [Header("Player Stat")]
     [SerializeField] private float initial_time = 300f;
@@ -99,7 +100,7 @@ public class Player2 : MonoBehaviour, IEntity
     }
     public void OnSkill()
     {
-        if (TimeManager.instance.OnCooldown == null && TimeManager.instance.Skillready)
+        if (TimeManager.instance.OnCooldown == null && TimeManager.instance.Skillready && playerCombat.isFall == false)
         {
             _animator.SetTrigger("Skill");
             TimeManager.instance.UseSkill(5f);
@@ -165,19 +166,24 @@ public class Player2 : MonoBehaviour, IEntity
         if (isDead == false)
         {
             isDead = true;
+            playerCombat.enabled = false;
+            playerCam.enabled = false;
+            movement.enabled = false;
+            //PI.enabled = false;
             StartCoroutine(AfterDeath());
         }
     }
     IEnumerator AfterDeath()
     {
         _animator.SetTrigger("Die");
-        DeathPanel.SetActive(true);
+        Cursor.visible = true;
         var CGdeath = DeathPanel.GetComponent<CanvasGroup>();
         CGdeath.DOFade(1, 0.5f);
-        pi.enabled = false;
+        //pi.enabled = false;
         UIManage.instance.Deathcount += 1;
         yield return new WaitForSeconds(0.5f);
         UIManage.instance.DeathCheck();
+        enabled = false;
     }
     Vector2 MoveValue => InputAction.FindAction("Move").ReadValue<Vector2>();
 }

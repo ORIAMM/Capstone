@@ -8,6 +8,10 @@ public class Credit : MonoBehaviour
     [SerializeField] private RectTransform InputMenu;
     [SerializeField] private RectTransform credit;
 
+    void Start()
+    {
+        Time.timeScale = 1f;
+    }
 
     public void OnCredit()
     {

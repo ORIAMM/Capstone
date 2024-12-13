@@ -2,21 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 
 public class SoundCEO : MonoBehaviour
 {
     public static SoundCEO instance;
     public AudioMixer audioMixer;
+    public Slider Sfxslider;
+    public Slider BGMslider;
+    public Slider Masterslider;
 
     [Header("Audio Mixer")]
 
     private List<AudioSource> audioSources = new List<AudioSource>();
     private Dictionary<AudioCategorys, string> volumeParameters = new Dictionary<AudioCategorys, string>
     {
-        {AudioCategorys.Master, "MasterVolume" },
-        {AudioCategorys.SFX, "SFXVolume" },
-        {AudioCategorys.BGM, "SFXVolume" },
+        {AudioCategorys.Master, "Master" },
+        {AudioCategorys.SFX, "SFX" },
+        {AudioCategorys.BGM, "BGM" },
     };
 
     private void Awake()
@@ -47,13 +51,16 @@ public class SoundCEO : MonoBehaviour
 
     public void PlaySound(SoundCLIP Clip)
     {
-        if (Clip == null || Clip.clip == null)
+        if (Clip == null || Clip.clips == null)
         {
             Debug.LogWarning("MANAA SO NYA WO");
             return;
         }
         AudioSource audioSource = GetAvailableAudioSource();
-        audioSource.clip = Clip.clip;
+        foreach(AudioClip clip in Clip.clips)
+        {
+            
+        }
         audioSource.volume = Clip.volume;
         audioSource.loop = Clip.loop;
         audioSource.outputAudioMixerGroup = audioMixer.FindMatchingGroups(Clip.category.ToString())[0];
@@ -86,6 +93,7 @@ public class SoundCEO : MonoBehaviour
         {
             float savedVolume = PlayerPrefs.GetFloat(entry.Value, 1f);
             audioMixer.SetFloat(entry.Value, Mathf.Log10(savedVolume) * 20);
+
         }
     }
 

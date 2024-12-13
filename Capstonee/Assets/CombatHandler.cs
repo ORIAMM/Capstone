@@ -112,6 +112,7 @@ public class CombatHandler : MonoBehaviour
                 hitEnemies.Add(enemy);
                 enemy.ReceiveDamage(70);
                 _player.HealthPlayer += 20f;
+                _player.TempHealth += 20f;
             }
         }
     }
