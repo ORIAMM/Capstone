@@ -515,7 +515,7 @@
                     "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -526,7 +526,7 @@
                     "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -537,7 +537,7 @@
                     "path": "<Keyboard>/a",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -548,7 +548,7 @@
                     "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
@@ -581,7 +581,7 @@
                     "path": "<Keyboard>/space",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Dodge",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -603,7 +603,7 @@
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Mouse",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -625,7 +625,7 @@
                     "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Target",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -647,7 +647,7 @@
                     "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -669,7 +669,7 @@
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Block",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -713,7 +713,7 @@
                     "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Escape",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -724,7 +724,7 @@
                     "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Skill",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -746,7 +746,7 @@
                     "path": "<Keyboard>/j",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
+                    "groups": "MnK",
                     "action": "Join",
                     "isComposite": false,
                     "isPartOfComposite": false
@@ -765,5 +765,22 @@
             ]
         }
     ],
-    "controlSchemes": []
+    "controlSchemes": [
+        {
+            "name": "MnK",
+            "bindingGroup": "MnK",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
 }
