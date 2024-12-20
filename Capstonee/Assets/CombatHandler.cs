@@ -12,6 +12,7 @@ public struct BasicAttackInfo
     public float max_frameTime;
     [Space(3)]
     public float MaxFrames;
+    public SoundCLIP AttackSound;
 }
 public class CombatHandler : MonoBehaviour
 {
@@ -21,6 +22,10 @@ public class CombatHandler : MonoBehaviour
 
     [SerializeField] private LayerMask enemyLayers;
     [SerializeField] int TotalCombos = 0;
+
+    [Header("Sound Clip")]
+    [SerializeField] private SoundCLIP dodge;
+
 
     [Header("Other Settings")]
     [SerializeField] private float DodgeCooltime;
@@ -60,6 +65,7 @@ public class CombatHandler : MonoBehaviour
         {
             if (max_frameTime - animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= max_frameTime - min_frameTime)
             {
+                
                 Debug.Log("hit");
                 hit();
             }
@@ -94,6 +100,7 @@ public class CombatHandler : MonoBehaviour
 
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(animationName));
         ResetHitEnemies();
+        SoundCEO.instance.PlaySound(info.AttackSound);
         min_frameTime = info.min_frameTime / info.MaxFrames;
         max_frameTime = info.max_frameTime / info.MaxFrames;
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.6f);
@@ -111,8 +118,8 @@ public class CombatHandler : MonoBehaviour
             {
                 hitEnemies.Add(enemy);
                 enemy.ReceiveDamage(70);
-                _player.HealthPlayer += 20f;
-                _player.TempHealth += 20f;
+                _player.HealthPlayer += 5f;
+                _player.TempHealth += 5f;
             }
         }
     }
@@ -122,6 +129,7 @@ public class CombatHandler : MonoBehaviour
     {
         isDodging = true;
         animator.SetTrigger("Dodge");
+        SoundCEO.instance.PlaySound(dodge);
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"));
         float dodgeDuration = 0.7f;
         float elapsedTime = 0f;
@@ -167,6 +175,7 @@ public class CombatHandler : MonoBehaviour
         {
             isAttacking = false;
             StopAllCoroutines();
+            isFall = true;
             coroutine = StartCoroutine(Interrupt());
         }
     }
@@ -175,7 +184,7 @@ public class CombatHandler : MonoBehaviour
         isFall = true;
         animator.SetTrigger("Fall");
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("Fall and Stand"));
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.8f);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f);
 
         coroutine = null;
         isFall = false;

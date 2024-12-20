@@ -9747,7 +9747,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79c775b3841b0cb43affc320e6143a56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 120
+  Damage: 60
   radius: 2.77
   attackDuration: 0.5
   AttackLayer:

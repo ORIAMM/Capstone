@@ -3,13 +3,16 @@
 public class SoundObject : TimedObject
 {
     [SerializeField] string SFX_Name;
+    [SerializeField] private SoundCLIP soundClip;
 
     public override void OnContinue()
     {
+        SoundCEO.instance.ResumeClip(soundClip);
     }
 
     public override void OnStop()
     {
+        SoundCEO.instance.PauseClip(soundClip);
     }
 
     public override void OnUpdate() { }
@@ -20,7 +23,8 @@ public class SoundObject : TimedObject
     }
     private void OnEnable()
     {
-        SoundManager.instance.PlaySFX(SFX_Name);
+        //SoundManager.instance.PlaySFX(SFX_Name);
+        SoundCEO.instance.PlaySound(soundClip);
         PoolManager.ReleaseObject(gameObject);
     }
 }

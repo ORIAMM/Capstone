@@ -14312,7 +14312,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d589e19a23d01b49aacecc4c47b8829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 110
+  damage: 60
+  StartDuration: 0
   duration: 3
   range: 2.4
   targetLayer:

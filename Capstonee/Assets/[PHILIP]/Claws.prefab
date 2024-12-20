@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SFX_Name: Claws
+  soundClip: {fileID: 11400000, guid: dacbef70c4294cf4988e2f161fa70764, type: 2}

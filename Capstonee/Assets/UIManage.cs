@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
+using UnityEditor;
 
 public class UIManage : MonoBehaviour
 {
@@ -23,7 +24,6 @@ public class UIManage : MonoBehaviour
         //PIM = FindObjectOfType<PlayerInputManager>();
     }
 
-
     public void DeathCheck()
     {
         Debug.LogWarning(Deathcount);
@@ -39,6 +39,12 @@ public class UIManage : MonoBehaviour
     public void Win()
     {
         StartCoroutine(Result());
+    }
+
+    public void BackScene()
+    {
+        SoundCEO.instance.StopAllSound();
+        ChangeScene("Menu");
     }
 
     public void ChangeScene(string SceneName)
@@ -57,7 +63,7 @@ public class UIManage : MonoBehaviour
         WinPanel.SetActive(true);
         var CGVictory = WinPanel.GetComponent<CanvasGroup>();
         CGVictory.DOFade(1, 0.5f);
-        yield return null;  
+        yield return new WaitForSeconds(0.5f);  
 
         result.SetActive(true);
         var CGResult = result.GetComponent<CanvasGroup>();

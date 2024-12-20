@@ -4819,7 +4819,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16cf54bc0b465894e9a10af50dbb5750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 110
+  Damage: 80
   frontOffset: 0
   Size: {x: 4, y: 3, z: 4}
   AttackLayer:

@@ -12,9 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d473589351099f40bc833a461582ec2, type: 3}
   m_Name: BGM
   m_EditorClassIdentifier: 
-  clips:
-  - {fileID: 8300000, guid: 2f24a3965752b364ca16fc304740f0e5, type: 3}
-  - {fileID: 8300000, guid: 972390349d8c1d14cbed7efd02b88099, type: 3}
+  clip: {fileID: 8300000, guid: 972390349d8c1d14cbed7efd02b88099, type: 3}
   loop: 1
   volume: 1
   category: 1

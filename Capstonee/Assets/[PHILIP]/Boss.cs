@@ -29,6 +29,9 @@ public class Boss : TimedObject, IEntity
     [Header("UI Settings")]
     [SerializeField] Image BossHPBar;
 
+    [Header("SoundClip")]
+    [SerializeField] private SoundCLIP Walk;
+
     private float Health;
     private float _health
     {
@@ -185,6 +188,7 @@ public class Boss : TimedObject, IEntity
         //mainrotspeed = Mathf.Lerp(mainrotspeed, 0, new Vector3(moveDirection.x, 0, moveDirection.z).magnitude / movementSpeed);
         controller.Move(moveDirection * Time.deltaTime);
         moveDirection.y -= gravity * Time.deltaTime;
+        SoundCEO.instance.PlaySound(Walk);
     }
     public void LookToPlayer(float offset, float rotateSpeed)
     {
@@ -195,7 +199,7 @@ public class Boss : TimedObject, IEntity
         targetRotation *= offsetRot;
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotateSpeed * Time.deltaTime);
     }
-    public void Target()
+    /*public void Target()
     {
         float closestDistance = TargetRadius + 1;
         Collider player = null;
@@ -211,6 +215,37 @@ public class Boss : TimedObject, IEntity
         }
         if (!player) return;
         else target = player.transform;
+    }*/
+    public void Target()
+    {
+        float closestDistance = TargetRadius + 1;
+        Collider player = null;
+
+        List<Collider> players = Physics.OverlapSphere(transform.position, TargetRadius, PlayerLayer).ToList();
+
+        foreach (Collider ply in players)
+        {
+            Player2 playerComponent = ply.GetComponent<Player2>();
+            if (playerComponent == null || playerComponent.isDead)
+            {
+                continue; 
+            }
+
+            float distance = Vector3.Distance(ply.transform.position, transform.position);
+
+            if (closestDistance > distance)
+            {
+                player = ply;
+                closestDistance = distance;
+            }
+        }
+
+        if (!player)
+        {
+            target = null;
+            return;
+        }
+        target = player.transform;
     }
     #endregion
     #region AtkPatterns

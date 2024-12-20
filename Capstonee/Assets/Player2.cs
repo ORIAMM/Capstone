@@ -10,6 +10,7 @@ using System.Collections;
 public class Player2 : MonoBehaviour, IEntity
 {
     private Animator _animator;
+    [SerializeField] private Animator _animatorSkill;
     private CharacterController controller;
 
     [Header("Main Settings")]
@@ -24,6 +25,9 @@ public class Player2 : MonoBehaviour, IEntity
     public float HealthPlayer;
     public float TempHealth;
 
+    [Header("SoundClip")]
+    [SerializeField] private SoundCLIP Death;
+ 
     [Header("References")]
     [SerializeField] private Transform CameraTransform;
     [SerializeField] private Transform PlayerMeshObject;
@@ -39,7 +43,8 @@ public class Player2 : MonoBehaviour, IEntity
     [NonSerialized] public float modifierMultiplier = 1;
     public bool isCombat => playerCam.target != null;
     public bool Dodging => playerCombat.isDodging;
-    private bool isDead = false;
+    public bool isDead = false;
+    private bool onSkill = false;
 
     private PlayerInput pi;
     private InputActionAsset _actionAsset;
@@ -61,12 +66,12 @@ public class Player2 : MonoBehaviour, IEntity
         //Initialize initial_Health
         HealthPlayer = Time.time + initial_time;
 
-        TempHealth = HealthPlayer;
+        TempHealth = initial_time;
         if (HealthSlider != null)
         {
             HealthSlider.value = TempHealth;
-            HealthSlider.maxValue = HealthPlayer;
-            HealthSlider.minValue = Time.time;
+            HealthSlider.maxValue = initial_time;
+            HealthSlider.minValue = 0;
         }
         else Debug.LogError("GK ADA");
 
@@ -100,18 +105,29 @@ public class Player2 : MonoBehaviour, IEntity
     }
     public void OnSkill()
     {
-        if (TimeManager.instance.OnCooldown == null && TimeManager.instance.Skillready && playerCombat.isFall == false)
+        if (TimeManager.instance.OnCooldown == null && TimeManager.instance.Skillready && playerCombat.isFall == false && isDead == false)
         {
+            TempHealth -= 20f;
+            HealthPlayer -= 20f;
             _animator.SetTrigger("Skill");
+            _animatorSkill.SetTrigger("Trigger");
+            StartCoroutine(Slowdown(1.5f));
             TimeManager.instance.UseSkill(5f);
         }
+    }
+
+    IEnumerator Slowdown(float time)
+    {
+        onSkill = true;
+        yield return new WaitForSeconds(time);
+        onSkill = false;
     }
 
     private void Update()
     {
         if (!playerCombat.isBlocking && !playerCombat.isFall && !playerCombat.isDodging)
         {
-            movement.Move(MoveValue * modifierMultiplier * (playerCombat.isAttacking ? 0.05f : 1));
+            movement.Move(MoveValue * modifierMultiplier * (playerCombat.isAttacking || onSkill ? 0.05f : 1));
         }
         if (playerCombat.isDodging) movement.ApplyMove(Gravity, true);
         else movement.ApplyMove(Gravity);
@@ -120,7 +136,7 @@ public class Player2 : MonoBehaviour, IEntity
 
     public void Ticking()
     {
-        if (HealthPlayer - Time.time <= 0)
+        if (HealthPlayer - Time.time <= 0 || TempHealth <= 0)
         {
             OnDeath();
         }
@@ -133,7 +149,7 @@ public class Player2 : MonoBehaviour, IEntity
     }
     public void FloatToTimeConverse()
     {
-        int totalSeconds = Mathf.CeilToInt(TempHealth - Time.time); // Pembulatan ke atas
+        int totalSeconds = Mathf.CeilToInt(TempHealth); // Pembulatan ke atas
         int minutes = totalSeconds / 60; // Hitung menit
         int seconds = totalSeconds % 60; // Hitung detik
 
@@ -169,8 +185,10 @@ public class Player2 : MonoBehaviour, IEntity
             playerCombat.enabled = false;
             playerCam.enabled = false;
             movement.enabled = false;
+            SoundCEO.instance.PlaySound(Death);
             //PI.enabled = false;
             StartCoroutine(AfterDeath());
+            
         }
     }
     IEnumerator AfterDeath()

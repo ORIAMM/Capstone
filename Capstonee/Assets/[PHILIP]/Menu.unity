@@ -964,7 +964,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 284639099}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2d12d660c1a4614e9b3503db32ab7f2, type: 3}
   m_Name: 
@@ -2406,8 +2406,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 208.3931, y: 65.938}
+  m_AnchoredPosition: {x: 0.0000019073486, y: 0}
+  m_SizeDelta: {x: 111.1829, y: 30.5208}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &666673326
 MonoBehaviour:
@@ -2429,7 +2429,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 70ad302ecba3fea4f816561928f28ed6, type: 3}
+  m_Sprite: {fileID: 1345538658, guid: eed1d1d4c640e894982f799bdb5433de, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2512,10 +2512,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0a16fdfb13a7a748909931ac38eb25b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixer: {fileID: 0}
-  Sfxslider: {fileID: 0}
-  BGMslider: {fileID: 0}
-  Masterslider: {fileID: 0}
+  audioMixer: {fileID: 24100000, guid: dc06c79ea46a8fc42b88a2fde7ca1f41, type: 2}
+  masterGroup: {fileID: 24300002, guid: dc06c79ea46a8fc42b88a2fde7ca1f41, type: 2}
+  sfxGroup: {fileID: 36300194960164093, guid: dc06c79ea46a8fc42b88a2fde7ca1f41, type: 2}
+  bgmGroup: {fileID: 1977492300523111873, guid: dc06c79ea46a8fc42b88a2fde7ca1f41,
+    type: 2}
 --- !u!4 &671117625
 Transform:
   m_ObjectHideFlags: 0
@@ -2644,7 +2645,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &680655505
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2988,7 +2989,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &776993930
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3248,6 +3249,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ThemeSong: MainMenuTheme
   mainPanel: {fileID: 904381944}
+  BGM: {fileID: 11400000, guid: 92f75b1366633a54cbc9c9b7fb25a142, type: 2}
+  Click: {fileID: 11400000, guid: 49c4d556392a9e84289f3a36bbde3c81, type: 2}
+  Play: {fileID: 0}
   clip: {fileID: 8300000, guid: f714c0fc55816ac4ab4093a08bc1892d, type: 3}
   escape:
     m_Name: Escape
@@ -3614,6 +3618,53 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1119567207
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1119567208}
+  - component: {fileID: 1119567209}
+  m_Layer: 0
+  m_Name: VolumeControl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1119567208
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119567207}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1870, y: 1030, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1119567209
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119567207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c284ddf26db02342931dc2ddf9f7a28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BGMSlider: {fileID: 1466410854}
+  SFXSlider: {fileID: 1363908219}
+  MasterSlider: {fileID: 2108309602}
 --- !u!1 &1151407798
 GameObject:
   m_ObjectHideFlags: 0
@@ -4118,31 +4169,7 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 284639100}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: SFXVolume
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 284639100}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: SavePref
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &1425089080
 GameObject:
   m_ObjectHideFlags: 0
@@ -4266,31 +4293,7 @@ MonoBehaviour:
   m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 284639100}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: MusicVolume
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 284639100}
-        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
-        m_MethodName: SavePref
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &1511132079
 GameObject:
   m_ObjectHideFlags: 0
@@ -4906,7 +4909,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1837444941
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5293,6 +5296,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1993922320}
         m_TargetAssemblyTypeName: VideoPlayerHandler, Assembly-CSharp
         m_MethodName: PlayVideo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 853690347}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OpenNewGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6090,3 +6105,4 @@ SceneRoots:
   - {fileID: 1993922319}
   - {fileID: 715053820}
   - {fileID: 671117625}
+  - {fileID: 1119567208}

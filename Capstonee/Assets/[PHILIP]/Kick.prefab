@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SFX_Name: Kick
+  soundClip: {fileID: 11400000, guid: bc17a26681336054781273eb2af0c2b1, type: 2}
